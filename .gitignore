@@ -1,0 +1,65 @@
+# --- OS / editors ---
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*~
+
+# --- Secrets / local config (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials*.json
+
+# --- Claude Code local state (keep shared CLAUDE.md and .claude/settings.json) ---
+.claude/settings.local.json
+.claude/worktrees/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+.coverage
+htmlcov/
+
+# --- Node / web ---
+node_modules/
+dist/
+build/
+.next/
+coverage/
+npm-debug.log*
+
+# --- Logs / temp ---
+*.log
+tmp/
+.cache/
+
+# --- Local model weights (large; pull via `ollama pull`, do not commit) ---
+*.gguf
+*.safetensors
+*.bin
+.ollama/
+
+# --- Real or unreviewed data (project handles clinical-style data) ---
+# Only synthetic / explicitly authorized de-identified samples may be committed,
+# and only under data/synthetic/.
+data/*
+!data/synthetic/
+!data/README.md
+*.sqlite
+*.sqlite3
+*.db
