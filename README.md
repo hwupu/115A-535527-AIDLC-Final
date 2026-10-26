@@ -126,7 +126,7 @@ services/llm/     Gemma-4 欄位擷取                             ⏳ 尚未建
 eval/             情境、指標、評估程式                         ⏳ 尚未建立
 docs/             路線圖、架構、評估、情境、Scrum、訪談
 prompt-log/       AI 協作紀錄
-CLAUDE.md         給 AI 代理的規則
+CLAUDE.md         給 AI 代理的規則（AGENTS.md 是指向它的連結，給其他工具用）
 ```
 
 ## 💬 給 Claude Code 的提示
