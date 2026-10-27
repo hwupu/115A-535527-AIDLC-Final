@@ -1,0 +1,15 @@
+# P1 stub: all four services start; stt and llm return canned data until A1/B2 land.
+services:
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    ports: ["5173:5173"]
+    depends_on: [api]
+  api:
+    build: services/api
+    ports: ["8000:8000"]
+  stt:
+    build: services/stt
+    ports: ["8001:8000"]
+  llm:
+    build: services/llm
+    ports: ["8002:8000"]
