@@ -1,4 +1,8 @@
-"""LLM stub. Interface: transcript -> field JSON with source_span. triage_level is never part of the output."""
+"""LLM stub. Interface: transcript -> field JSON with source_span.
+
+triage_level is never part of the output.
+"""
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -27,4 +31,5 @@ def health() -> dict[str, str]:
 @app.post("/extract", response_model=ExtractResponse)
 def extract(req: ExtractRequest) -> ExtractResponse:
     # Stub: canned output. Real field names follow docs/SCENARIOS.md §1.
-    return ExtractResponse(fields={"chief_complaint": Field(value="（stub）發燒", source_span=None)})
+    field = Field(value="（stub）發燒", source_span=None)
+    return ExtractResponse(fields={"chief_complaint": field})
