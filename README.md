@@ -84,7 +84,7 @@
 日期與每個 Sprint 的目標以 [`docs/ROADMAP.md`](docs/ROADMAP.md) 為準；每個 Sprint 的項目在[看板](https://github.com/users/hwupu/projects/3)。
 
 ## 🛠️ 一次性設定
-> 專案骨架（P1）已建立，服務目前是 stub（回傳固定假資料）。`.env.example` 與 dev/demo profiles 由 P3 補上。
+> 專案骨架已建立，服務目前是 stub（回傳固定假資料）。
 
 1. **安裝：** Git 2.40+、Git LFS 3.x、Node.js **LTS**（`.nvmrc` 是 24；`n` 選用）+ **pnpm**（`corepack enable`）、Python 3.12（`uv` 選用）、Docker（含 compose，沒有也能跑，見下方啟動）、**Claude Code**、GitHub CLI **`gh`**、你慣用的 IDE。
 2. **Git LFS：** `brew install git-lfs`（Mac）或 `winget install GitHub.GitLFS`（Windows），然後 `git lfs install`。
@@ -99,12 +99,13 @@
    git config user.email "GitHub 帳號使用的 email"
    ```
 5. **登入：** 執行 `gh auth login`，並啟動 `claude` 依指示登入。
-6. **環境變數：** 目前不需要。P3 加入 `.env.example` 後，複製為 `.env`。**不要 commit `.env`。**
+6. **環境變數：** `cp .env.example .env`（埠號與 compose profile，預設即可用）。**不要 commit `.env`。**
 7. **啟動（二選一）：**
    ```bash
    pnpm install
    # A. 有 Docker：web http://localhost:5173、api :8000、stt :8001、llm :8002（皆為 stub）
-   docker compose up --build
+   docker compose up --build                        # dev profile（熱更新，由 .env 的 COMPOSE_PROFILES 決定）
+   COMPOSE_PROFILES=demo docker compose up --build  # demo：建置後的前端（nginx）
    # B. 沒有 Docker：直接在本機跑四個服務（Ctrl-C 全部停止）
    pnpm dev:all
    ```
