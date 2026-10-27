@@ -2,10 +2,13 @@
   "name": "triage-assistant",
   "private": true,
   "packageManager": "pnpm@11.21.0",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
-    "typecheck": "pnpm --filter web typecheck"
+    "typecheck": "pnpm --filter web typecheck",
+    "dev:all": "./scripts/dev.sh"
   }
 }
