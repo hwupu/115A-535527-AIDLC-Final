@@ -92,7 +92,7 @@ Defence in depth, because a prompt alone is not enough:
 - `docker-compose` services: `web`, `api`, `stt`, `llm`. Profiles: `dev` and `demo`. `.env` for configuration (P3).
 - GPU for `stt` and `llm` is TBD (spikes A1, B2). A CPU-only or smaller-model path must exist for development laptops.
 - Microphone access needs a secure context: `localhost` works; a second device needs HTTPS via reverse proxy (P4, scope lever: demo from `localhost`).
-- Node.js LTS everywhere (local, CI, Docker images). `n` is optional for local version management.
+- Node.js LTS everywhere (local, CI, Docker images). `n` is optional for local version management. Python services use `uv` (Docker, local, CI).
 - CI (P2): lint, typecheck, test, build, docker build.
 
 ## 8. Evaluation harness

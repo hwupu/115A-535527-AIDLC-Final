@@ -1,0 +1,24 @@
+# Profiles: dev = vite hot reload; demo = built web served by nginx.
+# `docker compose up` uses COMPOSE_PROFILES from .env (default in .env.example: dev).
+# stt and llm return canned data until A1/B2 land.
+services:
+  web:
+    profiles: [dev]
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    ports: ["${WEB_PORT:-5173}:5173"]
+    volumes: ["./apps/web/src:/repo/apps/web/src"]
+    depends_on: [api]
+  web-demo:
+    profiles: [demo]
+    build: { context: ., dockerfile: apps/web/Dockerfile.demo }
+    ports: ["${WEB_PORT:-5173}:80"]
+    depends_on: [api]
+  api:
+    build: services/api
+    ports: ["${API_PORT:-8000}:8000"]
+  stt:
+    build: services/stt
+    ports: ["${STT_PORT:-8001}:8000"]
+  llm:
+    build: services/llm
+    ports: ["${LLM_PORT:-8002}:8000"]
