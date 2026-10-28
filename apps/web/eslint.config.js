@@ -2,7 +2,7 @@ import pluginVue from "eslint-plugin-vue";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: ["dist"] },
+  { ignores: ["dist", "src/components/ui"] },
   ...tseslint.configs.recommended,
   ...pluginVue.configs["flat/recommended"],
   {
