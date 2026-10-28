@@ -149,8 +149,19 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
 - Status: accepted by the frontend lead; items marked (PO) need 張棨翔's confirmation
 - Decision: adopt shadcn-vue and Pinia. Default text is large (18 px base, 20 px on tablets) with a high-contrast light
   theme. The first screen has four demo roles: 病患, 檢傷護理師, 醫師, 管理者 (admin, evaluation mode). Patient screen:
-  simulated patient code, voice input, text input (PO). Physician picks the patient from a list (PO). Admin persona owns
+  voice input, text input, then an ending screen with the 病歷號 (PO; amended below). Physician picks the patient from a list (PO). Admin persona owns
   evaluation mode, separate from the nurse screen (PO).
 - Consequences: the patient adds a new input source (`patient_input`) and the api gains list and evaluation endpoints;
   proposed in `docs/frontend/API_INTERFACE.md` for the backend lead to confirm. Patient read-back is deferred.
 - Decided by: 吳普軒 (frontend lead); PO confirmation pending
+
+## 2026-10-28 — No personal information; patients identified by a simulated 病歷號
+- Status: accepted by the frontend lead; backend allocation to be confirmed by 張棨翔
+- Context: school project, so no personal information is collected. The patient does not know an ID before anything is written to
+  the database.
+- Decision: the patient screen no longer asks for a code. The patient speaks or types, taps 完成, and the ending screen shows
+  the **病歷號** assigned by the system (simulated, format `SIM-######`, never a real hospital number). Nurses and physicians
+  identify patients by 病歷號. This supersedes the "simulated patient code" part of the entry above.
+- Consequences: backend allocates the number at `finish-intake` (or at nurse-created sessions) and purges unfinished intakes;
+  see `docs/frontend/API_INTERFACE.md`. No name, 身分證字號 or phone is stored anywhere.
+- Decided by: 吳普軒 (frontend lead); PO and backend confirmation pending

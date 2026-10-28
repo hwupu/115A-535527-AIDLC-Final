@@ -21,35 +21,36 @@ flowchart LR
 
 The role is the route (`/patient`, `/nurse`, `/doctor`, `/admin`). No login. Switching role never deletes a session.
 
-## 2. Patient: enter code, then speak or type
+## 2. Patient: speak or type, then receive a 病歷號
 
 ```mermaid
 flowchart TD
-    P[Patient view] --> ID[Enter simulated patient code, e.g. P-0001]
-    ID --> V{Format valid?}
-    V -->|No| E[Show format hint]
-    E --> ID
-    V -->|Yes| S[Find or create the session for this patient]
-    S --> CH{Choose how to answer}
+    P[Patient view: no login, no code entry] --> CH{Choose how to answer}
     CH -->|Voice| R[Tap to start speaking; recording indicator on]
     R --> ST[Tap to stop]
     CH -->|Text| T[Type and send]
     ST --> SENT[Entry is added to the session, labelled as a patient entry]
     T --> SENT
-    SENT --> CH
+    SENT --> MORE{More to say?}
+    MORE -->|Yes| CH
+    MORE -->|No| FIN[Tap 完成]
+    FIN --> W[System writes the session and allocates the 病歷號]
+    W --> END[Ending screen: large 病歷號 and 'tell the nurse']
+    END --> NEXT[下一位: clear the screen for the next patient]
 ```
 
 Rules:
-- Voice and text stay disabled until a valid code is set.
+- No ID, name or personal detail is asked for. The 病歷號 is a simulated number the **system** gives at the end (`SIM-######`).
+- 完成 is enabled only after at least one entry and when not recording.
 - A recording indicator is always visible while recording.
 - The patient never sees AI drafts, flags, a triage level or advice.
-- Real 身分證字號 or 病歷號 must not be entered (the screen says so).
+- Leaving before 完成 means no 病歷號 is issued and the unfinished entries are discarded after a timeout.
 
 ## 3. Nurse: triage session (main flow)
 
 ```mermaid
 flowchart TD
-    S[Nurse view] --> NS[Start or open session for a patient code]
+    S[Nurse view] --> NS[Open the patient by the 病歷號 they read out, or pick from the 'ready' list; or start a new session]
     NS --> C{Patient consents?}
     C -->|No| X[Do not record; type into the form manually]
     C -->|Yes| R[Start listening]
@@ -88,7 +89,7 @@ Principle: a failure never blocks triage and never fills fields with guesses. Em
 
 ```mermaid
 flowchart TD
-    D[Physician view] --> L[Patient list: code, status, time, flag icon; newest first; auto-refresh]
+    D[Physician view] --> L[Patient list: 病歷號, status, time, flag icon; newest first; auto-refresh]
     L --> PK[Pick a patient]
     PK --> Q{Report confirmed by nurse?}
     Q -->|No| W[Show 'not confirmed yet'; refresh by polling]
@@ -98,7 +99,7 @@ flowchart TD
     BK --> L
 ```
 
-List statuses: `進行中` (session open), `待確認` (draft not confirmed), `已確認` (confirmed). Only `已確認` reports open fully.
+List statuses: `等候中` (patient finished intake, nurse not started), `進行中` (nurse working), `已確認` (confirmed). Only `已確認` reports open fully.
 
 ## 6. Admin: evaluation mode
 
@@ -120,7 +121,7 @@ Evaluation controls live only on this route, so the nurse working screen stays c
 | Screen | Primary user | Route | Key content |
 |---|---|---|---|
 | Role select | all | `/` | four big role buttons, demo notice |
-| Patient | patient | `/patient` | patient code, voice input, text input, recording indicator |
+| Patient | patient | `/patient` | voice input, text input, recording indicator, ending screen with 病歷號 |
 | Nurse session | nurse | `/nurse` | recorder, transcript, draft form, vitals, level entry, confirm |
-| Physician | physician | `/doctor` | patient list, read-only confirmed report |
+| Physician | physician | `/doctor` | patient list (by 病歷號), read-only confirmed report |
 | Admin | evaluator | `/admin` | scenario picker, timer, event log, export |

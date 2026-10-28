@@ -45,8 +45,9 @@ Traditional Chinese as in the handoff glossary.
 - **Context:** at or near the 檢傷站, possibly unwell, anxious, masked, older, or a Taiwanese-Mandarin mix speaker.
   Not a power user; may not read small text.
 - **Goal (assumed):** tell their story in whichever way is easiest (speaking or typing) and know that it is being recorded.
-- **Screen scope (decided 2026-10-28):** simulated patient code, voice input, text input. Nothing else.
+- **Screen scope (decided 2026-10-28):** voice input and text input, then an ending screen that shows the **病歷號** the system assigned. No code entry, no personal information.
 - **Needs from the UI:** very large text and buttons, a very visible recording state, plain wording, nothing that looks like medical advice or a triage result.
+- **Privacy:** the patient is never asked for a name, 身分證字號 or phone number; the 病歷號 is a simulated number given at the end.
 - **Deferred:** a read-back of the drafted report for the patient to check (not in scope now).
 
 ### P-A: 管理者 / 評估人員 (admin, evaluation mode)
@@ -67,6 +68,7 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 | ID | Story |
 |---|---|
+| US-N0 | As a nurse, I want to open a patient by the 病歷號 they read out, or from the list of patients who finished intake, so that I start from what they already told the system. |
 | US-N1 | As a nurse, I want to start and stop listening with one big control so that my hands stay on the patient. |
 | US-N2 | As a nurse, I want to see the transcript appear as we talk so that I can confirm the system heard the right thing. Anything the patient entered themselves (voice or text) appears labelled as a patient entry. |
 | US-N3 | As a nurse, I want a structured draft (TOCC, 量測禁忌, 主訴, HPI) filled from the conversation so that I do not handwrite and re-key. |
@@ -83,7 +85,7 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 | ID | Story |
 |---|---|
-| US-D0 | As a physician, I want a list of patients waiting or recently triaged, with status, so that I can pick the right one. |
+| US-D0 | As a physician, I want a list of patients (by 病歷號) waiting or recently triaged, with status, so that I can pick the right one. |
 | US-D1 | As a physician, I want to open the confirmed triage report for the patient I picked so that I do not re-ask what was already asked. |
 | US-D2 | As a physician, I want 主訴 and HPI with onset, character and associated symptoms, and flagged vitals, so that I can work from a full picture. |
 | US-D3 | As a physician, I want to see what the nurse confirmed and what was edited so that I know how far to trust each field. **Hard rule: read-only.** |
@@ -92,10 +94,11 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 | ID | Story |
 |---|---|
-| US-P1 | As a patient, I want to enter my patient code so that what I say or type is attached to my own record. **Simulated codes only (for example P-0001); never a real 身分證字號 or 病歷號.** |
+| US-P1 | As a patient, I want to start right away without typing any ID or personal details so that I can begin quickly. |
 | US-P2 | As a patient, I want to speak my answer with one big button so that I do not have to type when I feel unwell. |
 | US-P3 | As a patient, I want to type my answer instead so that I can use the system in a noisy place or when speaking is hard. |
-| US-P4 | As a patient, I want to see at a glance whether I am being recorded so that I know when I am being heard. **Hard rule: no triage level, diagnosis or advice is ever shown to the patient.** |
+| US-P4 | As a patient, I want to see at a glance whether I am being recorded so that I know when I am being heard. |
+| US-P5 | As a patient, I want to receive my 病歷號 at the end so that I can tell the nurse who I am without giving personal details. **Hard rule: the patient screen never shows a triage level, diagnosis or advice.** |
 
 ### Admin (evaluation mode)
 
@@ -109,4 +112,4 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 ## Non-goals for the frontend
 
-No real HIS integration, no real patient data, no login or accounts (roles are a demo switch), no diagnosis or triage suggestions, no native app.
+No real HIS integration, no real patient data and no personal information (the 病歷號 is simulated), no login or accounts (roles are a demo switch), no diagnosis or triage suggestions, no native app.

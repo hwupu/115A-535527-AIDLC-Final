@@ -13,7 +13,8 @@ Decisions made on 2026-10-28 (frontend lead): shadcn-vue, Pinia, larger default 
 - All UI text in 繁體中文（台灣）; clinical terms follow the glossary in the handoff.
 - **Readable by default:** base text 18 px (20 px from 768 px wide), nothing smaller than 16 px, buttons at least 48 px tall.
   High-contrast light theme (body text at least 7:1), professional blue and neutral palette, no web fonts (offline demo).
-- Simulated data only; a "demo / simulated data" banner is always visible.
+- Simulated data only; a "demo / simulated data" banner is always visible. The UI collects **no personal information**: patients are
+  identified only by a system-assigned simulated 病歷號.
 
 ## 2. Stack
 
@@ -43,7 +44,7 @@ tuned for size and contrast; it is excluded from lint. The CLI makes the generat
 
 ```
 /          role select (demo; no login), four buttons
-/patient   patient: patient code, voice input, text input
+/patient   patient: voice input, text input, ending screen with 病歷號
 /nurse     nurse session screen
 /doctor    physician: patient list, then read-only report
 /admin     evaluation mode: scenarios, timer, event log, export
@@ -93,11 +94,12 @@ Each report field is `{ value, status, source_span, source }` (backend doc §4).
 
 ## 5b. Other screens
 
-- **Patient (`/patient`):** one column of large cards. Patient code field (pattern `P-####`, simulated), then a very large
-  "開始說話 / 停止錄音" button with a recording badge, and a text box with a send button. Voice and text stay disabled until a valid
-  code is set. State lives in the `patientInput` store; it will call the session endpoints in [`API_INTERFACE.md`](API_INTERFACE.md).
-  Today it is UI only (no network, no audio capture yet).
-- **Physician (`/doctor`):** a list of patients (code, status, time, flag icon, newest first, polled), tap a row to open the
+- **Patient (`/patient`):** large cards for voice (very large "開始說話 / 停止錄音" button with a recording badge) and text (box and send
+  button), a list of what was sent, and a big "完成，取得病歷號" button. No ID or personal field. After 完成 an ending screen shows the
+  **病歷號** (`SIM-######`) in very large type and a 下一位 button that clears the screen. State lives in the `patientInput` store
+  (`phase: intake | done`). **Today it is UI only:** the store generates a placeholder 病歷號 locally; it will be replaced by the
+  response of `POST /sessions/{id}/finish-intake` in [`API_INTERFACE.md`](API_INTERFACE.md). No audio is captured yet.
+- **Physician (`/doctor`):** a list of patients (病歷號, status, time, flag icon, newest first, polled), tap a row to open the
   read-only report with per-field confirmed or edited badges. Back returns to the list with its scroll position.
 - **Admin (`/admin`):** scenario list with dev or held-out label, participant code, start and stop timer, live event log, export.
   Reachable only from the role screen; evaluation controls never appear on the nurse screen.
@@ -160,6 +162,6 @@ Each report field is `{ value, status, source_span, source }` (backend doc §4).
 | 1 | Does the patient see anything after sending (for example "已送出")? | a simple list of what they sent |
 | 2 | Generate API types from OpenAPI? | hand-written until the schema stabilises |
 | 3 | Physician list: refresh by polling or push? | polling every few seconds |
-| 4 | Is the patient code created by the patient, the nurse or a seeded list? | any role (see API proposal) |
+| 4 | 病歷號 numbering and how long an unfinished intake is kept? | sequential `SIM-######`; purge after 30 minutes |
 | 5 | Admin export format for the report (JSON, CSV or both)? | both |
 | 6 | Vitest and Playwright adoption | add Vitest with the first logic-heavy store; Playwright for the nurse flow in S2 |

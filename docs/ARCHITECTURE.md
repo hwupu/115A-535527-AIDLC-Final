@@ -86,7 +86,7 @@ Defence in depth, because a prompt alone is not enough:
 
 - No real patient data; synthetic scenarios and consented teammate voices only.
 - Audio is held in memory for transcription and not written to disk by default; `DELETE /sessions/{id}` removes a session (D3).
-- Audit events record edits and timings for metrics (D2, E6). No real names, 身分證字號 or 病歷號 anywhere.
+- Audit events record edits and timings for metrics (D2, E6). No real names or 身分證字號 anywhere; no personal information is collected. A patient is identified only by a system-generated simulated 病歷號 (`SIM-######`), not a real hospital number.
 - Every evaluation run logs model, prompt version, Whisper model and git commit.
 
 ## 7. Deployment

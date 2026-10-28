@@ -9,7 +9,9 @@ No authentication in the prototype; evaluation endpoints are enabled only when `
 
 ## 1. Conventions
 
-- IDs are strings. `patient_id` is a **simulated code** matching `^P-\d{4}$`; never a real 身分證字號 or 病歷號.
+- IDs are strings. **No personal information is collected or stored** (no name, 身分證字號, phone). A patient is identified only by
+  `medical_record_no` (病歷號), a **system-generated simulated number** matching `^SIM-\d{6}$`, never a real hospital number.
+  It is allocated by the backend when the intake is written to the database, and is never typed by the patient.
 - Times are ISO 8601 UTC. Dates of birth are ISO; the UI shows 民國.
 - Errors: HTTP status plus `{ "error": { "code": "snake_case", "message": "人看得懂的繁中訊息" } }`.
 - Every report field is `{ value, status, source_span, source }`.
@@ -18,18 +20,22 @@ No authentication in the prototype; evaluation endpoints are enabled only when `
 
 ## 2. Sessions (nurse and patient)
 
-A session is one triage encounter for one patient code. There is at most one active session per `patient_id`.
+A session is one triage encounter. It is created by the patient screen (first input) or by the nurse. Its 病歷號 is allocated
+when the intake is committed (see `finish-intake`) or immediately when the nurse creates the session.
 
 | Method and path | Who | Purpose |
 |---|---|---|
-| `POST /sessions` `{ patient_id, created_by: "patient"\|"nurse", mode?: "normal"\|"evaluation", scenario_id? }` | patient, nurse, admin | Create the active session for the patient, or return the existing one (idempotent). → `{ session_id, patient_id, status }` |
-| `GET /sessions/{id}` | nurse | Full session: transcript segments, current report, status. |
+| `POST /sessions` `{ created_by: "patient"\|"nurse", mode?: "normal"\|"evaluation", scenario_id? }` | patient, nurse, admin | Create a session. → `{ session_id, status, medical_record_no? }` (`medical_record_no` is `null` until intake is finished; the nurse path returns it right away). |
 | `POST /sessions/{id}/inputs` `{ kind: "text", text }` | patient, nurse | Add a typed entry. Stored as a transcript segment with `speaker: "patient"` or `"nurse"` and `source: "patient_input"` when sent from the patient screen. → `{ input_id }` |
+| `POST /sessions/{id}/finish-intake` | patient | The patient is done. Allocates and returns the 病歷號 and moves the session to `ready`. → `{ medical_record_no }` |
+| `GET /sessions?medical_record_no=SIM-000123` or `?status=ready` | nurse | Find a patient by the 病歷號 they read out, or from the list of patients who finished intake. |
+| `GET /sessions/{id}` | nurse | Full session: transcript segments, current report, status. |
 | `PATCH /sessions/{id}/fields` `{ path, value }` | nurse | Edit one field (audited: AI value vs new value). Sets `source: "nurse_edit"`. |
 | `POST /sessions/{id}/confirm` `{ triage_level, fields_confirmed: [path…] }` | nurse | Confirm the report. `triage_level` is the nurse's own entry. → `{ confirmed_at }` |
 | `DELETE /sessions/{id}` | nurse, admin | Remove the session and its data. |
 
-Statuses: `in_progress` → `awaiting_confirmation` → `confirmed`.
+Statuses: `intake` (patient entering) → `ready` (intake finished, waiting for the nurse) → `in_progress` (nurse working) → `confirmed`.
+A session still in `intake` after a timeout (proposed 30 minutes) is purged and **never receives a 病歷號**.
 
 ### Realtime: `WS /sessions/{id}/ws?role=patient|nurse`
 
@@ -57,7 +63,7 @@ The socket resumes by `session_id` after a drop (server keeps state).
 
 | Method and path | Purpose |
 |---|---|
-| `GET /sessions?status=in_progress,awaiting_confirmation,confirmed&limit=50` | List for the physician picker. Items: `{ session_id, patient_id, status, started_at, confirmed_at?, chief_complaint?, has_flags }`. Newest first. |
+| `GET /sessions?status=ready,in_progress,confirmed&limit=50` | List for the physician picker. Items: `{ session_id, medical_record_no, status, started_at, confirmed_at?, chief_complaint?, has_flags }`. Newest first. |
 | `GET /sessions/{id}/report` | Read-only confirmed report (404 or `409 not_confirmed` if not yet confirmed). Includes per-field `status` and `source` so the UI can show confirmed versus edited. |
 
 The UI polls the list every few seconds (ETag or `If-None-Match`, return `304` when unchanged). Push (SSE or WS) is a later option.
@@ -68,7 +74,7 @@ The UI polls the list every few seconds (ETag or `If-None-Match`, return `304` w
 | Method and path | Purpose |
 |---|---|
 | `GET /scenarios` | `[{ id, title, split: "dev"\|"held_out", demo: bool }]` from `docs/SCENARIOS.md` data. |
-| `POST /evaluation/runs` `{ scenario_id, participant_code }` | Create a run (and its session). `participant_code` is anonymous, e.g. `N-01`. → `{ run_id, session_id }` |
+| `POST /evaluation/runs` `{ scenario_id, participant_code }` | Create a run (and its session). `participant_code` is anonymous, e.g. `N-01` (not a name). → `{ run_id, session_id }` |
 | `POST /evaluation/runs/{id}/start` and `/finish` | Start and stop the timer on the server clock. |
 | `GET /evaluation/runs/{id}/events` | Event log: `task_start`, `field_edit`, `error_found`, `level_entered`, `task_end`; edits come from the audit log automatically. |
 | `POST /evaluation/runs/{id}/events` `{ type, payload }` | Manual events the admin records (for example "nurse caught an error"). |
@@ -86,7 +92,7 @@ Evaluation endpoints return `404` when `EVAL_MODE` is off, so a normal demo cann
 1. **New `source` value** `patient_input` and a `speaker` on transcript segments (`patient | nurse`). Patient voice goes through the
    same stt path; patient text skips stt and goes straight into the transcript.
 2. **Patient entries are inputs to the draft, not confirmed facts.** They never reach a field as `護理師已確認` without the nurse.
-3. **Idempotent `POST /sessions`** so the patient and nurse screens converge on the same session for a code.
+3. **病歷號 allocation** happens at `finish-intake` (patient) or session creation (nurse); sessions abandoned in `intake` are purged without a number. The nurse finds the session by 病歷號 or from the `ready` list.
 4. **Physician list needs a cheap query** (status and timestamps indexed); no full report per row.
 5. **Patient endpoints expose no draft, flags or level.** The WebSocket with `role=patient` must not receive `field.update`.
 6. **`EVAL_MODE` flag** gates evaluation routes; evaluation reuses the audit log instead of a second logging path.
@@ -95,7 +101,7 @@ Evaluation endpoints return `404` when `EVAL_MODE` is off, so a normal demo cann
 
 | # | Question | Default |
 |---|---|---|
-| 1 | Who creates a patient code: the patient typing it, the nurse, or a seeded list? | any role can create via idempotent `POST /sessions` |
+| 1 | 病歷號 numbering: sequential or random within `SIM-######`? | sequential (easy to read aloud; no real data) |
 | 2 | Same WebSocket route for patient and nurse, or separate? | one route, `role` query decides |
 | 3 | Audio format and chunking | decide after spike A1 |
 | 4 | Polling versus push for the physician list | polling |
