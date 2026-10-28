@@ -12,8 +12,7 @@ command -v uv >/dev/null 2>&1 || {
 run_py() { # <service> <port>
   (
     cd "services/$1"
-    exec uv run --python 3.12 --with-requirements requirements.txt \
-      uvicorn app.main:app --reload --port "$2"
+    exec uv run uvicorn app.main:app --reload --port "$2"
   ) &
 }
 

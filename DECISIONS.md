@@ -106,8 +106,26 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
 - Decided by: team
 
 ## 2026-10-28 — uv for Python tooling
-- Status: accepted
+- Status: accepted; the `requirements.txt` part is superseded by
+  "uv projects instead of requirements.txt" below
 - Decision: Python services use `uv` for packages and the Python version (3.12),
   in Dockerfiles, `scripts/dev.sh` and CI. No pip. `requirements.txt` stays the
   single dependency list. `n` for Node remains optional.
 - Decided by: 吳普軒
+
+## 2026-10-28 — uv projects instead of requirements.txt
+- Status: accepted
+- Context: `requirements.txt` uses `>=` ranges, so local, CI and Docker can
+  install different versions. uv can lock exact versions.
+- Decision: each Python service (`api`, `stt`, `llm`) is its own uv project
+  with `pyproject.toml` and `uv.lock`; dev tools go in `[dependency-groups]`.
+  `requirements*.txt` files are removed. Add packages with `uv add`. Docker
+  uses `uv sync --frozen --no-dev`; CI uses `uv sync --locked`, which fails
+  if `uv.lock` was not updated after `pyproject.toml` changed. No uv
+  workspace: stt (Whisper) and llm (Gemma runtime) may need different
+  versions of shared packages such as PyTorch, and each service must stay
+  swappable on its own.
+- Consequences: replaces "requirements.txt stays the single dependency list"
+  in the entry above. Dockerfiles, CI, `scripts/dev.sh` and README change
+  together (#57).
+- Decided by: 張棨翔 (backend lead), agreed by 吳普軒 (CI)
