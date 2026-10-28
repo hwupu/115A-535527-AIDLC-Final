@@ -144,3 +144,13 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   Alembic setup. If SQLite is not enough, switch to PostgreSQL by the end
   of S2 (Nov 29), before evaluation data collection (E10) starts.
 - Decided by: 張棨翔 (backend lead), agreed by 吳普軒
+
+## 2026-10-28 — Frontend choices: shadcn-vue, Pinia, readable UI, roles
+- Status: accepted by the frontend lead; items marked (PO) need 張棨翔's confirmation
+- Decision: adopt shadcn-vue and Pinia. Default text is large (18 px base, 20 px on tablets) with a high-contrast light
+  theme. The first screen has four demo roles: 病患, 檢傷護理師, 醫師, 管理者 (admin, evaluation mode). Patient screen:
+  simulated patient code, voice input, text input (PO). Physician picks the patient from a list (PO). Admin persona owns
+  evaluation mode, separate from the nurse screen (PO).
+- Consequences: the patient adds a new input source (`patient_input`) and the api gains list and evaluation endpoints;
+  proposed in `docs/frontend/API_INTERFACE.md` for the backend lead to confirm. Patient read-back is deferred.
+- Decided by: 吳普軒 (frontend lead); PO confirmation pending

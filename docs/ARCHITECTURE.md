@@ -5,7 +5,7 @@ decided until it appears in `DECISIONS.md`. Items marked TBD depend on spikes A1
 Item IDs (A1, B2, ...) refer to issues on the GitHub Project board.
 This file is the starting point for F5 (`docs/architecture.md` in S2).
 
-Frontend details (personas, flows, `apps/web` structure): [`frontend/`](frontend/).
+Frontend details (personas, flows, `apps/web` structure, proposed API for patient, physician and admin screens): [`frontend/`](frontend/).
 
 ## 1. Goals and constraints
 
@@ -63,7 +63,7 @@ or frontend. Proposed API is the only component that holds state.
 
 Report schema follows `docs/SCENARIOS.md` §1 (patient, tocc, measurement, chief_complaint, hpi, flags). Changes proposed:
 
-- Every leaf field is `{ value, status, source_span, source }` where `status ∈ 未提及 | AI 草稿 | 護理師已確認` and `source ∈ ai | nurse_edit`.
+- Every leaf field is `{ value, status, source_span, source }` where `status ∈ 未提及 | AI 草稿 | 護理師已確認` and `source ∈ ai | nurse_edit | patient_input` (patient-entered text or voice, proposed 2026-10-28; see `frontend/API_INTERFACE.md`).
 - `triage_level` is **not part of the LLM output schema**. It exists only as a nurse-entered field in the UI, so the model has nowhere to write it.
 - Vitals are taken from nurse dictation, kept separate from patient-reported values (S01: reported 38.4 vs measured 38.5).
 - Dates stored as ISO, displayed in 民國.

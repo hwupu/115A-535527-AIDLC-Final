@@ -9,11 +9,12 @@ Related: [`USER_FLOW.md`](USER_FLOW.md), [`ARCHITECTURE.md`](ARCHITECTURE.md),
 
 Nurse and physician needs come from two CP1 interviews at teaching-hospital EDs. The nurse's "+2–3 min per patient"
 is her own estimate, not measured. The physician was asked about a tool idea, so the framing may be leading.
-**The patient role has no interview evidence.** Everything about the patient is an assumption and is marked 待確認.
+**The patient and admin roles have no interview evidence.** The patient screen scope was set by the team (2026-10-28);
+the patient's needs below are assumptions. The admin role exists for the evaluation study, not for clinical use.
 
 ## Roles on the first screen (demo)
 
-The first screen shows three buttons (病患, 檢傷護理師, 醫師). It is a demo role switch, not a login. Clinical terms stay in
+The first screen shows four buttons (病患, 檢傷護理師, 醫師, 管理者). It is a demo role switch, not a login. Clinical terms stay in
 Traditional Chinese as in the handoff glossary.
 
 ## Personas
@@ -35,17 +36,28 @@ Traditional Chinese as in the handoff glossary.
 - **Context:** in the consultation room; the patient is already in front of them. Reads the report on a desktop or tablet.
 - **Goal:** see an accurate, complete 主訴 and HPI plus vitals immediately, without re-asking TOCC.
 - **Pain today:** 主訴 is only a few words; triage fields still empty when the patient is already in the room; abnormal vitals not flagged.
-- **Needs from the UI:** read-only, scannable report, flags visible, a clear sign of what the nurse confirmed.
+- **Needs from the UI:** pick the patient from a list, read-only scannable report, flags visible, a clear sign of what the nurse confirmed.
 - **Does not want:** to edit nurse data, or to see AI text that looks confirmed when it is not.
 
 ### P-P: 病患 (assumption, 待確認)
 
 - **Who:** an adult ED patient or an accompanying family member (SCENARIOS S04, S07 involve family answering).
-- **Context:** stands or sits at the 檢傷站, possibly unwell, anxious, masked, older, or a Taiwanese-Mandarin mix speaker.
+- **Context:** at or near the 檢傷站, possibly unwell, anxious, masked, older, or a Taiwanese-Mandarin mix speaker.
   Not a power user; may not read small text.
-- **Goal (assumed):** know that they are being recorded and why; be able to say no; check that the information about them is right.
-- **Needs from the UI:** a plain-language notice, a very visible recording state, large text, nothing that looks like medical advice or a triage result.
-- **Open (待確認):** whether a patient-facing screen is in scope for the final demo or only a consent/recording indicator.
+- **Goal (assumed):** tell their story in whichever way is easiest (speaking or typing) and know that it is being recorded.
+- **Screen scope (decided 2026-10-28):** simulated patient code, voice input, text input. Nothing else.
+- **Needs from the UI:** very large text and buttons, a very visible recording state, plain wording, nothing that looks like medical advice or a triage result.
+- **Deferred:** a read-back of the drafted report for the patient to check (not in scope now).
+
+### P-A: 管理者 / 評估人員 (admin, evaluation mode)
+
+- **Who:** a team member running the evaluation sessions with nurses (pilot in Week 13, runs in Week 14).
+- **Context:** sits beside the participant, on a laptop or tablet; needs to run many scenarios consistently and not disturb the nurse.
+- **Goal:** pick a scenario, start a timed run, record what happens (time, edits, errors caught), and export the results.
+- **Pain if missing:** timings and edit counts collected by hand are inconsistent and cannot be audited.
+- **Needs from the UI:** a scenario list with split labels (dev / held-out), start / stop, a live event log, export, and a clear
+  separation so evaluation controls never appear on the nurse's working screen.
+- **Does not want:** to change clinical content, or to see real patient data.
 
 ## User stories
 
@@ -56,7 +68,7 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 | ID | Story |
 |---|---|
 | US-N1 | As a nurse, I want to start and stop listening with one big control so that my hands stay on the patient. |
-| US-N2 | As a nurse, I want to see the transcript appear as we talk so that I can confirm the system heard the right thing. |
+| US-N2 | As a nurse, I want to see the transcript appear as we talk so that I can confirm the system heard the right thing. Anything the patient entered themselves (voice or text) appears labelled as a patient entry. |
 | US-N3 | As a nurse, I want a structured draft (TOCC, 量測禁忌, 主訴, HPI) filled from the conversation so that I do not handwrite and re-key. |
 | US-N4 | As a nurse, I want each field to show whether it is 未提及, AI 草稿 or 護理師已確認 so that I never mistake a draft for fact. |
 | US-N5 | As a nurse, I want to click a field and see the sentence it came from so that I can verify it in seconds. |
@@ -71,7 +83,8 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 | ID | Story |
 |---|---|
-| US-D1 | As a physician, I want to open the confirmed triage report for the current patient so that I do not re-ask what was already asked. |
+| US-D0 | As a physician, I want a list of patients waiting or recently triaged, with status, so that I can pick the right one. |
+| US-D1 | As a physician, I want to open the confirmed triage report for the patient I picked so that I do not re-ask what was already asked. |
 | US-D2 | As a physician, I want 主訴 and HPI with onset, character and associated symptoms, and flagged vitals, so that I can work from a full picture. |
 | US-D3 | As a physician, I want to see what the nurse confirmed and what was edited so that I know how far to trust each field. **Hard rule: read-only.** |
 
@@ -79,16 +92,21 @@ Format: *As a ⟨role⟩, I want ⟨goal⟩ so that ⟨reason⟩.* "Hard rule" l
 
 | ID | Story |
 |---|---|
-| US-P1 | As a patient, I want to be told clearly that the conversation is being recorded and drafted, and to decline, so that I stay in control. |
-| US-P2 | As a patient, I want to see recording is on or off at a glance so that I know when I am being heard. |
-| US-P3 | As a patient, I want to check the information about me and say what is wrong so that the record is correct. **Hard rule: no triage level, diagnosis or advice shown.** |
+| US-P1 | As a patient, I want to enter my patient code so that what I say or type is attached to my own record. **Simulated codes only (for example P-0001); never a real 身分證字號 or 病歷號.** |
+| US-P2 | As a patient, I want to speak my answer with one big button so that I do not have to type when I feel unwell. |
+| US-P3 | As a patient, I want to type my answer instead so that I can use the system in a noisy place or when speaking is hard. |
+| US-P4 | As a patient, I want to see at a glance whether I am being recorded so that I know when I am being heard. **Hard rule: no triage level, diagnosis or advice is ever shown to the patient.** |
 
-### Cross-cutting (evaluation)
+### Admin (evaluation mode)
 
 | ID | Story |
 |---|---|
-| US-E1 | As an evaluator, I want a mode that picks a scenario, times the task and logs edits so that we can measure documentation time and edit burden. |
+| US-A1 | As an admin, I want to pick a scenario (and see whether it is dev or held-out) so that each participant runs the same set. |
+| US-A2 | As an admin, I want to start and stop a timed run so that documentation time is measured the same way every time. |
+| US-A3 | As an admin, I want a live log of events (field edits, errors, level entered) so that I can compute edit burden and error-catch rate. |
+| US-A4 | As an admin, I want to export run results with model, prompt version and Whisper model recorded so that every number is reproducible. |
+| US-A5 | As an admin, I want evaluation controls on their own screen so that they never distract the nurse. |
 
 ## Non-goals for the frontend
 
-No real HIS integration, no real patient data, no login or accounts, no diagnosis or triage suggestions, no native app.
+No real HIS integration, no real patient data, no login or accounts (roles are a demo switch), no diagnosis or triage suggestions, no native app.
