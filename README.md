@@ -86,7 +86,7 @@
 ## 🛠️ 一次性設定
 > 專案骨架已建立，服務目前是 stub（回傳固定假資料）。
 
-1. **安裝：** Git 2.40+、Git LFS 3.x、Node.js **LTS**（`.nvmrc` 是 24；`n` 選用）+ **pnpm**（`corepack enable`）、Python 3.12（`uv` 選用）、Docker（含 compose，沒有也能跑，見下方啟動）、**Claude Code**、GitHub CLI **`gh`**、你慣用的 IDE。
+1. **安裝：** Git 2.40+、Git LFS 3.x、Node.js **LTS**（`.nvmrc` 是 24；`n` 選用）+ **pnpm**（`corepack enable`）、Python 3.12 + **uv**、Docker（含 compose，沒有也能跑，見下方啟動）、**Claude Code**、GitHub CLI **`gh`**、你慣用的 IDE。
 2. **Git LFS：** `brew install git-lfs`（Mac）或 `winget install GitHub.GitLFS`（Windows），然後 `git lfs install`。
 3. **Clone：**
    ```bash
@@ -109,7 +109,7 @@
    # B. 沒有 Docker：直接在本機跑四個服務（Ctrl-C 全部停止）
    pnpm dev:all
    ```
-   - 方式 B 需要 Node 24+ 與 Python 3.12+。版本管理工具**選用**：Node 可用 [`n`](https://github.com/tj/n)（`n auto` 會讀 `.nvmrc`），Python 可用 [`uv`](https://docs.astral.sh/uv/)（有 `uv` 時腳本自動使用並抓 3.12；沒有就用 `python3 -m venv` + pip）。
+   - 方式 B 需要 Node 24+、Python 3.12 與 [`uv`](https://docs.astral.sh/uv/)（Python 套件與版本管理一律用 uv，不用 pip；`uv` 會自動抓 3.12）。Node 版本管理 [`n`](https://github.com/tj/n) 為選用（`n auto` 會讀 `.nvmrc`）。
    - 沒有 corepack 時（Node 25+ 不內建）：`npm i -g pnpm` 即可。
    - 需要 GPU 的部分見 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
 

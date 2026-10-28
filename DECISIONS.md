@@ -104,3 +104,10 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   Owner decides backlog order and acceptance; the AI Scrum Master flags this
   load at each Sprint Planning.
 - Decided by: team
+
+## 2026-10-28 — uv for Python tooling
+- Status: accepted
+- Decision: Python services use `uv` for packages and the Python version (3.12),
+  in Dockerfiles, `scripts/dev.sh` and CI. No pip. `requirements.txt` stays the
+  single dependency list. `n` for Node remains optional.
+- Decided by: 吳普軒
