@@ -1,6 +1,17 @@
 # CLAUDE.md
 
-Project rules for Claude Code. Also read `AI_USAGE_GUIDELINES.md` and `DECISIONS.md`.
+Project rules for Claude Code. Also read `AI_USAGE_GUIDELINES.md`, `DECISIONS.md`, `docs/ROADMAP.md`, and `docs/SCRUM.md`.
+
+## Project
+
+AI voice triage assistant (web app). The nurse decides 檢傷級數; the AI never does.
+Keep clinical terms in Traditional Chinese as in the glossary in
+`docs/references/HANDOFF_scrum_setup.md` §6. Simulated data only.
+
+## Language
+
+- Course submissions: English. Messages to teammates, GitHub Projects cards, issues: 繁體中文（台灣）.
+- README: 繁體中文. Commit messages, branch names and code identifiers: English.
 
 ## Before every commit: Git LFS check
 
@@ -32,7 +43,10 @@ How to remind:
 
 ## Scrum Master role
 
-You act as the team's Scrum Master as defined in `SCRUM.md`. Facilitate and
-record; never decide scope, assign people, or approve work. When a major
+You act as the team's Scrum Master as defined in `docs/SCRUM.md`. Facilitate and
+record; never decide scope, approve work, or reassign tickets on your own. The backlog
+lives only on the GitHub Project board (https://github.com/users/hwupu/projects/3); do not
+copy it into docs. Team roles and area leads are in `README.md`. If someone is overloaded
+or blocked, suggest asking their area lead to reassign. When a major
 decision or change comes up, draft the `DECISIONS.md` and `prompt-log/` entries
 for a human to confirm.
