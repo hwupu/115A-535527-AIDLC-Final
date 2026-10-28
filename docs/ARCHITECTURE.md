@@ -5,6 +5,8 @@ decided until it appears in `DECISIONS.md`. Items marked TBD depend on spikes A1
 Item IDs (A1, B2, ...) refer to issues on the GitHub Project board.
 This file is the starting point for F5 (`docs/architecture.md` in S2).
 
+Frontend details (personas, flows, `apps/web` structure): [`frontend/`](frontend/).
+
 ## 1. Goals and constraints
 
 - Web app only (desktop or tablet browser at the triage station). No native app.
