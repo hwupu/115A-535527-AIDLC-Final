@@ -1,21 +1,8 @@
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
-
-const status = ref("檢查中…");
-
-onMounted(async () => {
-  try {
-    const res = await fetch("/api/health");
-    status.value = res.ok ? "api 連線正常" : `api 回應 ${res.status}`;
-  } catch {
-    status.value = "api 無法連線";
-  }
-});
-</script>
-
 <template>
-  <main>
-    <h1>AI 語音檢傷問診輔助系統</h1>
-    <p>骨架（stub）。{{ status }}</p>
-  </main>
+  <div class="min-h-dvh bg-slate-50 text-slate-900">
+    <div class="bg-amber-100 px-4 py-2 text-center text-sm text-amber-900">
+      示範用途・僅使用模擬資料，請勿輸入真實病患資料
+    </div>
+    <RouterView />
+  </div>
 </template>
