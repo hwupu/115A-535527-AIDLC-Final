@@ -129,3 +129,18 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   in the entry above. Dockerfiles, CI, `scripts/dev.sh` and README change
   together (#57).
 - Decided by: 張棨翔 (backend lead), agreed by 吳普軒 (CI)
+
+## 2026-10-28 — SQLite with SQLAlchemy for the api database
+- Status: accepted
+- Context: the api needs to store sessions, transcript segments, fields,
+  audit events and evaluation runs. At most two sessions run at once. A
+  separate database container would add setup for every member and CI.
+- Decision: a SQLite file inside the api, accessed only through SQLAlchemy;
+  schema changes through Alembic migrations. Connection string in `.env` as
+  `DATABASE_URL`. No raw SQL or SQLite-only features, so moving to
+  PostgreSQL stays a configuration change. Database files are not committed.
+- Consequences: no `db` service in docker-compose; Docker-free dev and CI
+  need no changes. D2 (audit log, 劉順松) adds its tables through the same
+  Alembic setup. If SQLite is not enough, switch to PostgreSQL by the end
+  of S2 (Nov 29), before evaluation data collection (E10) starts.
+- Decided by: 張棨翔 (backend lead), agreed by 吳普軒
