@@ -2,7 +2,7 @@
 - Date: 2026-10-28
 - Author: 張棨翔
 - Tool / model: Claude Code / Opus 5.5
-- PR: (to fill)
+- PR: #67
 
 ## Prompt
 Open a ticket to use uv instead of requirements.txt, update DECISIONS.md, and
