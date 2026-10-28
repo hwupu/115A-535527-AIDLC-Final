@@ -21,6 +21,7 @@ and 0.9.30; `docker compose` dev and demo profiles build and serve web → api,
 stt and llm stubs; `uv run uvicorn` starts each service from a clean state.
 
 ## Outcome
-- Kept: (to fill)
-- Changed: (to fill)
-- Rejected (and why): (to fill)
+- Kept: all generated files and both DECISIONS.md entries.
+- Changed: no file edits; I chose uv projects and SQLite, and 吳普軒 agreed.
+- Rejected (and why): keeping `requirements.txt` (no locked versions);
+  PostgreSQL for now (extra container and setup; can switch by end of S2).
