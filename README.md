@@ -100,7 +100,7 @@
    git config user.email "GitHub 帳號使用的 email"
    ```
 5. **登入：** 執行 `gh auth login`，並啟動 `claude` 依指示登入。
-6. **環境變數：** `cp .env.example .env`（埠號與 compose profile，預設即可用）。**不要 commit `.env`。**
+6. **環境變數：** `cp .env.example .env`（埠號與 compose profile，預設即可用；`VITE_API_MOCK=1` 讓前端用 mock、不需後端）。**不要 commit `.env`。**
 7. **啟動（二選一）：**
    ```bash
    pnpm install
