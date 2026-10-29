@@ -8,15 +8,15 @@ export interface PatientEntry {
   at: string; // ISO time
 }
 
-// 病歷號 is assigned by the system when the session is written to the database, never typed by the
+// 就診號 is assigned by the system when the session is written to the database, never typed by the
 // patient. It is a simulated number (format SIM-######), not a real hospital record number.
-export const MEDICAL_RECORD_NO_PATTERN = /^SIM-\d{6}$/;
+export const VISIT_NO_PATTERN = /^SIM-\d{6}$/;
 
 export const usePatientInputStore = defineStore("patientInput", () => {
   const phase = ref<"intake" | "done">("intake");
   const entries = ref<PatientEntry[]>([]);
   const listening = ref(false);
-  const medicalRecordNo = ref("");
+  const visitNo = ref("");
   let listeningSince = 0;
 
   const canFinish = computed(() => entries.value.length > 0 && !listening.value);
@@ -41,10 +41,10 @@ export const usePatientInputStore = defineStore("patientInput", () => {
     push("voice", `語音輸入（${seconds} 秒）`);
   }
 
-  // TODO(API): replace with POST /sessions/{id}/finish-intake, which returns the 病歷號 from the database.
+  // TODO(API): replace with POST /sessions/{id}/finish-intake, which returns the 就診號 from the database.
   function finish() {
     if (!canFinish.value) return;
-    medicalRecordNo.value = `SIM-${String(Math.floor(Math.random() * 1_000_000)).padStart(6, "0")}`;
+    visitNo.value = `SIM-${String(Math.floor(Math.random() * 1_000_000)).padStart(6, "0")}`;
     phase.value = "done";
   }
 
@@ -52,8 +52,8 @@ export const usePatientInputStore = defineStore("patientInput", () => {
     phase.value = "intake";
     entries.value = [];
     listening.value = false;
-    medicalRecordNo.value = "";
+    visitNo.value = "";
   }
 
-  return { phase, entries, listening, medicalRecordNo, canFinish, addText, toggleListening, finish, reset };
+  return { phase, entries, listening, visitNo, canFinish, addText, toggleListening, finish, reset };
 });

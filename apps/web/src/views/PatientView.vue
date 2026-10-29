@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePatientInputStore } from "@/stores/patientInput";
 
 const store = usePatientInputStore();
-const { phase, entries, listening, medicalRecordNo, canFinish } = storeToRefs(store);
+const { phase, entries, listening, visitNo, canFinish } = storeToRefs(store);
 
 const textDraft = ref("");
 
@@ -24,15 +24,15 @@ function send() {
 <template>
   <RoleHeader role="patient" />
 
-  <!-- Ending screen: the 病歷號 is shown only after the session is written. -->
+  <!-- Ending screen: the 就診號 is shown only after the session is written. -->
   <main v-if="phase === 'done'" class="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-14 text-center">
     <Check class="size-16 rounded-full bg-success p-3 text-success-foreground" aria-hidden="true" />
     <h2 class="text-3xl font-bold">謝謝您，已完成</h2>
-    <p class="text-xl text-muted-foreground">請將下方病歷號告訴護理師。</p>
-    <p class="rounded-2xl border-2 border-primary bg-card px-10 py-6 text-5xl font-bold tracking-wider text-primary" role="status" aria-label="病歷號">
-      {{ medicalRecordNo }}
+    <p class="text-xl text-muted-foreground">請將下方就診號告訴護理師。</p>
+    <p class="rounded-2xl border-2 border-primary bg-card px-10 py-6 text-5xl font-bold tracking-wider text-primary" role="status" aria-label="就診號">
+      {{ visitNo }}
     </p>
-    <p class="text-lg text-muted-foreground">病歷號</p>
+    <p class="text-lg text-muted-foreground">就診號</p>
     <Button size="lg" variant="outline" @click="store.reset()">下一位</Button>
   </main>
 
@@ -80,7 +80,7 @@ function send() {
     </Card>
 
     <div class="md:col-span-2">
-      <Button size="lg" class="h-20 w-full text-2xl" :disabled="!canFinish" @click="store.finish()">完成，取得病歷號</Button>
+      <Button size="lg" class="h-20 w-full text-2xl" :disabled="!canFinish" @click="store.finish()">完成，取得就診號</Button>
       <p v-if="listening" class="mt-2 text-center text-lg text-muted-foreground">請先停止錄音。</p>
     </div>
   </main>
