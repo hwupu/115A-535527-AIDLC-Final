@@ -7,6 +7,8 @@ import tailwindcss from "@tailwindcss/vite";
 const apiTarget = process.env.API_URL ?? "http://localhost:8000";
 
 export default defineConfig({
+  // VITE_* variables come from the repo-root .env (shared with docker compose).
+  envDir: fileURLToPath(new URL("../..", import.meta.url)),
   plugins: [vue(), tailwindcss()],
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   server: { port: 5173, proxy: { "/api": { target: apiTarget, rewrite: (p) => p.replace(/^\/api/, "") } } },

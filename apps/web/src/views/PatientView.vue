@@ -11,13 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePatientInputStore } from "@/stores/patientInput";
 
 const store = usePatientInputStore();
-const { phase, entries, listening, visitNo, canFinish } = storeToRefs(store);
+const { phase, entries, listening, visitNo, canFinish, busy, error } = storeToRefs(store);
 
 const textDraft = ref("");
 
-function send() {
-  store.addText(textDraft.value);
-  textDraft.value = "";
+async function send() {
+  if (await store.addText(textDraft.value)) textDraft.value = "";
 }
 </script>
 
@@ -61,7 +60,7 @@ function send() {
       <CardContent class="grid gap-4">
         <Label for="patient-text" class="sr-only">文字輸入</Label>
         <Textarea id="patient-text" v-model="textDraft" placeholder="例如：從昨天開始發燒、咳嗽" />
-        <Button size="lg" :disabled="!textDraft.trim()" @click="send">
+        <Button size="lg" :disabled="!textDraft.trim() || busy" @click="send">
           <Send aria-hidden="true" />
           送出
         </Button>
@@ -82,6 +81,7 @@ function send() {
     <div class="md:col-span-2">
       <Button size="lg" class="h-20 w-full text-2xl" :disabled="!canFinish" @click="store.finish()">完成，取得就診號</Button>
       <p v-if="listening" class="mt-2 text-center text-lg text-muted-foreground">請先停止錄音。</p>
+      <p v-if="error" class="mt-2 text-center text-lg font-semibold text-destructive" role="alert">{{ error }}</p>
     </div>
   </main>
 </template>
