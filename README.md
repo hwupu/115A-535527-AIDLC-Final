@@ -110,6 +110,7 @@
    pnpm dev:all
    ```
    - 方式 B 需要 Node 24+、Python 3.12 與 [`uv`](https://docs.astral.sh/uv/)（Python 套件與版本管理一律用 uv，不用 pip；`uv` 會自動抓 3.12）。Node 版本管理 [`n`](https://github.com/tj/n) 為選用（`n auto` 會讀 `.nvmrc`）。
+   - Python 服務（`services/api`、`stt`、`llm`）各自是一個 uv 專案（`pyproject.toml` + `uv.lock`）。在該服務目錄下：`uv sync` 建環境、`uv run pytest` 跑測試、`uv add <套件>`（開發工具用 `uv add --dev`）新增套件，並一起 commit `uv.lock`。
    - 沒有 corepack 時（Node 25+ 不內建）：`npm i -g pnpm` 即可。
    - 需要 GPU 的部分見 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
 
