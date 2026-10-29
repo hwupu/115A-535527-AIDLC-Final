@@ -34,8 +34,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: uv run --python 3.12 --with ruff ruff check .
-      - run: uv run --python 3.12 --with-requirements requirements-dev.txt pytest -q
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run pytest -q
 
   docker-build:
     runs-on: ubuntu-latest

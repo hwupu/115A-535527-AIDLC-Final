@@ -106,8 +106,41 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
 - Decided by: team
 
 ## 2026-10-28 — uv for Python tooling
-- Status: accepted
+- Status: accepted; the `requirements.txt` part is superseded by
+  "uv projects instead of requirements.txt" below
 - Decision: Python services use `uv` for packages and the Python version (3.12),
   in Dockerfiles, `scripts/dev.sh` and CI. No pip. `requirements.txt` stays the
   single dependency list. `n` for Node remains optional.
 - Decided by: 吳普軒
+
+## 2026-10-28 — uv projects instead of requirements.txt
+- Status: accepted
+- Context: `requirements.txt` uses `>=` ranges, so local, CI and Docker can
+  install different versions. uv can lock exact versions.
+- Decision: each Python service (`api`, `stt`, `llm`) is its own uv project
+  with `pyproject.toml` and `uv.lock`; dev tools go in `[dependency-groups]`.
+  `requirements*.txt` files are removed. Add packages with `uv add`. Docker
+  uses `uv sync --frozen --no-dev`; CI uses `uv sync --locked`, which fails
+  if `uv.lock` was not updated after `pyproject.toml` changed. No uv
+  workspace: stt (Whisper) and llm (Gemma runtime) may need different
+  versions of shared packages such as PyTorch, and each service must stay
+  swappable on its own.
+- Consequences: replaces "requirements.txt stays the single dependency list"
+  in the entry above. Dockerfiles, CI, `scripts/dev.sh` and README change
+  together (#57).
+- Decided by: 張棨翔 (backend lead), agreed by 吳普軒 (CI)
+
+## 2026-10-28 — SQLite with SQLAlchemy for the api database
+- Status: accepted
+- Context: the api needs to store sessions, transcript segments, fields,
+  audit events and evaluation runs. At most two sessions run at once. A
+  separate database container would add setup for every member and CI.
+- Decision: a SQLite file inside the api, accessed only through SQLAlchemy;
+  schema changes through Alembic migrations. Connection string in `.env` as
+  `DATABASE_URL`. No raw SQL or SQLite-only features, so moving to
+  PostgreSQL stays a configuration change. Database files are not committed.
+- Consequences: no `db` service in docker-compose; Docker-free dev and CI
+  need no changes. D2 (audit log, 劉順松) adds its tables through the same
+  Alembic setup. If SQLite is not enough, switch to PostgreSQL by the end
+  of S2 (Nov 29), before evaluation data collection (E10) starts.
+- Decided by: 張棨翔 (backend lead), agreed by 吳普軒
