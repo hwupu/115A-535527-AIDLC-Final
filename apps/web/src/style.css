@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn-vue/tailwind.css";
+
+/* System fonts only (no web-font download: the demo must work offline). */
+@theme inline {
+  --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@custom-variant dark (&:is(.dark *)); /* no dark theme: keep dark: utilities inert */
+
+/* Single light theme, high contrast (text >= 7:1 on its background). */
+:root {
+  --background: oklch(0.985 0.003 250);
+  --foreground: oklch(0.15 0.02 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 255);
+  --primary: oklch(0.38 0.14 258);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.93 0.015 250);
+  --secondary-foreground: oklch(0.2 0.03 255);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.38 0.03 255);
+  --accent: oklch(0.92 0.03 250);
+  --accent-foreground: oklch(0.2 0.05 258);
+  --destructive: oklch(0.45 0.2 27);
+  --warning: oklch(0.95 0.08 90);
+  --warning-foreground: oklch(0.3 0.07 60);
+  --success: oklch(0.93 0.07 155);
+  --success-foreground: oklch(0.28 0.08 155);
+  --border: oklch(0.7 0.02 255);
+  --input: oklch(0.55 0.03 255);
+  --ring: oklch(0.38 0.14 258);
+  --radius: 0.75rem;
+}
+
+/* Larger text by default: 18px base, 20px on tablets and up. Components use rem. */
+html {
+  font-size: 112.5%;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 125%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    line-height: 1.6;
+  }
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

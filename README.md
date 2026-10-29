@@ -57,6 +57,7 @@
 |---|---|
 | 進度與時程 | [`docs/ROADMAP.md`](docs/ROADMAP.md) |
 | 系統架構（提案） | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| 前端：角色與使用者故事、流程、架構（提案） | [`docs/frontend/`](docs/frontend/) |
 | Scrum 角色與流程 | [`docs/SCRUM.md`](docs/SCRUM.md) |
 | 決策紀錄（含目前 code steward） | [`DECISIONS.md`](DECISIONS.md) |
 | AI 使用規則 | [`AI_USAGE_GUIDELINES.md`](AI_USAGE_GUIDELINES.md)、[`CLAUDE.md`](CLAUDE.md) |
@@ -131,7 +132,7 @@ git push -u origin HEAD               # 開 PR 並連結 issue
 
 ## 📁 Repo 結構
 ```
-apps/web/         前端（Vue 3 + Vite + TS；Tailwind、shadcn-vue 之後加）
+apps/web/         前端（Vue 3 + Vite + TS + Tailwind；shadcn-vue 待確認）
 services/api/     Session API、驗證、稽核紀錄（目前 stub）
 services/stt/     Whisper 語音轉文字（目前 stub，POST /transcribe）
 services/llm/     Gemma-4 欄位擷取（目前 stub，POST /extract）

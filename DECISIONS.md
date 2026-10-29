@@ -144,3 +144,29 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   Alembic setup. If SQLite is not enough, switch to PostgreSQL by the end
   of S2 (Nov 29), before evaluation data collection (E10) starts.
 - Decided by: 張棨翔 (backend lead), agreed by 吳普軒
+
+## 2026-10-28 — Frontend choices: shadcn-vue, Pinia, readable UI, roles
+- Status: accepted. Items marked (PO) were confirmed by 張棨翔 on 2026-10-29
+- Decision: adopt shadcn-vue and Pinia. Default text is large (18 px base, 20 px on tablets) with a high-contrast light
+  theme. The first screen has four demo roles: 病患, 檢傷護理師, 醫師, 管理者 (admin, evaluation mode). Patient screen:
+  voice input, text input, then an ending screen with the 就診號 (PO; amended below). Physician picks the patient from a list (PO). Admin persona owns
+  evaluation mode, separate from the nurse screen (PO).
+- Consequences: the patient adds a new input source (`patient_input`) and the api gains list and evaluation endpoints;
+  proposed in `docs/frontend/API_INTERFACE.md`; direction approved by the PO and backend lead (details in D1/D5).
+  Patient read-back is deferred and, when built, only repeats the patient's own words (no draft, flags or level).
+- Decided by: 吳普軒 (frontend lead); confirmed by PO 張棨翔 (2026-10-29)
+
+## 2026-10-28 — No personal information; visits identified by a simulated 就診號
+- Status: accepted; confirmed by the PO 張棨翔 (2026-10-29)
+- Context: school project, so no personal information is collected. The patient does not know an ID before anything is written to
+  the database.
+- Decision: the patient screen no longer asks for a code. The patient speaks or types, taps 完成, and the ending screen shows
+  the **就診號** assigned by the system (simulated, format `SIM-######`, never a real hospital number). Nurses and physicians
+  identify patients by 就診號. This supersedes the "simulated patient code" part of the entry above.
+- Terminology (PO, 2026-10-29): what the patient receives is the **就診號** (visit number, generated per visit), not the 病歷號
+  (the patient's permanent record number). The prototype does not handle 病歷號 because there is no HIS integration.
+  The api field is `visit_no`.
+- Consequences: backend allocates the number at `finish-intake` (or at nurse-created sessions) and purges unfinished intakes;
+  see `docs/frontend/API_INTERFACE.md`. No name, 身分證字號 or phone is stored anywhere. The app has no login, so
+  access control is needed before exposing it on an HTTPS domain.
+- Decided by: 吳普軒 (frontend lead); PO 張棨翔 confirmed
