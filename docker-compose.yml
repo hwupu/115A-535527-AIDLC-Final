@@ -7,15 +7,21 @@ services:
     build: { context: ., dockerfile: apps/web/Dockerfile }
     ports: ["${WEB_PORT:-5173}:5173"]
     volumes: ["./apps/web/src:/repo/apps/web/src"]
-    depends_on: [api]
+    depends_on: { api: { condition: service_healthy } }
   web-demo:
     profiles: [demo]
     build: { context: ., dockerfile: apps/web/Dockerfile.demo }
     ports: ["${WEB_PORT:-5173}:80"]
-    depends_on: [api]
+    depends_on: { api: { condition: service_healthy } }
   api:
     build: services/api
     ports: ["${API_PORT:-8000}:8000"]
+    # Web waits for this so the first /api request doesn't hit a 502 while uvicorn starts.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
   stt:
     build: services/stt
     ports: ["${STT_PORT:-8001}:8000"]
