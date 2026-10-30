@@ -64,7 +64,7 @@ apps/web/src/
     PatientView.vue          (in place; UI only)
     NurseView.vue            (in place)
     DoctorListView.vue, DoctorReportView.vue   (in place)
-    AdminView.vue            later (evaluation mode)
+    AdminView.vue            (in place)
   components/
     ui/                      shadcn-vue components (generated)
     recorder/                mic button, level meter, connection status
@@ -75,7 +75,7 @@ apps/web/src/
     useSession.ts            session lifecycle, WebSocket, reconnect
     useRecorder.ts           MediaRecorder / getUserMedia
     useReport.ts             field edits, confirm, audit events sent to api
-  stores/                    Pinia: patientInput, nurseSession, doctor (in place), adminRun (later)
+  stores/                    Pinia: patientInput, nurseSession, doctor, adminRun (in place)
   api/                       types, client interface, http client, mock (VITE_API_MOCK=1)
   i18n/                      zh-TW strings (single locale for now)
 ```
@@ -107,8 +107,12 @@ Each report field is `{ value, status, source_span, source }` (backend doc §4).
   fields (empty ones folded under "未提及的項目"). Fields the nurse changed carry a 「護理師修改」 tag; AI-derived fields show their source
   sentence. Before the nurse saves, the page says 「尚未確認」 and keeps checking every 4 s until the report appears. No inputs exist on these
   screens and the `doctor` store has no write path. Files: `views/Doctor*View.vue`, `components/doctor/`, `stores/doctor.ts`.
-- **Admin (`/admin`):** scenario list with dev or held-out label, participant code, start and stop timer, live event log, export.
-  Reachable only from the role screen; evaluation controls never appear on the nurse screen.
+- **Admin (`/admin`):** evaluation mode, as built and mock-backed. Pick one of the 11 scenarios (labelled 開發 / 留存 and 展示), enter an anonymous
+  participant code (`N-##`, never a name), 建立執行 creates a run and a nurse session whose 就診號 the participant opens on the nurse screen
+  (or 在護理師畫面開啟 on the same device). 開始計時 / 結束 drive the timer (server clock). The event log updates every 2 s: the nurse's field
+  edits, direct confirmations and level entry are recorded automatically while the run is running; the admin adds 「護理師發現系統錯誤」 and
+  notes. Each run exports as JSON (with `model`, `prompt_version`, `whisper_model`, `git_commit`) or CSV. Past runs are listed on the first
+  screen. Files: `views/AdminView.vue`, `components/admin/RunTimer.vue`, `stores/adminRun.ts`. The admin screen never changes report content.
 
 ## 6. Nurse workflow (as built, mock-backed)
 

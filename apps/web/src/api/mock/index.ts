@@ -1,8 +1,8 @@
 import { emptyFields } from "@/report/schema";
 import type { ApiClient, RealtimeConnection, RealtimeHandlers } from "../client";
 import { ApiError } from "../types";
-import type { Role, ServerMessage, Session, SessionSummary } from "../types";
-import { mockScript } from "./fixtures";
+import type { Role, Run, RunEvent, RunEventType, ServerMessage, Session, SessionSummary } from "../types";
+import { mockScenarios, mockScript } from "./fixtures";
 import { seedDialysis, seedFever, seedWaiting } from "./seed";
 
 // In-memory stand-in for the api, enabled with VITE_API_MOCK=1. State resets on page reload.
@@ -16,6 +16,10 @@ type MockSession = Session & { started_at: string; listeners: Set<Listener>; scr
 const MIN = 60_000;
 
 const sessions = new Map<string, MockSession>();
+const runs = new Map<string, Run>();
+const runEvents = new Map<string, RunEvent[]>();
+const runBySession = new Map<string, string>();
+let nextRun = 1;
 let nextSession = 1;
 let nextVisitNo = 1;
 
@@ -50,6 +54,20 @@ function seed() {
     segments: [{ segment_id: "w1", speaker: "patient", text: seedWaiting.text, start: 0, end: 0, final: true, source: "patient_input" }],
   });
 }
+
+// While a run is started and not finished, what the nurse does in its session is logged automatically
+// (the real api derives these from the audit log, docs/frontend/API_INTERFACE.md §4).
+function logRunEvent(sessionId: string, type: RunEventType, payload?: Record<string, unknown>) {
+  const runId = runBySession.get(sessionId);
+  const run = runId ? runs.get(runId) : undefined;
+  if (!runId || !run?.started_at || run.finished_at) return;
+  runEvents.get(runId)!.push({ at: new Date().toISOString(), type, payload });
+}
+const getRun = (id: string) => {
+  const r = runs.get(id);
+  if (!r) throw new ApiError(404, "run_not_found", "找不到這個評估執行");
+  return r;
+};
 
 const delay = <T>(value: T) => new Promise<T>((resolve) => setTimeout(() => resolve(value), 150));
 
@@ -163,6 +181,67 @@ export const mockClient: ApiClient = {
     return delay(structuredClone(session));
   },
 
+  async listScenarios() {
+    return delay(mockScenarios.map((x) => ({ ...x })));
+  },
+
+  async createRun({ scenario_id, participant_code }) {
+    if (!mockScenarios.some((x) => x.id === scenario_id)) throw new ApiError(404, "scenario_not_found", "找不到這個情境");
+    const session = await mockClient.createSession("nurse"); // the participant works in a nurse session
+    const run: Run = {
+      run_id: `run-${nextRun++}`, scenario_id, participant_code, session_id: session.session_id,
+      visit_no: session.visit_no, created_at: new Date().toISOString(),
+    };
+    runs.set(run.run_id, run);
+    runEvents.set(run.run_id, []);
+    runBySession.set(run.session_id, run.run_id);
+    return delay({ ...run });
+  },
+
+  async startRun(runId) {
+    const r = getRun(runId);
+    if (r.started_at) throw new ApiError(409, "run_already_started", "這個執行已經開始");
+    r.started_at = new Date().toISOString();
+    runEvents.get(runId)!.push({ at: r.started_at, type: "task_start" });
+    return delay({ ...r });
+  },
+
+  async finishRun(runId) {
+    const r = getRun(runId);
+    if (!r.started_at || r.finished_at) throw new ApiError(409, "run_not_running", "這個執行沒有在進行");
+    r.finished_at = new Date().toISOString();
+    runEvents.get(runId)!.push({ at: r.finished_at, type: "task_end" });
+    return delay({ ...r });
+  },
+
+  async listRuns() {
+    return delay([...runs.values()].reverse().map((r) => ({ ...r })));
+  },
+
+  async listRunEvents(runId) {
+    getRun(runId);
+    return delay(structuredClone(runEvents.get(runId)!));
+  },
+
+  async addRunEvent(runId, body) {
+    getRun(runId);
+    const event: RunEvent = { at: new Date().toISOString(), type: body.type, payload: body.payload };
+    runEvents.get(runId)!.push(event);
+    return delay({ ...event });
+  },
+
+  async exportRun(runId, format) {
+    const run = getRun(runId);
+    const events = runEvents.get(runId)!;
+    if (format === "csv") {
+      const esc = (v: string) => `"${v.replaceAll('"', '""')}"`;
+      return delay(["run_id,scenario_id,participant_code,at,type,payload", ...events.map((e) =>
+        [run.run_id, run.scenario_id, run.participant_code, e.at, e.type, esc(JSON.stringify(e.payload ?? {}))].join(","))].join("\n"));
+    }
+    // The real api adds the actual model, prompt version, Whisper model and git commit (backend doc §4, `runs` table).
+    return delay(JSON.stringify({ run, events, model: "mock", prompt_version: "mock", whisper_model: "mock", git_commit: "mock" }, null, 2));
+  },
+
   async getReport(sessionId) {
     const s = get(sessionId);
     if (s.status !== "confirmed" || !s.triage_level || !s.confirmed_at || !s.visit_no) {
@@ -182,6 +261,12 @@ export const mockClient: ApiClient = {
     const s = get(sessionId);
     const current = s.fields[path];
     if (!current) throw new ApiError(404, "field_not_found", `沒有這個欄位：${path}`);
+    logRunEvent(sessionId, "field_edit", {
+      path,
+      kind: "confirm" in change ? "confirm" : "edit",
+      ai_value: current.source === "ai" ? current.value : null,
+      new_value: "confirm" in change ? current.value : change.value,
+    });
     s.fields[path] =
       "confirm" in change
         ? { ...current, status: "護理師已確認" }
@@ -196,6 +281,7 @@ export const mockClient: ApiClient = {
     }
     s.status = "confirmed";
     s.triage_level = body.triage_level;
+    logRunEvent(sessionId, "level_entered", { triage_level: body.triage_level });
     s.confirmed_at = new Date().toISOString();
     return delay({ confirmed_at: s.confirmed_at });
   },

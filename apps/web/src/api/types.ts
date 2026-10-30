@@ -73,6 +73,33 @@ export interface SessionSummary {
   has_flags: boolean;
 }
 
+// Evaluation mode (admin). Participant codes are anonymous (for example N-01), never names.
+export interface Scenario {
+  id: string;
+  title: string;
+  split: "dev" | "held_out";
+  demo: boolean;
+}
+
+export type RunEventType = "task_start" | "task_end" | "field_edit" | "level_entered" | "error_found" | "note";
+
+export interface RunEvent {
+  at: string; // ISO time on the server clock
+  type: RunEventType;
+  payload?: Record<string, unknown>;
+}
+
+export interface Run {
+  run_id: string;
+  scenario_id: string;
+  participant_code: string;
+  session_id: string;
+  visit_no: string | null;
+  created_at: string;
+  started_at?: string;
+  finished_at?: string;
+}
+
 export type Role = "patient" | "nurse";
 
 // WebSocket messages
