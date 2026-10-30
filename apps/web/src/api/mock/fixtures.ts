@@ -49,3 +49,18 @@ export const mockScript: ScriptStep[] = [
   { delayMs: 10900, message: seg("m9", "patient", "我拿拐杖還可以，但是今天喘，給我輪椅好了。", 24) },
   { delayMs: 11300, nurseOnly: true, message: draft("patient.mobility", "輪椅", "給我輪椅好了") },
 ];
+
+// Scenario list for evaluation mode (docs/SCENARIOS.md §2). Splits and demo flags follow that table.
+export const mockScenarios = [
+  { id: "S01", title: "流感樣症狀", split: "dev", demo: true },
+  { id: "S02", title: "旅遊後腹痛腹瀉", split: "held_out", demo: false },
+  { id: "S03", title: "洗腎病人喘、腳腫", split: "dev", demo: true },
+  { id: "S04", title: "長者胸悶 + 家屬陪同", split: "dev", demo: true },
+  { id: "S05", title: "描述不清、資訊不足", split: "dev", demo: false },
+  { id: "S06", title: "台語夾雜國語", split: "held_out", demo: false },
+  { id: "S07", title: "幼兒發燒、母親代答", split: "dev", demo: false },
+  { id: "S08", title: "生命徵象口述與更正", split: "held_out", demo: false },
+  { id: "S09", title: "嘈雜環境與打斷", split: "held_out", demo: false },
+  { id: "S10", title: "中途更正答案", split: "held_out", demo: false },
+  { id: "S11", title: "機車外傷、手腕疼痛", split: "held_out", demo: false },
+] as const;

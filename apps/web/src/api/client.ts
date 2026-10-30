@@ -2,6 +2,10 @@ import { ApiError } from "./types";
 import type {
   ClientMessage,
   ConfirmedReport,
+  Run,
+  RunEvent,
+  RunEventType,
+  Scenario,
   Field,
   FieldValue,
   Role,
@@ -24,7 +28,7 @@ export interface RealtimeHandlers {
 }
 
 // The one interface the UI depends on. `http.ts` talks to the real api; `mock/` is an in-memory stand-in.
-export interface ApiClient {
+export interface ApiClient extends EvaluationApi {
   createSession(createdBy: Role): Promise<{ session_id: string; status: SessionStatus; visit_no: string | null }>;
   addTextInput(sessionId: string, text: string, as: Role): Promise<{ input_id: string }>;
   finishIntake(sessionId: string): Promise<{ visit_no: string }>;
@@ -39,6 +43,18 @@ export interface ApiClient {
   /** Save the report. `triage_level` is the nurse's own entry. Fails with 409 `drafts_unconfirmed` while any AI 草稿 remains. */
   confirmSession(sessionId: string, body: { triage_level: TriageLevel }): Promise<{ confirmed_at: string }>;
   connect(sessionId: string, role: Role, handlers: RealtimeHandlers): RealtimeConnection;
+}
+
+/** Evaluation mode. The real api returns 404 for all of these when EVAL_MODE is off. */
+export interface EvaluationApi {
+  listScenarios(): Promise<Scenario[]>;
+  createRun(body: { scenario_id: string; participant_code: string }): Promise<Run>;
+  startRun(runId: string): Promise<Run>;
+  finishRun(runId: string): Promise<Run>;
+  listRuns(): Promise<Run[]>;
+  listRunEvents(runId: string): Promise<RunEvent[]>;
+  addRunEvent(runId: string, body: { type: RunEventType; payload?: Record<string, unknown> }): Promise<RunEvent>;
+  exportRun(runId: string, format: "json" | "csv"): Promise<string>;
 }
 
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {
