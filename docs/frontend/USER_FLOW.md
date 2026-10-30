@@ -50,8 +50,9 @@ Rules:
 
 ```mermaid
 flowchart TD
-    S[Nurse view] --> NS[Open the patient by the 就診號 they read out, or pick from the 'ready' list; or start a new session]
-    NS --> C{Patient consents?}
+    S[Nurse view] --> NS[Open the patient by the 就診號 they read out, or pick from the list; or start a new session]
+    NS --> CL[Claim: ready becomes in_progress]
+    CL --> C{Patient consents?}
     C -->|No| X[Do not record; type into the form manually]
     C -->|Yes| R[Start listening]
     R --> T[Live transcript: nurse speech, patient speech, patient self-entries labelled]
@@ -59,8 +60,11 @@ flowchart TD
     V --> DR[Draft report: fields marked AI 草稿 / 未提及, each with source sentence]
     DR --> RV[Nurse reviews fields: tap field to see source, edit if wrong]
     RV --> LV[Nurse enters 檢傷級數 herself]
-    LV --> CF[Confirm: fields become 護理師已確認]
-    CF --> OUT[Copy or print for HIS; report appears in the physician list]
+    LV --> CF{確認並儲存: any AI 草稿 left or no level?}
+    CF -->|Yes| BL[List what is missing; jump to it]
+    BL --> RV
+    CF -->|No| SV[Report saved; read-only]
+    SV --> OUT[Copy or print for HIS; report appears in the physician list]
     X --> LV
     OUT --> END[End session]
 ```

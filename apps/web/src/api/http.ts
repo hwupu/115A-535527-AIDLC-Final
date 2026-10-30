@@ -20,6 +20,14 @@ export const httpClient: ApiClient = {
 
   getSession: (sessionId) => request(`/sessions/${sessionId}`),
 
+  claimSession: (sessionId) => request(`/sessions/${sessionId}/claim`, { method: "POST" }),
+
+  patchField: (sessionId, path, change) =>
+    request(`/sessions/${sessionId}/fields`, { method: "PATCH", body: JSON.stringify({ path, ...change }) }),
+
+  confirmSession: (sessionId, body) =>
+    request(`/sessions/${sessionId}/confirm`, { method: "POST", body: JSON.stringify(body) }),
+
   connect(sessionId: string, role: Role, handlers: RealtimeHandlers): RealtimeConnection {
     const scheme = location.protocol === "https:" ? "wss" : "ws";
     const ws = new WebSocket(`${scheme}://${location.host}/api/sessions/${sessionId}/ws?role=${role}`);
