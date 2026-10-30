@@ -12,7 +12,7 @@ import { seedDialysis, seedFever, seedWaiting } from "./seed";
 //  - an unfinished intake has no 就診號 and is not listed;
 //  - a session cannot be confirmed while any AI 草稿 remains.
 type Listener = { role: Role; handlers: RealtimeHandlers };
-type MockSession = Session & { started_at: string; listeners: Set<Listener>; scriptStarted: boolean };
+type MockSession = Session & { started_at: string; listeners: Set<Listener>; scriptStarted: Set<Role> };
 const MIN = 60_000;
 
 const sessions = new Map<string, MockSession>();
@@ -32,7 +32,7 @@ function seed() {
     const { minutesAgo, ...rest } = over;
     const s: MockSession = {
       session_id: id, status: "ready", visit_no: allocateVisitNo(), segments: [], fields: emptyFields(), flags: [],
-      started_at: new Date(Date.now() - minutesAgo * MIN).toISOString(), listeners: new Set(), scriptStarted: true, ...rest,
+      started_at: new Date(Date.now() - minutesAgo * MIN).toISOString(), listeners: new Set(), scriptStarted: new Set<Role>(["nurse", "patient"]), ...rest,
     };
     sessions.set(id, s);
     return s;
@@ -80,10 +80,21 @@ function runStep(s: MockSession, message: ServerMessage, nurseOnly: boolean) {
   broadcast(s, message, nurseOnly);
 }
 
-function startScript(s: MockSession) {
-  if (s.scriptStarted) return;
-  s.scriptStarted = true;
-  for (const step of mockScript) setTimeout(() => runStep(s, step.message, !!step.nurseOnly), step.delayMs);
+// Stands in for audio being transcribed. A patient recording yields only the patient's own lines (tagged as patient input),
+// never the nurse's lines and never drafts.
+function startScript(s: MockSession, role: Role) {
+  if (s.scriptStarted.has(role)) return;
+  s.scriptStarted.add(role);
+  for (const step of mockScript) {
+    const m = step.message;
+    if (role === "patient") {
+      if (m.type !== "transcript.segment" || m.speaker !== "patient") continue;
+      const own: ServerMessage = { ...m, segment_id: `p-${m.segment_id}`, source: "patient_input" };
+      setTimeout(() => runStep(s, own, false), step.delayMs);
+    } else {
+      setTimeout(() => runStep(s, m, !!step.nurseOnly), step.delayMs);
+    }
+  }
 }
 
 seed();
@@ -101,7 +112,7 @@ export const mockClient: ApiClient = {
       flags: [],
       started_at: new Date().toISOString(),
       listeners: new Set(),
-      scriptStarted: false,
+      scriptStarted: new Set(),
     });
     const s = get(id);
     return delay({ session_id: id, status: s.status, visit_no: s.visit_no });
@@ -198,7 +209,7 @@ export const mockClient: ApiClient = {
       send(message) {
         if (message.type === "recording.start") {
           broadcast(s, { type: "recording.state", recording: true, by: role });
-          startScript(s); // stands in for audio being transcribed
+          startScript(s, role);
         }
         if (message.type === "recording.stop") broadcast(s, { type: "recording.state", recording: false, by: role });
       },
