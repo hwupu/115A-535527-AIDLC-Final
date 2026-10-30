@@ -170,3 +170,16 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   see `docs/frontend/API_INTERFACE.md`. No name, 身分證字號 or phone is stored anywhere. The app has no login, so
   access control is needed before exposing it on an HTTPS domain.
 - Decided by: 吳普軒 (frontend lead); PO 張棨翔 confirmed
+
+## 2026-10-30 — Nurse workflow built as one PR behind contracts
+- Status: accepted by the frontend lead; backend items proposed to 張棨翔 (see tickets D1, D5, B4, B8)
+- Context: the nurse path touches tickets owned by several people. Reviewing it in one PR keeps the context together, and
+  placeholders behind fixed contracts let the other owners replace their parts without blocking the workflow.
+- Decision: implement the whole nurse workflow against the mock api (open by 就診號 or list, consent, recorder, transcript,
+  editable draft, 量測禁忌 and flags, nurse-entered 檢傷級數, confirm gate, copy/print). Report fields are a flat path map
+  (`apps/web/src/report/schema.ts`). No "confirm all" button: drafts are confirmed one by one. The server (not only the UI) must
+  refuse to save while any AI 草稿 remains and must never overwrite a nurse-edited field with an AI update. Vitest and happy-dom are
+  adopted and run in CI.
+- Consequences: new api surface proposed in `docs/frontend/API_INTERFACE.md` (`claim`, `PATCH` with `confirm`, `flags.update`,
+  409 `drafts_unconfirmed`). Whether nurses accept confirming one by one is a pilot question (E9).
+- Decided by: 吳普軒 (frontend lead)
