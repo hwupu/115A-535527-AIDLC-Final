@@ -7,10 +7,13 @@ services:
     build: { context: ., dockerfile: apps/web/Dockerfile }
     ports: ["${WEB_PORT:-5173}:5173"]
     volumes: ["./apps/web/src:/repo/apps/web/src"]
+    environment:
+      VITE_API_MOCK: ${VITE_API_MOCK:-0}
     depends_on: { api: { condition: service_healthy } }
   web-demo:
     profiles: [demo]
-    build: { context: ., dockerfile: apps/web/Dockerfile.demo }
+    # VITE_* values are baked in at build time, so the mock flag is passed as a build arg.
+    build: { context: ., dockerfile: apps/web/Dockerfile.demo, args: { VITE_API_MOCK: "${VITE_API_MOCK:-0}" } }
     ports: ["${WEB_PORT:-5173}:80"]
     depends_on: { api: { condition: service_healthy } }
   api:
