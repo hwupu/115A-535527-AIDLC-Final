@@ -63,7 +63,7 @@ apps/web/src/
     RoleSelectView.vue
     PatientView.vue          (in place; UI only)
     NurseView.vue            (in place)
-    DoctorView.vue           later (list + report)
+    DoctorListView.vue, DoctorReportView.vue   (in place)
     AdminView.vue            later (evaluation mode)
   components/
     ui/                      shadcn-vue components (generated)
@@ -75,7 +75,7 @@ apps/web/src/
     useSession.ts            session lifecycle, WebSocket, reconnect
     useRecorder.ts           MediaRecorder / getUserMedia
     useReport.ts             field edits, confirm, audit events sent to api
-  stores/                    Pinia: patientInput (in place), session, report, adminRun
+  stores/                    Pinia: patientInput, nurseSession, doctor (in place), adminRun (later)
   api/                       types, client interface, http client, mock (VITE_API_MOCK=1)
   i18n/                      zh-TW strings (single locale for now)
 ```
@@ -99,8 +99,14 @@ Each report field is `{ value, status, source_span, source }` (backend doc §4).
   **就診號** (`SIM-######`) in very large type and a 下一位 button that clears the screen. State lives in the `patientInput` store
   (`phase: intake | done`). **Today it is UI only:** the store generates a placeholder 就診號 locally; it will be replaced by the
   response of `POST /sessions/{id}/finish-intake` in [`API_INTERFACE.md`](API_INTERFACE.md). No audio is captured yet.
-- **Physician (`/doctor`):** a list of patients (就診號, status, time, flag icon, newest first, polled), tap a row to open the
-  read-only report with per-field confirmed or edited badges. Back returns to the list with its scroll position.
+- **Physician (`/doctor`, `/doctor/:id`):** as built, mock-backed. `DoctorListView` lists patients (就診號, status 等候中 / 進行中 / 已確認,
+  time, 有建議留意 icon, and a main-complaint preview **only for confirmed reports**), newest first, polled every 5 s with `If-None-Match`
+  (the previous list stays on screen while refreshing; it is cached in the `doctor` store so Back restores it and its scroll position).
+  `DoctorReportView` shows the read-only report: 就診號, confirmation time, the **nurse's** 檢傷級數, 量測禁忌 banner, 建議留意 flags,
+  a vitals strip (values only; which are worrying is the backend's flag and the nurse's call), then the sections with only the filled
+  fields (empty ones folded under "未提及的項目"). Fields the nurse changed carry a 「護理師修改」 tag; AI-derived fields show their source
+  sentence. Before the nurse saves, the page says 「尚未確認」 and keeps checking every 4 s until the report appears. No inputs exist on these
+  screens and the `doctor` store has no write path. Files: `views/Doctor*View.vue`, `components/doctor/`, `stores/doctor.ts`.
 - **Admin (`/admin`):** scenario list with dev or held-out label, participant code, start and stop timer, live event log, export.
   Reachable only from the role screen; evaluation controls never appear on the nurse screen.
 
@@ -193,7 +199,7 @@ connection, selection. Rules enforced there and in tests:
 |---|---|---|
 | 1 | Does the patient see anything after sending (for example "已送出")? | a simple list of what they sent |
 | 2 | Generate API types from OpenAPI? | hand-written until the schema stabilises |
-| 3 | Physician list: refresh by polling or push? | polling every few seconds |
+| 3 | Physician list: refresh by polling or push? | polling every 5 s (adopted; ETag keeps it cheap) |
 | 4 | 就診號 numbering and how long an unfinished intake is kept? | sequential `SIM-######`; purge after 30 minutes (adopted by the PO) |
 | 7 | Access control before exposing the app on an HTTPS domain (no login today)? | not decided; needed before a public demo (see P4) |
 | 5 | Admin export format for the report (JSON, CSV or both)? | both |

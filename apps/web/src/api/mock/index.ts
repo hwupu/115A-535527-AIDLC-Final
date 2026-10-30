@@ -3,6 +3,7 @@ import type { ApiClient, RealtimeConnection, RealtimeHandlers } from "../client"
 import { ApiError } from "../types";
 import type { Role, ServerMessage, Session, SessionSummary } from "../types";
 import { mockScript } from "./fixtures";
+import { seedDialysis, seedFever, seedWaiting } from "./seed";
 
 // In-memory stand-in for the api, enabled with VITE_API_MOCK=1. State resets on page reload.
 // It follows the same rules the real api must enforce (docs/frontend/API_INTERFACE.md):
@@ -12,6 +13,7 @@ import { mockScript } from "./fixtures";
 //  - a session cannot be confirmed while any AI 草稿 remains.
 type Listener = { role: Role; handlers: RealtimeHandlers };
 type MockSession = Session & { started_at: string; listeners: Set<Listener>; scriptStarted: boolean };
+const MIN = 60_000;
 
 const sessions = new Map<string, MockSession>();
 let nextSession = 1;
@@ -23,6 +25,32 @@ const get = (id: string) => {
   if (!s) throw new ApiError(404, "session_not_found", "找不到這個 session");
   return s;
 };
+// Demo data: one confirmed report, one in progress, one waiting. Newest started last so the list shows the waiting patient first.
+function seed() {
+  const make = (over: Partial<MockSession> & { minutesAgo: number }): MockSession => {
+    const id = `mock-${nextSession++}`;
+    const { minutesAgo, ...rest } = over;
+    const s: MockSession = {
+      session_id: id, status: "ready", visit_no: allocateVisitNo(), segments: [], fields: emptyFields(), flags: [],
+      started_at: new Date(Date.now() - minutesAgo * MIN).toISOString(), listeners: new Set(), scriptStarted: true, ...rest,
+    };
+    sessions.set(id, s);
+    return s;
+  };
+  make({
+    minutesAgo: 45, status: "confirmed", fields: seedDialysis.fields, flags: seedDialysis.flags,
+    triage_level: seedDialysis.triageLevel, confirmed_at: new Date(Date.now() - 20 * MIN).toISOString(),
+  });
+  make({
+    minutesAgo: 12, status: "in_progress", fields: seedFever.fields,
+    segments: seedFever.segments.map((x, i) => ({ segment_id: `s${i}`, speaker: x.speaker, text: x.text, start: 0, end: 0, final: true })),
+  });
+  make({
+    minutesAgo: 3, status: "ready",
+    segments: [{ segment_id: "w1", speaker: "patient", text: seedWaiting.text, start: 0, end: 0, final: true, source: "patient_input" }],
+  });
+}
+
 const delay = <T>(value: T) => new Promise<T>((resolve) => setTimeout(() => resolve(value), 150));
 
 function broadcast(s: MockSession, message: ServerMessage, nurseOnly = false) {
@@ -57,6 +85,8 @@ function startScript(s: MockSession) {
   s.scriptStarted = true;
   for (const step of mockScript) setTimeout(() => runStep(s, step.message, !!step.nurseOnly), step.delayMs);
 }
+
+seed();
 
 export const mockClient: ApiClient = {
   async createSession(createdBy) {
@@ -122,6 +152,14 @@ export const mockClient: ApiClient = {
     return delay(structuredClone(session));
   },
 
+  async getReport(sessionId) {
+    const s = get(sessionId);
+    if (s.status !== "confirmed" || !s.triage_level || !s.confirmed_at || !s.visit_no) {
+      throw new ApiError(409, "not_confirmed", "護理師尚未確認這份報告");
+    }
+    return delay(structuredClone({ session_id: s.session_id, visit_no: s.visit_no, confirmed_at: s.confirmed_at, triage_level: s.triage_level, fields: s.fields, flags: s.flags }));
+  },
+
   async claimSession(sessionId) {
     const s = get(sessionId);
     if (s.status === "intake") throw new ApiError(409, "intake_not_finished", "病患還沒完成輸入");
@@ -140,12 +178,13 @@ export const mockClient: ApiClient = {
     return delay(structuredClone(s.fields[path]));
   },
 
-  async confirmSession(sessionId) {
+  async confirmSession(sessionId, body) {
     const s = get(sessionId);
     if (Object.values(s.fields).some((f) => f.status === "AI 草稿")) {
       throw new ApiError(409, "drafts_unconfirmed", "還有 AI 草稿未確認");
     }
     s.status = "confirmed";
+    s.triage_level = body.triage_level;
     s.confirmed_at = new Date().toISOString();
     return delay({ confirmed_at: s.confirmed_at });
   },

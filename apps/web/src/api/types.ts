@@ -50,6 +50,17 @@ export interface Session {
   fields: ReportFields;
   flags: Flag[];
   confirmed_at?: string;
+  triage_level?: TriageLevel; // the nurse's own entry, present once confirmed
+}
+
+// What the physician reads: only available after the nurse confirmed. Read-only.
+export interface ConfirmedReport {
+  session_id: string;
+  visit_no: string;
+  confirmed_at: string;
+  triage_level: TriageLevel; // decided and entered by the nurse
+  fields: ReportFields;
+  flags: Flag[];
 }
 
 export interface SessionSummary {

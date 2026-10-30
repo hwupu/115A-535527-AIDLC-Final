@@ -3,12 +3,13 @@
 import { Plus, Search } from "@lucide/vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import { api } from "@/api";
-import type { SessionStatus, SessionSummary } from "@/api";
+import type { SessionSummary } from "@/api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { clock, statusLabel } from "@/lib/status";
 import { useNurseSessionStore } from "@/stores/nurseSession";
 
 const store = useNurseSessionStore();
@@ -16,8 +17,6 @@ const visitNo = ref("");
 const list = ref<SessionSummary[]>([]);
 const listError = ref("");
 let timer: ReturnType<typeof setInterval> | undefined;
-
-const statusLabel: Record<SessionStatus, string> = { intake: "輸入中", ready: "等候中", in_progress: "進行中", confirmed: "已確認" };
 
 async function refresh() {
   try {
@@ -33,8 +32,6 @@ onMounted(() => {
   timer = setInterval(refresh, 5000);
 });
 onUnmounted(() => clearInterval(timer));
-
-const time = (iso: string) => new Date(iso).toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" });
 </script>
 
 <template>
@@ -76,7 +73,7 @@ const time = (iso: string) => new Date(iso).toLocaleTimeString("zh-TW", { hour: 
             <Button variant="outline" size="lg" class="h-auto w-full justify-between py-3 text-left" :disabled="store.busy" @click="store.open(s.session_id)">
               <span class="text-xl font-bold">{{ s.visit_no }}</span>
               <span class="flex items-center gap-3 text-base font-normal">
-                {{ time(s.started_at) }}
+                {{ clock(s.started_at) }}
                 <Badge :variant="s.status === 'ready' ? 'default' : 'outline'">{{ statusLabel[s.status] }}</Badge>
               </span>
             </Button>

@@ -77,8 +77,8 @@ The socket resumes by `session_id` after a drop (server keeps state).
 
 | Method and path | Purpose |
 |---|---|
-| `GET /sessions?status=ready,in_progress,confirmed&limit=50` | List for the physician picker. Items: `{ session_id, visit_no, status, started_at, confirmed_at?, chief_complaint?, has_flags }`. Newest first. |
-| `GET /sessions/{id}/report` | Read-only confirmed report (404 or `409 not_confirmed` if not yet confirmed). Includes per-field `status` and `source` so the UI can show confirmed versus edited. |
+| `GET /sessions?status=ready,in_progress,confirmed&limit=50` | List for the physician picker. Items: `{ session_id, visit_no, status, started_at, confirmed_at?, chief_complaint?, has_flags }`. Newest first. `chief_complaint` is filled only for `confirmed` sessions, so the physician never sees an unconfirmed AI draft in the list. `ETag` / `If-None-Match` supported (304). |
+| `GET /sessions/{id}/report` | Read-only confirmed report `{ session_id, visit_no, confirmed_at, triage_level, fields, flags }`. `triage_level` is the nurse's own entry. **409 `not_confirmed`** until the nurse saves (the UI treats this as "尚未確認" and keeps polling). Per-field `source` lets the UI mark what the nurse edited (`nurse_edit`) versus accepted (`ai`). |
 
 The UI polls the list every few seconds (ETag or `If-None-Match`, return `304` when unchanged). Push (SSE or WS) is a later option.
 `chief_complaint` in the list is a one-line preview of the nurse-confirmed value only (empty until confirmed).

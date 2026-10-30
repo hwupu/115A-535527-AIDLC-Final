@@ -1,6 +1,20 @@
 import { request } from "./client";
 import type { ApiClient, RealtimeConnection, RealtimeHandlers } from "./client";
-import type { Role } from "./types";
+import type { Role, SessionSummary } from "./types";
+
+// Polling the list is cheap: send If-None-Match and reuse the last body on 304 (docs/frontend/API_INTERFACE.md §3).
+const listCache = new Map<string, { etag: string; body: SessionSummary[] }>();
+
+async function getList(path: string): Promise<SessionSummary[]> {
+  const cached = listCache.get(path);
+  const res = await fetch(`/api${path}`, { headers: cached ? { "If-None-Match": cached.etag } : {} });
+  if (res.status === 304 && cached) return cached.body;
+  if (!res.ok) return request(path); // throws the usual ApiError
+  const body = (await res.json()) as SessionSummary[];
+  const etag = res.headers.get("ETag");
+  if (etag) listCache.set(path, { etag, body });
+  return body;
+}
 
 export const httpClient: ApiClient = {
   createSession: (createdBy) =>
@@ -15,10 +29,12 @@ export const httpClient: ApiClient = {
     const params = new URLSearchParams();
     if (query.status?.length) params.set("status", query.status.join(","));
     if (query.visit_no) params.set("visit_no", query.visit_no);
-    return request(`/sessions?${params}`);
+    return getList(`/sessions?${params}`);
   },
 
   getSession: (sessionId) => request(`/sessions/${sessionId}`),
+
+  getReport: (sessionId) => request(`/sessions/${sessionId}/report`),
 
   claimSession: (sessionId) => request(`/sessions/${sessionId}/claim`, { method: "POST" }),
 

@@ -127,6 +127,7 @@ export const useNurseSessionStore = defineStore("nurseSession", () => {
     fields.value = { ...emptyFields(), ...s.fields };
     flags.value = s.flags;
     confirmedAt.value = s.confirmed_at ?? null;
+    triageLevel.value = s.triage_level ?? null; // only present once the nurse has saved it
     connect(id);
   }
 
