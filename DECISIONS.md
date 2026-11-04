@@ -183,3 +183,11 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
 - Consequences: new api surface proposed in `docs/frontend/API_INTERFACE.md` (`claim`, `PATCH` with `confirm`, `flags.update`,
   409 `drafts_unconfirmed`). Whether nurses accept confirming one by one is a pilot question (E9).
 - Decided by: 吳普軒 (frontend lead)
+
+## 2026-10-30 — Physician workflow: confirmed reports only, nurse's level shown
+- Status: accepted by the frontend lead; api items proposed to 張棨翔 (D1, D4)
+- Decision: the physician list and report are read-only and mock-backed. The report is available only after the nurse saves it
+  (409 `not_confirmed` before that, shown as 「尚未確認」). The physician sees the nurse's 檢傷級數 and which fields the nurse edited;
+  the list previews the main complaint only for confirmed sessions, so no unconfirmed AI draft reaches the physician. Vitals are
+  displayed as values only; flags come from the backend (B8). The list refreshes by polling with ETag.
+- Decided by: 吳普軒 (frontend lead)

@@ -1,6 +1,7 @@
 import { ApiError } from "./types";
 import type {
   ClientMessage,
+  ConfirmedReport,
   Field,
   FieldValue,
   Role,
@@ -29,6 +30,8 @@ export interface ApiClient {
   finishIntake(sessionId: string): Promise<{ visit_no: string }>;
   listSessions(query?: { status?: SessionStatus[]; visit_no?: string }): Promise<SessionSummary[]>;
   getSession(sessionId: string): Promise<Session>;
+  /** Physician view. Fails with 409 `not_confirmed` until the nurse has saved the report. */
+  getReport(sessionId: string): Promise<ConfirmedReport>;
   /** Nurse takes a `ready` session (ready → in_progress). Idempotent for the same session. */
   claimSession(sessionId: string): Promise<{ status: SessionStatus; visit_no: string }>;
   /** Edit a field (`value`) or confirm the AI draft as it is (`confirm`). Both are audited by the api. */
