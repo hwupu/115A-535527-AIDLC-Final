@@ -36,6 +36,19 @@ export const httpClient: ApiClient = {
 
   getReport: (sessionId) => request(`/sessions/${sessionId}/report`),
 
+  listScenarios: () => request("/scenarios"),
+  createRun: (body) => request("/evaluation/runs", { method: "POST", body: JSON.stringify(body) }),
+  startRun: (runId) => request(`/evaluation/runs/${runId}/start`, { method: "POST" }),
+  finishRun: (runId) => request(`/evaluation/runs/${runId}/finish`, { method: "POST" }),
+  listRuns: () => request("/evaluation/runs"),
+  listRunEvents: (runId) => request(`/evaluation/runs/${runId}/events`),
+  addRunEvent: (runId, body) => request(`/evaluation/runs/${runId}/events`, { method: "POST", body: JSON.stringify(body) }),
+  exportRun: async (runId, format) => {
+    const res = await fetch(`/api/evaluation/runs/${runId}/export?format=${format}`);
+    if (!res.ok) return request(`/evaluation/runs/${runId}/export?format=${format}`); // throws the usual ApiError
+    return res.text();
+  },
+
   claimSession: (sessionId) => request(`/sessions/${sessionId}/claim`, { method: "POST" }),
 
   patchField: (sessionId, path, change) =>

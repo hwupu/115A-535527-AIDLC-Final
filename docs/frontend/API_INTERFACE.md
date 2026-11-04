@@ -96,6 +96,16 @@ The UI polls the list every few seconds (ETag or `If-None-Match`, return `304` w
 
 Evaluation endpoints return `404` when `EVAL_MODE` is off, so a normal demo cannot reach them.
 
+Shapes the frontend uses (the mock in `apps/web/src/api/mock/` is a runnable reference):
+
+- `Run`: `{ run_id, scenario_id, participant_code, session_id, visit_no, created_at, started_at?, finished_at? }`. `POST /evaluation/runs` also creates
+  the session (nurse-created, so `visit_no` exists immediately). `start` and `finish` are 409 when already started / not running.
+- `RunEvent`: `{ at, type, payload? }` with `type` one of `task_start`, `task_end`, `field_edit`, `level_entered`, `error_found`, `note`.
+  `field_edit` payload `{ path, kind: "edit"|"confirm", ai_value, new_value }`; `level_entered` payload `{ triage_level }`; `note` payload `{ text }`.
+  Events are recorded automatically from the session's audit log only between `start` and `finish`.
+- Export JSON `{ run, events, model, prompt_version, whisper_model, git_commit }`; CSV columns `run_id,scenario_id,participant_code,at,type,payload`
+  (payload as quoted JSON), one row per event.
+
 ## 5. Health and misc
 
 - `GET /health` → `{ "status": "ok", "service": "api" }` (exists).

@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePatientInputStore } from "@/stores/patientInput";
 
 const store = usePatientInputStore();
-const { phase, entries, listening, visitNo, canFinish, busy, error } = storeToRefs(store);
+const { phase, entries, listening, visitNo, canFinish, busy, error, offline, level } = storeToRefs(store);
 
 const textDraft = ref("");
 
@@ -49,6 +49,9 @@ async function send() {
         <Badge :variant="listening ? 'destructive' : 'outline'" role="status">
           {{ listening ? "錄音中" : "未錄音" }}
         </Badge>
+        <div class="h-4 w-full overflow-hidden rounded-full bg-muted" role="meter" aria-label="音量" :aria-valuenow="Math.round(level * 100)" aria-valuemin="0" aria-valuemax="100">
+          <div class="h-full bg-primary transition-all" :style="{ width: `${Math.round(level * 100)}%` }" />
+        </div>
       </CardContent>
     </Card>
 
@@ -81,6 +84,7 @@ async function send() {
     <div class="md:col-span-2">
       <Button size="lg" class="h-20 w-full text-2xl" :disabled="!canFinish" @click="store.finish()">完成，取得就診號</Button>
       <p v-if="listening" class="mt-2 text-center text-lg text-muted-foreground">請先停止錄音。</p>
+      <p v-if="offline" class="mt-2 text-center text-lg font-semibold text-destructive" role="alert">與伺服器的連線中斷，已輸入的內容會保留。</p>
       <p v-if="error" class="mt-2 text-center text-lg font-semibold text-destructive" role="alert">{{ error }}</p>
     </div>
   </main>

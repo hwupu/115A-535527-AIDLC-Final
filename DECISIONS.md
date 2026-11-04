@@ -191,3 +191,12 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   the list previews the main complaint only for confirmed sessions, so no unconfirmed AI draft reaches the physician. Vitals are
   displayed as values only; flags come from the backend (B8). The list refreshes by polling with ETag.
 - Decided by: 吳普軒 (frontend lead)
+
+## 2026-10-30 — Admin evaluation screen and patient wiring, mock-backed
+- Status: accepted by the frontend lead; evaluation api (D6) proposed in `docs/frontend/API_INTERFACE.md` §4
+- Decision: the admin screen runs scenarios as timed runs with anonymous participant codes (`N-##`), logs the nurse's edits and
+  level entry automatically while a run is running, takes manual error and note events, and exports JSON and CSV. The patient
+  screen now uses the api client (lazy session, typed text, shared recorder contract, `finish-intake` for the 就診號).
+- Consequences: the mock is the executable reference for D6; whether to keep `EVAL_MODE` as a build or runtime flag is left to
+  the backend. Run data contains no names.
+- Decided by: 吳普軒 (frontend lead)
