@@ -4,6 +4,8 @@ version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115",
+    "torch>=2.15.0",
+    "transformers>=4.45,<5",
     "uvicorn[standard]>=0.30",
 ]
 
@@ -17,3 +19,10 @@ dev = [
 # Not a distributable package: uv only manages the environment.
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"

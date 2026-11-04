@@ -1,0 +1,35 @@
+{
+  "archive_sha256": "07dc229ceff25c0bcd819aba8ec11684cd6bd62c1fbec52d8e184b0e6c7e1c35",
+  "source_manifest_verified": true,
+  "note": "Fresh source extraction; reused per-service Python dependency environments and offline pnpm cache. No model downloads/inference rerun here.",
+  "results": [
+    {
+      "name": "api",
+      "exit": 0
+    },
+    {
+      "name": "stt",
+      "exit": 0
+    },
+    {
+      "name": "llm",
+      "exit": 0
+    },
+    {
+      "name": "metrics",
+      "exit": 0
+    },
+    {
+      "name": "install",
+      "exit": 0
+    },
+    {
+      "name": "web-build",
+      "exit": 0
+    },
+    {
+      "name": "web-test",
+      "exit": 0
+    }
+  ]
+}

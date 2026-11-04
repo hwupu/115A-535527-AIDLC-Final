@@ -1,5 +1,13 @@
 # AI Usage Guidelines (Draft v0.1)
 
+## CP2 local candidate addendum (2026-11-04, pending team ratification)
+
+劉順松 authorized Codex to implement and verify the CP2 candidate locally. Codex drafted code, tests and documentation and collected machine outputs; all interpretations and claims require human review. No external-user findings, attendance, approvals or other members' contributions are generated or claimed. See docs/cp2/PROMPT_CARD.md and prompt-log/2026-11-04-414551016-cp2.md. Existing main rules remain: humans own decisions and review every change.
+
+The tested hardware adapter uses local Qwen/Qwen2.5-0.5B-Instruct on CPU and Whisper small int8. This substitutes for the planned unimplemented Gemma runtime only in this local review candidate. The team must confirm or replace it before declaring the project architecture final. No cloud inference, real patient audio or identifiers were used.
+
+Actual synthetic AI failures are retained with successful runs. Automated tests are not user research. Human confirmation of reported outcomes remains required. The AI does not approve or merge PRs, represent a teammate's authorship, or submit to E3.
+
 Current code steward: see `DECISIONS.md` (rotates weekly)
 
 ## 1. What AI tools we plan to use, and what we will use each for

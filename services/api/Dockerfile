@@ -5,4 +5,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-cache
 ENV PATH="/srv/.venv/bin:$PATH"
 COPY app app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY migrations migrations
+COPY alembic.ini .
+ENV DATA_DIR=/srv/data
+CMD ["sh", "-c", "uv run --no-dev alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
