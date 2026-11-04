@@ -63,3 +63,19 @@ data/*
 *.sqlite
 *.sqlite3
 *.db
+
+# Local CP2 tools, models, runtime data and generated evidence
+.tools/
+data/
+evidence/
+submission/
+.playwright/
+playwright-report/
+test-results/
+
+# Generated PDF remains local; editable Markdown and text evidence are versioned.
+docs/cp2/*.pdf
+
+# Publish only the reviewed text-evidence snapshot under docs.
+!docs/cp2/evidence/
+!docs/cp2/evidence/**
