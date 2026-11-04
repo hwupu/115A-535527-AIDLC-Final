@@ -1,5 +1,15 @@
 import { ApiError } from "./types";
-import type { ClientMessage, Role, ServerMessage, Session, SessionStatus, SessionSummary } from "./types";
+import type {
+  ClientMessage,
+  Field,
+  FieldValue,
+  Role,
+  ServerMessage,
+  Session,
+  SessionStatus,
+  SessionSummary,
+  TriageLevel,
+} from "./types";
 
 export interface RealtimeConnection {
   send(message: ClientMessage): void;
@@ -19,6 +29,12 @@ export interface ApiClient {
   finishIntake(sessionId: string): Promise<{ visit_no: string }>;
   listSessions(query?: { status?: SessionStatus[]; visit_no?: string }): Promise<SessionSummary[]>;
   getSession(sessionId: string): Promise<Session>;
+  /** Nurse takes a `ready` session (ready → in_progress). Idempotent for the same session. */
+  claimSession(sessionId: string): Promise<{ status: SessionStatus; visit_no: string }>;
+  /** Edit a field (`value`) or confirm the AI draft as it is (`confirm`). Both are audited by the api. */
+  patchField(sessionId: string, path: string, change: { value: FieldValue } | { confirm: true }): Promise<Field>;
+  /** Save the report. `triage_level` is the nurse's own entry. Fails with 409 `drafts_unconfirmed` while any AI 草稿 remains. */
+  confirmSession(sessionId: string, body: { triage_level: TriageLevel }): Promise<{ confirmed_at: string }>;
   connect(sessionId: string, role: Role, handlers: RealtimeHandlers): RealtimeConnection;
 }
 

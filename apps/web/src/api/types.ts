@@ -4,40 +4,28 @@
 export type FieldStatus = "未提及" | "AI 草稿" | "護理師已確認";
 export type FieldSource = "ai" | "nurse_edit" | "patient_input";
 
-export interface Field<T = string | null> {
+export interface Field<T = FieldValue> {
   value: T;
   status: FieldStatus;
   source_span: string | null; // exact quote from the transcript; null when not mentioned
   source: FieldSource;
 }
 
-export type YesNoUnknown = "有" | "無" | "未提及";
+// Leaf values: text, numbers (vitals), booleans (wristband), lists (symptoms, restrictions as "部位：原因").
+export type FieldValue = string | number | boolean | string[] | null;
 
-export interface Report {
-  patient: { dob: Field; accompanied_by: Field; mobility: Field };
-  tocc: {
-    fever_cough_cold: Field<YesNoUnknown>;
-    travel: Field<YesNoUnknown>;
-    occupation: Field;
-    contact: Field<YesNoUnknown>;
-    cluster: Field<YesNoUnknown>;
-  };
-  measurement: {
-    restrictions: Field<{ site: string; reason: string }[]>;
-    wristband_no_treatment: Field<boolean | null>;
-    vitals: Field<{
-      bp_sys: number | null;
-      bp_dia: number | null;
-      hr: number | null;
-      spo2: number | null;
-      temp_c: number | null;
-    }>;
-  };
-  chief_complaint: Field;
-  hpi: Record<string, Field<string | string[] | null>>;
-  flags: { text: string; basis: string }[]; // suggestions only
-  // There is deliberately no triage_level here: the AI never produces one. The nurse enters it on confirm.
+// The report is a flat map keyed by field path (for example "tocc.travel", "measurement.vitals.spo2").
+// The paths and their labels are defined in src/report/schema.ts.
+// There is deliberately no triage level in it: the AI never produces one. The nurse enters it on confirm.
+export type ReportFields = Record<string, Field<FieldValue>>;
+
+// Danger-sign suggestion shown to the nurse. Never a finding or an order.
+export interface Flag {
+  text: string;
+  basis: string; // quote from the transcript that triggered it
 }
+
+export type TriageLevel = 1 | 2 | 3 | 4 | 5;
 
 // intake: patient entering; ready: intake finished, waiting for the nurse; in_progress: nurse working.
 export type SessionStatus = "intake" | "ready" | "in_progress" | "confirmed";
@@ -59,7 +47,9 @@ export interface Session {
   status: SessionStatus;
   visit_no: string | null; // SIM-######, null until intake is finished
   segments: TranscriptSegment[];
-  report: Report | null;
+  fields: ReportFields;
+  flags: Flag[];
+  confirmed_at?: string;
 }
 
 export interface SessionSummary {
@@ -83,6 +73,7 @@ export type ServerMessage =
   | ({ type: "transcript.segment" } & TranscriptSegment)
   | { type: "field.update"; path: string; value: unknown; status: FieldStatus; source_span: string | null; source: FieldSource }
   | { type: "recording.state"; recording: boolean; by: Role }
+  | { type: "flags.update"; flags: Flag[] }
   | { type: "status"; stt: "ok" | "down"; llm: "ok" | "slow" | "down" }
   | { type: "error"; code: string; message: string };
 

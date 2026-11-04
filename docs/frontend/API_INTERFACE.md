@@ -34,10 +34,18 @@ when the intake is committed (see `finish-intake`) or immediately when the nurse
 | `POST /sessions/{id}/inputs` `{ kind: "text", text }` | patient, nurse | Add a typed entry. Stored as a transcript segment with `speaker: "patient"` or `"nurse"` and `source: "patient_input"` when sent from the patient screen. → `{ input_id }` |
 | `POST /sessions/{id}/finish-intake` | patient | The patient is done. Allocates and returns the 就診號 and moves the session to `ready`. → `{ visit_no }` |
 | `GET /sessions?visit_no=SIM-000123` or `?status=ready` | nurse | Find a patient by the 就診號 they read out, or from the list of patients who finished intake. |
-| `GET /sessions/{id}` | nurse | Full session: transcript segments, current report, status. |
-| `PATCH /sessions/{id}/fields` `{ path, value }` | nurse | Edit one field (audited: AI value vs new value). Sets `source: "nurse_edit"`. |
-| `POST /sessions/{id}/confirm` `{ triage_level, fields_confirmed: [path…] }` | nurse | Confirm the report. `triage_level` is the nurse's own entry. → `{ confirmed_at }` |
+| `POST /sessions/{id}/claim` | nurse | The nurse takes a `ready` session (`ready → in_progress`). Idempotent. 409 `intake_not_finished` if the patient is still entering. → `{ status, visit_no }` |
+| `GET /sessions/{id}` | nurse | Full session: `{ session_id, status, visit_no, segments, fields, flags, confirmed_at? }`. `fields` is a flat map from field path to `{ value, status, source_span, source }`. |
+| `PATCH /sessions/{id}/fields` `{ path, value }` or `{ path, confirm: true }` | nurse | Edit one field, or accept the AI draft as it is. Both are audited (AI value vs new value). An edit sets `source: "nurse_edit"`; a plain confirm keeps `source: "ai"`. Both set `status: 護理師已確認`. An empty `value` returns the field to `未提及`. → the updated field |
+| `POST /sessions/{id}/confirm` `{ triage_level: 1..5 }` | nurse | Save the report. `triage_level` is the nurse's own entry. **409 `drafts_unconfirmed`** while any field is still `AI 草稿` (the server enforces the gate, not only the UI). → `{ confirmed_at }` |
 | `DELETE /sessions/{id}` | nurse, admin | Remove the session and its data. |
+
+**Server rules the frontend relies on:** (1) an AI update (`field.update`) never overwrites a field whose status is `護理師已確認`;
+(2) after `confirmed` every write returns 409; (3) the patient role never receives `field.update` or `flags.update`.
+
+**Field paths.** The current list of paths, Chinese labels and value types is `apps/web/src/report/schema.ts` (frontend-owned until the
+backend schema B1 lands, then B1 is the source of truth and the file is aligned to it). Values are text, numbers (vitals), booleans
+(`measurement.wristband_no_treatment`) or string lists (`measurement.restrictions` as "部位：原因", symptoms, history).
 
 Statuses: `intake` (patient entering) → `ready` (intake finished, waiting for the nurse) → `in_progress` (nurse working) → `confirmed`.
 A session still in `intake` after a timeout (proposed 30 minutes) is purged and **never receives a 就診號**.
@@ -57,7 +65,8 @@ Server → client:
 | Message | Notes |
 |---|---|
 | `{ "type": "transcript.segment", segment_id, speaker, text, start, end, final }` | Partial (`final:false`) and final segments. |
-| `{ "type": "field.update", path, value, status, source_span, source }` | Draft changes from the LLM. |
+| `{ "type": "field.update", path, value, status, source_span, source }` | Draft changes from the LLM (`status: AI 草稿`). Nurse role only. |
+| `{ "type": "flags.update", flags: [{ text, basis }] }` | Danger-sign suggestions with the quote they are based on (replaces the previous list). Nurse role only. Thresholds come from the backend (B8), never from the frontend. |
 | `{ "type": "recording.state", recording: bool, by }` | So the nurse sees the patient is speaking, and vice versa. |
 | `{ "type": "status", stt: "ok"\|"down", llm: "ok"\|"slow"\|"down" }` | Drives the connection banner. |
 | `{ "type": "error", code, message }` | Non-fatal; the UI keeps the manual path open. |
