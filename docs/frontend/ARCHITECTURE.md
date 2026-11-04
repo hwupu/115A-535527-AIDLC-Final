@@ -14,7 +14,7 @@ Decisions made on 2026-10-28 (frontend lead): shadcn-vue, Pinia, larger default 
 - **Readable by default:** base text 18 px (20 px from 768 px wide), nothing smaller than 16 px, buttons at least 48 px tall.
   High-contrast light theme (body text at least 7:1), professional blue and neutral palette, no web fonts (offline demo).
 - Simulated data only; a "demo / simulated data" banner is always visible. The UI collects **no personal information**: patients are
-  identified only by a system-assigned simulated 就診號 (per visit; the permanent 病歷號 is out of scope, no HIS).
+  identified only by a system-assigned simulated 就診號 (per visit; the permanent 就診號 is out of scope, no HIS).
 
 ## 2. Stack
 
@@ -76,7 +76,7 @@ apps/web/src/
     useRecorder.ts           MediaRecorder / getUserMedia
     useReport.ts             field edits, confirm, audit events sent to api
   stores/                    Pinia: patientInput (in place), session, report, adminRun
-  api/                       REST client, WebSocket message types, schema types
+  api/                       types, client interface, http client, mock (VITE_API_MOCK=1)
   i18n/                      zh-TW strings (single locale for now)
 ```
 
@@ -154,6 +154,11 @@ Each report field is `{ value, status, source_span, source }` (backend doc §4).
 - Local: `pnpm dev` (or `pnpm dev:all` with the services). Compose: `dev` profile serves Vite, `demo` serves the built app via nginx.
 - CI: `pnpm lint`, `pnpm typecheck`, `pnpm build` (already in `.github/workflows/ci.yml`); add `pnpm test` when tests exist.
 - API base is `/api`, proxied to the api service (Vite dev server and nginx).
+- **Mock mode:** `VITE_API_MOCK=1` (in the repo-root `.env`, default in `.env.example`) makes the UI use an in-memory mock instead of the
+  api, so frontend work does not wait for the backend. Set it to `0` to talk to the real api. Code: `apps/web/src/api/`
+  (`types.ts` contract types, `client.ts` interface, `http.ts` real client, `mock/` fixtures and in-memory sessions, `index.ts` switch).
+  The mock follows the same rules as the real api: the patient WebSocket never receives `field.update`, unfinished intakes get no
+  就診號 and are not listed. Restarting the page resets mock state.
 
 ## 11. Open questions
 

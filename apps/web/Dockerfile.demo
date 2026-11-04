@@ -5,6 +5,8 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/web/package.json apps/web/
 RUN pnpm install --frozen-lockfile
 COPY apps/web apps/web
+ARG VITE_API_MOCK=0
+ENV VITE_API_MOCK=$VITE_API_MOCK
 RUN pnpm --filter web build
 
 FROM nginx:alpine
