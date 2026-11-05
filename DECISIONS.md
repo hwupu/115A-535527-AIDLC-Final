@@ -200,3 +200,19 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
 - Consequences: the mock is the executable reference for D6; whether to keep `EVAL_MODE` as a build or runtime flag is left to
   the backend. Run data contains no names.
 - Decided by: 吳普軒 (frontend lead)
+
+## 2026-11-05 — Compact layout for staff screens (nurse, physician, admin)
+- Status: accepted by the frontend lead
+- Context: the nurse, physician and admin screens showed little information per screen. Heavy padding, 2 px borders, a box
+  around every field and large buttons made them hard to scan; the nurse report was about 7,000 px tall on a tablet.
+- Decision: staff routes are marked `compact` and use an 18 px base at every width (no 20 px tablet step), tighter line
+  height and spacing, 1 px borders, and no box per field, list item or vital: report fields are rows (label and value on the
+  left, status and actions on the right). The nurse's 就診號 and 返回清單 move into the role header. Entry and patient screens keep
+  the 18/20 px sizes of the entry above. The full-width 「示範用途・僅使用模擬資料」 banner is removed on every screen to save
+  space; the data stays simulated (`SIM-######` visit numbers, no personal information). Unchanged: nothing smaller than
+  16 px, buttons at least 48 px tall, status shown with text and icon, high contrast.
+- Consequences: amends the "Default text is large" part of the 2026-10-28 frontend entry for staff screens only, and the
+  "demo / simulated data banner is always visible" rule in `docs/frontend/ARCHITECTURE.md`. Shared
+  components tighten with the `compact:` Tailwind variant (`apps/web/src/style.css`). Whether 18 px reads well on the ward
+  tablet is a pilot question (E9).
+- Decided by: 吳普軒 (frontend lead)
