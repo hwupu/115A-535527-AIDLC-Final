@@ -17,7 +17,7 @@ const levels: TriageLevel[] = [1, 2, 3, 4, 5];
       v-for="n in levels"
       :key="n"
       :variant="modelValue === n ? 'default' : 'outline'"
-      size="icon-lg"
+      size="icon"
       class="text-xl"
       :aria-pressed="modelValue === n"
       :aria-label="`第 ${n} 級`"

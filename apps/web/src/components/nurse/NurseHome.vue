@@ -35,24 +35,24 @@ onUnmounted(() => clearInterval(timer));
 </script>
 
 <template>
-  <main class="mx-auto grid max-w-6xl gap-6 px-6 py-8 md:grid-cols-2">
+  <main class="mx-auto grid max-w-6xl items-start gap-4 px-4 py-4 md:grid-cols-[2fr_3fr]">
     <Card>
       <CardHeader>
         <CardTitle>輸入就診號</CardTitle>
         <CardDescription>請病患念出螢幕上的就診號（例如 SIM-000001）。</CardDescription>
       </CardHeader>
-      <CardContent class="grid gap-4">
-        <form class="flex flex-wrap items-end gap-3" @submit.prevent="store.openByVisitNo(visitNo)">
-          <div class="grid gap-2">
+      <CardContent class="grid gap-3">
+        <form class="flex flex-wrap items-end gap-2" @submit.prevent="store.openByVisitNo(visitNo)">
+          <div class="grid gap-1">
             <Label for="visit-no">就診號</Label>
-            <Input id="visit-no" v-model="visitNo" class="w-56" placeholder="SIM-000001" autocomplete="off" />
+            <Input id="visit-no" v-model="visitNo" class="w-52" placeholder="SIM-000001" autocomplete="off" />
           </div>
-          <Button type="submit" size="lg" :disabled="!visitNo.trim() || store.busy">
+          <Button type="submit" :disabled="!visitNo.trim() || store.busy">
             <Search aria-hidden="true" />
             開啟
           </Button>
         </form>
-        <Button variant="outline" size="lg" :disabled="store.busy" @click="store.startNew()">
+        <Button variant="outline" :disabled="store.busy" @click="store.startNew()">
           <Plus aria-hidden="true" />
           開始新的問診（病患沒有先輸入）
         </Button>
@@ -60,26 +60,27 @@ onUnmounted(() => clearInterval(timer));
       </CardContent>
     </Card>
 
-    <Card>
+    <Card class="compact:pb-1">
       <CardHeader>
         <CardTitle>病患清單</CardTitle>
         <CardDescription>病患完成輸入後會出現在這裡，每幾秒更新。</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p v-if="listError" class="text-lg font-semibold text-destructive" role="alert">{{ listError }}</p>
-        <p v-else-if="!list.length" class="text-lg text-muted-foreground">目前沒有病患。</p>
-        <ul class="grid gap-3">
-          <li v-for="s in list" :key="s.session_id">
-            <Button variant="outline" size="lg" class="h-auto w-full justify-between py-3 text-left" :disabled="store.busy" @click="store.open(s.session_id)">
-              <span class="text-xl font-bold">{{ s.visit_no }}</span>
-              <span class="flex items-center gap-3 text-base font-normal">
-                {{ clock(s.started_at) }}
-                <Badge :variant="s.status === 'ready' ? 'default' : 'outline'">{{ statusLabel[s.status] }}</Badge>
-              </span>
-            </Button>
-          </li>
-        </ul>
-      </CardContent>
+      <p v-if="listError" class="px-3 text-lg font-semibold text-destructive" role="alert">{{ listError }}</p>
+      <p v-else-if="!list.length" class="px-3 pb-2 text-lg text-muted-foreground">目前沒有病患。</p>
+      <ul class="divide-y divide-border/15">
+        <li v-for="s in list" :key="s.session_id">
+          <button
+            type="button"
+            class="flex min-h-12 w-full items-center gap-3 px-3 py-1.5 text-left hover:bg-muted disabled:opacity-50"
+            :disabled="store.busy"
+            @click="store.open(s.session_id)"
+          >
+            <span class="flex-1 text-lg font-bold">{{ s.visit_no }}</span>
+            <span class="text-base text-muted-foreground tabular-nums">{{ clock(s.started_at) }}</span>
+            <Badge :variant="s.status === 'ready' ? 'default' : 'outline'">{{ statusLabel[s.status] }}</Badge>
+          </button>
+        </li>
+      </ul>
     </Card>
   </main>
 </template>

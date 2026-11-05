@@ -18,9 +18,9 @@ const messages = computed(() => {
 </script>
 
 <template>
-  <div v-if="messages.length" class="grid gap-2" role="alert">
-    <p v-for="m in messages" :key="m" class="flex items-center gap-2 rounded-xl border-2 border-destructive bg-card px-4 py-3 text-lg font-semibold text-destructive">
-      <WifiOff class="size-6 shrink-0" aria-hidden="true" />
+  <div v-if="messages.length" class="grid gap-1" role="alert">
+    <p v-for="m in messages" :key="m" class="flex items-center gap-2 rounded-lg border border-destructive bg-card px-3 py-1.5 text-lg font-semibold text-destructive">
+      <WifiOff class="size-5 shrink-0" aria-hidden="true" />
       {{ m }}
     </p>
   </div>

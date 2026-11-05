@@ -18,19 +18,19 @@ onUnmounted(() => store.closeReport());
 </script>
 
 <template>
-  <RoleHeader role="doctor" />
-  <main class="mx-auto max-w-4xl px-6 py-6">
-    <Button variant="outline" size="lg" class="mb-4" as-child>
+  <RoleHeader role="doctor">
+    <Button variant="outline" as-child>
       <RouterLink to="/doctor">
         <ArrowLeft aria-hidden="true" />
         返回清單
       </RouterLink>
     </Button>
-
-    <p v-if="reportState === 'loading'" class="text-xl text-muted-foreground">讀取中…</p>
-    <section v-else-if="reportState === 'waiting'" class="rounded-xl border-2 border-warning-foreground/50 bg-warning p-6 text-warning-foreground" role="status">
-      <h2 class="text-2xl font-bold">尚未確認</h2>
-      <p class="mt-1 text-lg">護理師還沒有儲存這位病患的報告。確認後會自動顯示在這裡。</p>
+  </RoleHeader>
+  <main class="mx-auto max-w-6xl px-4 py-3">
+    <p v-if="reportState === 'loading'" class="text-lg text-muted-foreground">讀取中…</p>
+    <section v-else-if="reportState === 'waiting'" class="rounded-lg bg-warning px-4 py-3 text-warning-foreground" role="status">
+      <h2 class="text-xl font-bold">尚未確認</h2>
+      <p class="text-lg">護理師還沒有儲存這位病患的報告。確認後會自動顯示在這裡。</p>
     </section>
     <p v-else-if="reportState === 'error'" class="text-lg font-semibold text-destructive" role="alert">{{ reportError }}</p>
     <ReadonlyReport v-else-if="report" :report="report" />
