@@ -6,6 +6,13 @@ import DoctorReportView from "./views/DoctorReportView.vue";
 import NurseView from "./views/NurseView.vue";
 import PatientView from "./views/PatientView.vue";
 
+declare module "vue-router" {
+  interface RouteMeta {
+    // Staff screen: smaller text and tighter spacing (style.css). Entry and patient screens stay large.
+    compact?: boolean;
+  }
+}
+
 export const router = createRouter({
   history: createWebHistory(),
   // Back from a report returns to the same place in the (cached) list.
@@ -13,10 +20,10 @@ export const router = createRouter({
   routes: [
     { path: "/", name: "role-select", component: RoleSelectView },
     { path: "/patient", name: "patient", component: PatientView },
-    { path: "/nurse", name: "nurse", component: NurseView },
-    { path: "/doctor", name: "doctor", component: DoctorListView },
-    { path: "/doctor/:id", name: "doctor-report", component: DoctorReportView, props: true },
-    { path: "/admin", name: "admin", component: AdminView },
+    { path: "/nurse", name: "nurse", component: NurseView, meta: { compact: true } },
+    { path: "/doctor", name: "doctor", component: DoctorListView, meta: { compact: true } },
+    { path: "/doctor/:id", name: "doctor-report", component: DoctorReportView, props: true, meta: { compact: true } },
+    { path: "/admin", name: "admin", component: AdminView, meta: { compact: true } },
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
 });

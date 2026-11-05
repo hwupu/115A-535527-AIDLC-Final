@@ -17,18 +17,18 @@ async function copy() {
 </script>
 
 <template>
-  <section class="rounded-xl border-2 border-success-foreground/40 bg-success p-4 text-success-foreground">
+  <section class="rounded-lg bg-success px-4 py-3 text-success-foreground">
     <h2 class="flex items-center gap-2 text-xl font-bold">
       <Check class="size-6" aria-hidden="true" />
       報告已儲存
     </h2>
-    <p class="mt-1 text-lg">請複製或列印後，手動輸入醫院系統（本系統不會寫入 HIS）。</p>
-    <div class="mt-3 flex flex-wrap gap-3 print:hidden">
-      <Button size="lg" variant="outline" @click="copy">
+    <p class="text-lg">請複製或列印後，手動輸入醫院系統（本系統不會寫入 HIS）。</p>
+    <div class="mt-2 flex flex-wrap gap-2 print:hidden">
+      <Button variant="outline" @click="copy">
         <Copy aria-hidden="true" />
         {{ copied ? "已複製" : "複製文字" }}
       </Button>
-      <Button size="lg" variant="outline" @click="print">
+      <Button variant="outline" @click="print">
         <Printer aria-hidden="true" />
         列印
       </Button>

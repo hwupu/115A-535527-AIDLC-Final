@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // The nurse's working screen. Landscape tablet: transcript on the left, report on the right, confirm bar at the bottom.
 // Narrow or portrait: the two columns become tabs. Every part below is replaceable behind its own contract.
-import { ArrowLeft } from "@lucide/vue";
+// 返回清單 and the 就診號 sit in the role header (NurseView.vue).
 import { storeToRefs } from "pinia";
-import { nextTick, ref } from "vue";
+import { nextTick, onUnmounted, ref } from "vue";
 import ConfirmBar from "./ConfirmBar.vue";
 import ConnectionBanner from "./ConnectionBanner.vue";
 import ConsentGate from "./ConsentGate.vue";
@@ -13,17 +13,19 @@ import FlagList from "@/components/report/FlagList.vue";
 import ReportForm from "@/components/report/ReportForm.vue";
 import SafetyBanner from "@/components/report/SafetyBanner.vue";
 import TranscriptPanel from "@/components/transcript/TranscriptPanel.vue";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRecorder } from "@/composables/useRecorder";
 import { useNurseSessionStore } from "@/stores/nurseSession";
 
 const store = useNurseSessionStore();
-const { visitNo, status, segments, fields, flags, triageLevel, consent, connection, selectedPath, highlight, drafts, blockers, confirmed, busy, error, reportText } = storeToRefs(store);
+const { segments, fields, flags, triageLevel, consent, connection, selectedPath, highlight, drafts, blockers, confirmed, busy, error, reportText } = storeToRefs(store);
 const recorder = useRecorder();
 const tab = ref<"transcript" | "report">("report");
 const note = ref("");
+
+// Leaving by any route (返回清單, 切換角色) must not leave the microphone on.
+onUnmounted(() => recorder.stop());
 
 async function startRecording() {
   await recorder.start(store.sendAudio);
@@ -55,34 +57,28 @@ function select(path: string) {
 </script>
 
 <template>
-  <div class="flex min-h-[calc(100dvh-3rem)] flex-col">
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border bg-card px-6 py-3 print:hidden">
-      <Button variant="outline" @click="leave">
-        <ArrowLeft aria-hidden="true" />
-        返回清單
-      </Button>
-      <div class="flex items-center gap-3">
-        <span class="text-xl font-bold">就診號 {{ visitNo }}</span>
-        <Badge :variant="confirmed ? 'default' : 'outline'">{{ confirmed ? "已確認" : status === "in_progress" ? "進行中" : status }}</Badge>
-      </div>
-    </div>
-
-    <div class="grid gap-3 px-6 pt-4 print:hidden">
+  <!-- 4rem = role header, so the confirm bar starts at the bottom of the screen. -->
+  <div class="flex min-h-[calc(100dvh-4rem)] flex-col">
+    <div class="grid gap-2 px-4 pt-3 print:hidden">
       <ConnectionBanner :connection="connection" />
-      <p v-if="error" class="rounded-xl border-2 border-destructive bg-card px-4 py-3 text-lg font-semibold text-destructive" role="alert">{{ error }}</p>
+      <p v-if="error" class="rounded-lg border border-destructive bg-card px-3 py-2 text-lg font-semibold text-destructive" role="alert">{{ error }}</p>
       <ConsentGate v-if="consent === 'unknown' && !confirmed" :consent="consent" @set="store.setConsent" />
       <p v-else-if="consent === 'no' && !confirmed" class="text-lg font-semibold">病患不同意錄音：請手動填寫報告。<Button variant="link" @click="store.setConsent('unknown')">重新詢問</Button></p>
     </div>
 
-    <div class="px-6 pt-4 lg:hidden print:hidden" role="tablist" aria-label="畫面切換">
+    <div class="px-4 pt-3 lg:hidden print:hidden" role="tablist" aria-label="畫面切換">
       <div class="grid grid-cols-2 gap-2">
-        <Button role="tab" :variant="tab === 'transcript' ? 'default' : 'outline'" size="lg" :aria-selected="tab === 'transcript'" @click="tab = 'transcript'">逐字稿</Button>
-        <Button role="tab" :variant="tab === 'report' ? 'default' : 'outline'" size="lg" :aria-selected="tab === 'report'" @click="tab = 'report'">報告</Button>
+        <Button role="tab" :variant="tab === 'transcript' ? 'default' : 'outline'" :aria-selected="tab === 'transcript'" @click="tab = 'transcript'">逐字稿</Button>
+        <Button role="tab" :variant="tab === 'report' ? 'default' : 'outline'" :aria-selected="tab === 'report'" @click="tab = 'report'">報告</Button>
       </div>
     </div>
 
-    <div v-if="!confirmed" class="grid flex-1 gap-4 px-6 py-4 lg:grid-cols-2 print:hidden">
-      <div class="flex min-h-0 flex-col gap-4" :class="tab === 'transcript' ? 'flex' : 'hidden lg:flex'">
+    <div v-if="!confirmed" class="grid flex-1 items-start gap-3 px-4 py-3 lg:grid-cols-[2fr_3fr] print:hidden">
+      <!-- Landscape: the transcript column stays in view while the report scrolls. -->
+      <div
+        class="min-h-0 flex-col gap-2 lg:sticky lg:top-3 lg:h-[calc(100dvh-10rem)]"
+        :class="tab === 'transcript' ? 'flex' : 'hidden lg:flex'"
+      >
         <RecorderPanel
           :state="recorder.state.value"
           :level="recorder.level.value"
@@ -94,19 +90,19 @@ function select(path: string) {
         <TranscriptPanel :segments="segments" :highlight="highlight" />
         <form class="flex gap-2" @submit.prevent="sendNote">
           <Input v-model="note" aria-label="補充文字" placeholder="補充文字（例如口述不便時打字）" />
-          <Button type="submit" size="lg" :disabled="!note.trim()">加入</Button>
+          <Button type="submit" :disabled="!note.trim()">加入</Button>
         </form>
       </div>
-      <div class="grid content-start gap-4" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
+      <div class="content-start gap-3" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
         <SafetyBanner :fields="fields" @edit="store.editField" />
         <FlagList :flags="flags" />
         <ReportForm :fields="fields" :selected-path="selectedPath" @select="select" @edit="store.editField" @confirm="store.confirmField" />
       </div>
     </div>
 
-    <div v-else class="grid flex-1 content-start gap-4 px-6 py-4">
+    <div v-else class="grid flex-1 content-start gap-3 px-4 py-3">
       <ExportPanel :text="reportText" />
-      <Button size="lg" variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
+      <Button variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
     </div>
 
     <ConfirmBar

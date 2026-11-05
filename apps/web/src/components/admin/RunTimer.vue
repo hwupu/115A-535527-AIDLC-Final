@@ -18,5 +18,5 @@ const text = computed(() => {
 </script>
 
 <template>
-  <p class="text-6xl font-bold tabular-nums" role="timer" aria-label="計時">{{ text }}</p>
+  <p class="text-5xl font-bold tabular-nums" role="timer" aria-label="計時">{{ text }}</p>
 </template>
