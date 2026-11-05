@@ -2,7 +2,7 @@
 - Date: 2026-11-05
 - Author: 吳普軒
 - Tool / model: Claude Code / Opus 5.5
-- PR: (to be added)
+- PR: #74
 
 ## Prompt
 Make the layout more compact, except for the entry screen and the patient screen. The nurse, physician and admin
