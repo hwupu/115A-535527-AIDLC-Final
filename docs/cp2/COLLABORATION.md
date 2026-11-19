@@ -15,34 +15,12 @@ Per-member counts are in `REQUIREMENTS.md`. Only real events go here and in `DEC
 - **張棨翔:** record the Week 11 steward handover.
 - If someone is overloaded, ask their area lead to reassign. Do not split empty or doc-only PRs to hit the count.
 
-## Walking skeleton (Week 9) - record when confirmed
+## Team sessions (TA worksheets, 2026-11-19)
 
-Copy into `DECISIONS.md` only with real facts:
+Order: **walking skeleton → merge day → E3 submission** (Nov 29). Both need all four members.
 
-```markdown
-## 2026-11-0X — Walking skeleton session
-- Status: held
-- Attendees: (all four names)
-- What each person changed: ...
-- Result: end-to-end path that ran (patient/nurse → api → doctor), test result
-- Merged PR: #...
-- What we learned: ...
-- Led by: ...
-```
+- **Walking skeleton** (~75 min): fill `docs/walking_skeleton.md` during the session. We already run end to end, so use Route 2: someone who did not write each box explains it, then the team builds the next thin slice. Hand in the merged `skeleton` PR, reviewed on screen by the current steward with a real comment, plus one `DECISIONS.md` line.
+- **Merge day** (~60 min + 15 min steward prep): the steward writes the merge plan in `DECISIONS.md` *before* the session (worksheet Part 0). Merge one PR at a time, running tests and the app on `main` after each. Someone other than the steward does the fresh-clone test. Add the outcome under the plan and save `docs/merge_day.md`.
+- **Peer review, Mon Nov 23 lab:** bring the repo link, a laptop that runs the demo, and one teammate who can demo without help. Afterwards, turn the findings into issues, rewrite three AI rules so they can be checked from a PR, and make one change to the evaluation plan.
 
-If the team never held a joint session, say so honestly in the submission rather than relabeling another PR.
-
-## Merge day (Week 11, Nov 16–22) - not yet held
-
-Agenda: list open PRs and their dependency order; agree who owns each conflict; resolve conflicts; run `./scripts/check-cp2.sh` from a clean checkout of `main`; confirm the demo runs; record unresolved limits.
-
-```markdown
-## 2026-11-2X — Merge day plan and result
-- Status: held
-- Attendees: (all four names)
-- Open PRs and merge order: #74 → ... (who owns each conflict)
-- Result: merged ..., deferred ... (why)
-- main after merge: checks pass / demo runs (commit sha)
-- What we learned: ...
-- Led by: (Week 11 steward 張棨翔)
-```
+Both session PRs are a natural way for 林均澔 and 劉順松 to reach their PR and approval minimums.

@@ -33,4 +33,7 @@
   missing PRs/approvals for 劉順松 and 林均澔.
 - Update after #74 merged: merged `main` into #75 (no conflicts) and refreshed the per-member counts
   (吳普軒 8 PRs; 劉順松 1 approval with a comment, on #74).
+- TA supplements (CP2-guidance.pdf, two worksheets): rewrote ticket #49 (deadline 11/29, peer-review prep, session
+  order, per-member minimums; owner unchanged) and added the worksheets as `docs/walking_skeleton.md` and
+  `docs/merge_day.md`. Corrected my earlier framing of the walking skeleton as a missed Week 9 event.
 - Note: the agent merging #73 departs from the 2026-10-08 decision; recorded in `DECISIONS.md` for the team to rule on.

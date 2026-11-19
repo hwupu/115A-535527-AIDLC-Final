@@ -4,7 +4,7 @@ Source: published CP2 page, https://csic30216-fall26.denniswang.net/project/cp2/
 
 - **Mon 2026-11-23, Week 12 lab:** peer review. The prototype must be demonstrable when we arrive.
 - **Sun 2026-11-29, end of day:** E3 deadline. One zip per group named `GroupXX_CP2` (ours: `Group01_CP2`), all deliverables plus the repository link as a plain-text file. Build with `python3 scripts/package-cp2.py`.
-- Merge day is a Week 11 session outside class (Nov 16–22).
+- Team sessions (TA material, 2026-11-19): walking skeleton first, then merge day, both before submission. Worksheets: `docs/walking_skeleton.md`, `docs/merge_day.md`.
 - Grading is on evidence, not claims. Honest gaps cost nothing.
 
 Status as of 2026-11-19. Update this table in the same PR that adds the evidence.
@@ -21,8 +21,8 @@ Status as of 2026-11-19. Update this table in the same PR that adds the evidence
 | 6 | Prompt test suite: ≥10 cases, typical + edge, ≥1 fail→fix→re-run | 6 | `eval/cases.json` (12); `evidence/prompt-v2.jsonl` → `prompt-v3.jsonl` (T01) | Done |
 | 7 | `DECISIONS.md` complete through Phase 2, cross-referenceable with PRs | 10 | `DECISIONS.md` | Partial: steward handovers Weeks 9–11 and model decision pending |
 | 8 | Contributor graph: substantive code from all four | 15 | [graph](https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors); `COLLABORATION.md` | **Not met for 林均澔; 劉順松 has 1 of 2 PRs** |
-| 9 | Walking skeleton: link to the merged PR from the Week 9 session | (in 10 "team sessions") | — | **Missing** |
-| 10 | Merge day: `DECISIONS.md` merge-plan entry from the Week 11 session | (in 10 "team sessions") | template in `COLLABORATION.md` | **Not held yet** |
+| 9 | Walking skeleton: merged PR + `docs/walking_skeleton.md` | (in 10 "team sessions") | worksheet in repo | **Not held yet** (must come before merge day) |
+| 10 | Merge day: merge plan + outcome in `DECISIONS.md`, `docs/merge_day.md` | (in 10 "team sessions") | worksheet in repo | **Not held yet** |
 | — | Review quality and code steward role | 15 | PR reviews; `DECISIONS.md` | Partial: approvals without comments do not count |
 
 Product = rows 1–6 (50). Collaboration = 8, review quality, 7, team sessions 9–10 (50).

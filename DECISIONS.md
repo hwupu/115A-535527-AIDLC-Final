@@ -11,7 +11,8 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
 - Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
   2026-11-19 says the Week 12 lab on Mon Nov 23 is peer review, where the prototype must be demonstrable, and the E3
-  deadline is Sun Nov 29. Merge day is a Week 11 session outside class.
+  deadline is Sun Nov 29. The TA's CP2 guidance (2026-11-19) orders the team sessions: walking skeleton, then merge
+  day, both before submission (worksheets in `docs/walking_skeleton.md` and `docs/merge_day.md`).
 - Decision: be demo-ready on Nov 23 and submit `Group01_CP2.zip` to E3 by Nov 29. This supersedes the CP2 date in
   "Two-week sprints and schedule". Evidence matrix: `docs/cp2/REQUIREMENTS.md`.
 - Consequences: six extra days for the two outside-team user sessions and the per-member PR minimums.
