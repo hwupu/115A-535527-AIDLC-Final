@@ -84,6 +84,7 @@ function select(path: string) {
           :level="recorder.level.value"
           :error="recorder.error.value"
           :disabled="consent !== 'yes'"
+          :connection="connection.ws"
           @start="startRecording"
           @stop="stopRecording"
         />
