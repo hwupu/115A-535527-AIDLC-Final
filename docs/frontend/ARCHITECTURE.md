@@ -12,9 +12,11 @@ Decisions made on 2026-10-28 (frontend lead): shadcn-vue, Pinia, larger default 
 - The frontend never calls `stt` or `llm` directly; it talks only to `services/api` (REST + WebSocket).
 - All UI text in 繁體中文（台灣）; clinical terms follow the glossary in the handoff.
 - **Readable by default:** base text 18 px (20 px from 768 px wide), nothing smaller than 16 px, buttons at least 48 px tall.
+  Staff screens (nurse, physician, admin) are compact: 18 px at every width, 1 px borders, rows instead of a box per item
+  (route `meta.compact`, `compact:` variant in `src/style.css`; DECISIONS.md 2026-11-05).
   High-contrast light theme (body text at least 7:1), professional blue and neutral palette, no web fonts (offline demo).
-- Simulated data only; a "demo / simulated data" banner is always visible. The UI collects **no personal information**: patients are
-  identified only by a system-assigned simulated 就診號 (per visit; the permanent 就診號 is out of scope, no HIS).
+- Simulated data only (visit numbers are `SIM-######`); there is no on-screen demo banner (removed 2026-11-05 to save
+  space). The UI collects **no personal information**: patients are identified only by a system-assigned simulated 就診號 (per visit; the permanent 就診號 is out of scope, no HIS).
 
 ## 2. Stack
 
@@ -37,7 +39,8 @@ tuned for size and contrast; it is excluded from lint. The CLI makes the generat
 
 - Palette is defined once as CSS variables (`--primary` deep blue, `--foreground` near-black, `--muted-foreground` dark grey,
   `--warning`, `--success`, `--destructive`). Use the semantic classes (`text-foreground`, `bg-card`, ...), not raw colours.
-- Borders are 2 px and clearly visible; focus is a 3 px outline; no information by colour alone (always a label or icon too).
+- Borders are 2 px and clearly visible (1 px on compact staff screens); focus is a 3 px outline; no information by colour alone
+  (always a label or icon too).
 - Dark theme is not provided.
 
 ## 3. Routes and roles
@@ -121,12 +124,12 @@ minimal, behind a **contract** (props, emits or composable shape) that the owner
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│ 返回清單 · 就診號 SIM-000001 · 進行中                              │
+│ RoleHeader: 檢傷護理師 · 返回清單 · 就診號 SIM-000001 · 進行中      │
 │ [connection banners]  [consent gate until answered]            │
 ├───────────────────────────┬───────────────────────────────────┤
 │ RecorderPanel             │ SafetyBanner (量測禁忌 + 手圈)        │
-│ TranscriptPanel           │ FlagList (建議留意)                  │
-│ (+ nurse text box)        │ ReportForm → FieldRow ×N            │
+│ TranscriptPanel (sticky)  │ FlagList (建議留意)                  │
+│ (+ nurse text box)        │ ReportForm → FieldRow rows ×N       │
 ├───────────────────────────┴───────────────────────────────────┤
 │ ConfirmBar: 檢傷級數 1–5 (nurse) · 確認並儲存                      │
 └───────────────────────────────────────────────────────────────┘

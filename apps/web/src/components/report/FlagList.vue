@@ -7,16 +7,16 @@ defineProps<{ flags: Flag[] }>();
 </script>
 
 <template>
-  <section v-if="flags.length" class="rounded-xl border-2 border-dashed border-primary bg-card p-4" aria-label="系統建議留意">
-    <h3 class="flex items-center gap-2 text-xl font-bold">
-      <Lightbulb class="size-6 text-primary" aria-hidden="true" />
+  <section v-if="flags.length" class="rounded-lg border border-dashed border-primary bg-card px-3 py-2" aria-label="系統建議留意">
+    <h3 class="flex flex-wrap items-center gap-x-2 text-lg font-bold">
+      <Lightbulb class="size-5 text-primary" aria-hidden="true" />
       建議留意
+      <span class="text-base font-normal text-muted-foreground">系統根據對話提示，非診斷，由護理師判斷。</span>
     </h3>
-    <p class="text-base text-muted-foreground">系統根據對話提示，非診斷，由護理師判斷。</p>
-    <ul class="mt-2 grid gap-2">
-      <li v-for="f in flags" :key="f.text" class="rounded-lg bg-muted px-3 py-2 text-lg">
-        <span class="font-semibold">{{ f.text }}</span>
-        <span class="block text-base text-muted-foreground">依據：「{{ f.basis }}」</span>
+    <ul class="mt-1 grid gap-1">
+      <li v-for="f in flags" :key="f.text" class="text-lg">
+        <span class="font-semibold">・{{ f.text }}</span>
+        <span class="ml-2 text-base text-muted-foreground">依據：「{{ f.basis }}」</span>
       </li>
     </ul>
   </section>
