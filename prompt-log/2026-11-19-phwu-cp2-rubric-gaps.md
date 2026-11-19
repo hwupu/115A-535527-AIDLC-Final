@@ -31,4 +31,6 @@
 - Not done by AI (needs humans): the two outside-team user sessions, walking-skeleton and merge-day records,
   steward handover entries for Weeks 9–11, the Qwen vs Gemma-4 decision (PO), ratifying guidelines v0.2, and the
   missing PRs/approvals for 劉順松 and 林均澔.
+- Update after #74 merged: merged `main` into #75 (no conflicts) and refreshed the per-member counts
+  (吳普軒 8 PRs; 劉順松 1 approval with a comment, on #74).
 - Note: the agent merging #73 departs from the 2026-10-08 decision; recorded in `DECISIONS.md` for the team to rule on.

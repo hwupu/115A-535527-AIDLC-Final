@@ -35,9 +35,9 @@ Counted from GitHub on 2026-11-19 (PRs merged into `main`):
 
 | Member | Merged code PRs | Approvals with a comment | Steward recorded in `DECISIONS.md` |
 |---|---|---|---|
-| 吳普軒 (hwupu) | 7 (#54 #55 #56 #69 #70 #71 #72) | 3 (#67 #68 #73) | Yes (Week 8) |
+| 吳普軒 (hwupu) | 8 (#54 #55 #56 #69 #70 #71 #72 #74) | 3 (#67 #68 #73) | Yes (Week 8) |
 | 張棨翔 (XiangLibra) | 2 (#67 #68) | 3 (#54 #55 #56) | No (Week 11 per schedule) |
-| 劉順松 (414551016) | 1 (#73) | 0 | No (Week 9 per schedule) |
+| 劉順松 (414551016) | 1 (#73) | 1 (#74) | No (Week 9 per schedule) |
 | 林均澔 (junlinwk) | 0 | 0 (4 approvals on #69–#72 have empty bodies) | No (Week 10 per schedule) |
 
 "Substantive" is the instructor's call; #67 (uv projects) and #68 (healthcheck fix) are small. Re-count before submission.

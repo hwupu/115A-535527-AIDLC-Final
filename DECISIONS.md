@@ -27,7 +27,8 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   account. This departs from "AI agent as Scrum Master" (2026-10-08: the agent does not merge to `main`). The team
   should ratify or reject the amendment proposed in `AI_USAGE_GUIDELINES.md` §1.
 - Consequences: the Qwen adapter is now on `main` while the model choice is still open (next entry). #74's conflict
-  with #73 in `NurseSession.vue` was resolved on the #74 branch.
+  with #73 in `NurseSession.vue` was resolved on the #74 branch; 劉順松 then approved #74 with a written review
+  (submitted by Codex on their instruction) and merged it the same day.
 - Decided by: 吳普軒 (approver and merger)
 
 ## 2026-11-19 — Extraction model for CP2 (OPEN, needs the Product Owner)

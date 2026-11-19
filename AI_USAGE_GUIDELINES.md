@@ -23,7 +23,7 @@ General rules:
 - Every PR is approved by a human other than the author, regardless of who or what wrote the code.
 - **(proposed)** An approval must contain a substantive comment: a question, concern, or specific suggestion with what was checked. An empty approval is not a review (the CP2 rubric does not count it either).
 - **(proposed)** PR checklist boxes are ticked only after the event happens. AI tools must not tick review, approval or user-testing boxes.
-- **(proposed)** An AI agent may run `gh pr review` / `gh pr merge` only on an explicit instruction from the human approver in the same session, under that human's account. The human is accountable for the approval and merge. This amends the 2026-10-08 Scrum Master entry. It first happened with #73 on 2026-11-19.
+- **(proposed)** An AI agent may run `gh pr review` / `gh pr merge` only on an explicit instruction from the human approver in the same session, under that human's account. The human is accountable for the approval and merge. This amends the 2026-10-08 Scrum Master entry. It first happened with #73 (Claude Code, for 吳普軒) and #74 (Codex, for 劉順松) on 2026-11-19.
 - AI agents never record attendance, user-test findings, approvals or a teammate's authorship that did not happen.
 
 ## 2. How we will document AI interactions
@@ -59,5 +59,5 @@ Trivial uses (typo fixes, explaining a single error message) need no entry.
 | Extraction model shown as open (Qwen today, Gemma-4 planned) | #73 shipped a Qwen CPU adapter for a 4 GB-VRAM laptop; no Gemma-4 run exists |
 | Approvals need a substantive comment | Four approvals on #69–#72 had empty bodies; the CP2 rubric does not count them |
 | Checklist boxes ticked only after the fact | #73's checklist marked reviews that had not happened |
-| AI may merge only on the approver's explicit instruction | #73 was approved and merged by Claude Code on 吳普軒's instruction; v0.1 and the 2026-10-08 entry did not allow this |
+| AI may merge only on the approver's explicit instruction | #73 (Claude Code, for 吳普軒) and #74 (Codex, for 劉順松) were approved by AI agents on the approver's instruction; v0.1 and the 2026-10-08 entry did not allow this |
 | Prompt-log gap acknowledged | Frontend PRs #69–#72 were AI-assisted but have no `prompt-log/` entry. Going forward the PR author adds the entry in the same PR |

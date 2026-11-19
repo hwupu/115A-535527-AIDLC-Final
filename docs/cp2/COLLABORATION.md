@@ -11,7 +11,7 @@ Per-member counts are in `REQUIREMENTS.md`. Only real events go here and in `DEC
 
 - **Approvals must carry a substantive comment**: a question, concern or specific suggestion. An empty "Approve" or "LGTM" does not count. Every PR needs one human approver other than the author.
 - **林均澔:** 2 merged PRs with substantive code; 2 approvals with comments; record the Week 10 steward handover.
-- **劉順松:** 1 more merged PR with substantive code; 2 approvals with comments; record the Week 9 steward handover.
+- **劉順松:** 1 more merged PR with substantive code; 1 more approval with a comment (has #74); record the Week 9 steward handover.
 - **張棨翔:** record the Week 11 steward handover.
 - If someone is overloaded, ask their area lead to reassign. Do not split empty or doc-only PRs to hit the count.
 
