@@ -46,6 +46,8 @@ describe("nurse session store", () => {
     await store.editField("chief_complaint", "發燒");
     await store.editField("chief_complaint", "");
     expect(store.fields.chief_complaint).toMatchObject({ value: null, status: "未提及" });
+    store.applyServerMessage(draft("chief_complaint", "新 AI 值"));
+    expect(store.fields.chief_complaint.value).toBeNull();
   });
 
   it("blocks saving until drafts are handled and a level is entered", async () => {

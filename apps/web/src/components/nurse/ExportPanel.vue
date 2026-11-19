@@ -4,15 +4,27 @@ import { Check, Copy, Printer } from "@lucide/vue";
 import { ref } from "vue";
 import { Button } from "@/components/ui/button";
 
-const props = defineProps<{ text: string }>();
+const props = defineProps<{ text: string; report?: unknown }>();
 const copied = ref(false);
+const error = ref("");
 
 const print = () => window.print();
 
 async function copy() {
-  await navigator.clipboard.writeText(props.text);
-  copied.value = true;
-  setTimeout(() => (copied.value = false), 2000);
+  try {
+    await navigator.clipboard.writeText(props.text);
+    copied.value = true;
+    error.value = "";
+    setTimeout(() => (copied.value = false), 2000);
+  } catch { error.value = "無法使用剪貼簿，請選取下方文字複製。"; }
+}
+function downloadJson() {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(props.report, null, 2)], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "confirmed-report.json";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 </script>
 
@@ -32,7 +44,10 @@ async function copy() {
         <Printer aria-hidden="true" />
         列印
       </Button>
+      <Button v-if="report" size="lg" variant="outline" @click="downloadJson">下載 JSON</Button>
     </div>
+    <p v-if="error" role="alert">{{ error }}</p>
+    <textarea v-if="error" :value="text" readonly aria-label="報告文字" class="mt-2 w-full bg-white p-3" />
     <pre class="mt-3 hidden whitespace-pre-wrap text-lg text-foreground print:block">{{ text }}</pre>
   </section>
 </template>

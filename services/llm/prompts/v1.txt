@@ -1,0 +1,3 @@
+Extract a triage record in Traditional Chinese. Output JSON only:
+{"fields":{"chief_complaint":{"value":"症狀","source_span":"原句"}}}.
+Allowed keys: chief_complaint, hpi.onset, tocc.travel, measurement.vitals.temp_c, measurement.restrictions, patient.mobility.

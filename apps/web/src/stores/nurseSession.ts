@@ -71,7 +71,7 @@ export const useNurseSessionStore = defineStore("nurseSession", () => {
       }
       case "field.update": {
         const current = fields.value[m.path];
-        if (!current || current.status === "護理師已確認") break; // never overwrite the nurse
+        if (!current || current.status === "護理師已確認" || current.source === "nurse_edit") break; // never overwrite the nurse
         fields.value[m.path] = { value: m.value as FieldValue, status: m.status, source_span: m.source_span, source: m.source };
         break;
       }
@@ -229,8 +229,10 @@ export const useNurseSessionStore = defineStore("nurseSession", () => {
     if (!t || !sessionId.value) return false;
     const id = sessionId.value;
     return (await guard(async () => {
-      await api.addTextInput(id, t, "nurse");
-      segments.value.push({ segment_id: `local-${Date.now()}`, speaker: "nurse", text: t, start: 0, end: 0, final: true });
+      const result = await api.addTextInput(id, t, "nurse");
+      if (!segments.value.some((segment) => segment.segment_id === result.input_id)) {
+        segments.value.push({ segment_id: result.input_id, speaker: "nurse", text: t, start: 0, end: 0, final: true });
+      }
       return true;
     }, "送出失敗")) ?? false;
   }

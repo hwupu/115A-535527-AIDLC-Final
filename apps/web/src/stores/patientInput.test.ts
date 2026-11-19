@@ -3,6 +3,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api } from "@/api";
 import { usePatientInputStore, VISIT_NO_PATTERN } from "./patientInput";
 
+// Store tests mock microphone hardware; the browser integration test covers actual MediaRecorder.
+vi.mock("@/composables/useRecorder", async () => {
+  const { ref } = await import("vue");
+  return { useRecorder: () => {
+    const state = ref("idle");
+    return { state, level: ref(0), error: ref(""), start: async () => { state.value = "recording"; }, stop: () => { state.value = "idle"; } };
+  } };
+});
+
 let store: ReturnType<typeof usePatientInputStore>;
 beforeEach(() => {
   setActivePinia(createPinia());
@@ -36,6 +45,8 @@ describe("patient intake store", () => {
     await store.toggleListening();
     expect(store.listening).toBe(false);
     expect(store.entries[0].kind).toBe("voice");
+    expect(store.canFinish).toBe(false); // wait for server transcription acknowledgement
+    await new Promise((resolve) => setTimeout(resolve, 1700));
     expect(store.canFinish).toBe(true);
   });
 

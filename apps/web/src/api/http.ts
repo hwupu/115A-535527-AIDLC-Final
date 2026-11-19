@@ -60,11 +60,21 @@ export const httpClient: ApiClient = {
   connect(sessionId: string, role: Role, handlers: RealtimeHandlers): RealtimeConnection {
     const scheme = location.protocol === "https:" ? "wss" : "ws";
     const ws = new WebSocket(`${scheme}://${location.host}/api/sessions/${sessionId}/ws?role=${role}`);
+    const pending: (string | Blob)[] = [];
+    const send = (data: string | Blob) => {
+      if (ws.readyState === WebSocket.OPEN) ws.send(data);
+      else if (ws.readyState === WebSocket.CONNECTING) pending.push(data);
+    };
+    ws.onopen = () => { for (const data of pending.splice(0)) ws.send(data); };
     ws.onmessage = (e) => handlers.onMessage(JSON.parse(e.data));
     ws.onclose = () => handlers.onClose?.();
     return {
-      send: (message) => ws.send(JSON.stringify(message)),
-      sendAudio: (chunk) => ws.send(chunk),
+      send: (message) => send(JSON.stringify(message)),
+      sendAudio: (chunk) => {
+        send(JSON.stringify({ type: "recording.start" }));
+        send(chunk);
+        send(JSON.stringify({ type: "recording.stop" }));
+      },
       close: () => ws.close(),
     };
   },

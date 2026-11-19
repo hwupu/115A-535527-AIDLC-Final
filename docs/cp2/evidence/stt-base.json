@@ -1,0 +1,14 @@
+{
+  "kind": "synthetic Windows Hanhan TTS, not human evaluation",
+  "reference": "從昨天開始發燒，咳嗽，沒有旅遊史。",
+  "model": "base",
+  "device": "cpu",
+  "compute_type": "int8",
+  "segments": [
+    {
+      "text": "從昨天開始發燒,咳嗽沒有綠優勢",
+      "start": 0.0,
+      "end": 4.08
+    }
+  ]
+}

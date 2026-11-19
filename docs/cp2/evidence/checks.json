@@ -1,0 +1,46 @@
+[
+  {
+    "exit": 0,
+    "name": "web-lint"
+  },
+  {
+    "exit": 0,
+    "name": "web-typecheck"
+  },
+  {
+    "exit": 0,
+    "name": "web-test"
+  },
+  {
+    "exit": 0,
+    "name": "web-build"
+  },
+  {
+    "exit": 0,
+    "name": "api-lint"
+  },
+  {
+    "exit": 0,
+    "name": "api-tests"
+  },
+  {
+    "exit": 0,
+    "name": "stt-lint"
+  },
+  {
+    "exit": 0,
+    "name": "stt-tests"
+  },
+  {
+    "exit": 0,
+    "name": "llm-lint"
+  },
+  {
+    "exit": 0,
+    "name": "llm-tests"
+  },
+  {
+    "exit": 0,
+    "name": "metrics"
+  }
+]

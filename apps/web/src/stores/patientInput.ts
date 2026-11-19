@@ -42,9 +42,14 @@ export const usePatientInputStore = defineStore("patientInput", () => {
 
   function ensureConnection(id: string) {
     conn ??= api.connect(id, "patient", {
-      onMessage: () => (offline.value = false),
+      onMessage: (message) => {
+        offline.value = false;
+        if (message.type === "transcript.segment") busy.value = false;
+        if (message.type === "error") { busy.value = false; error.value = message.message; }
+      },
       onClose: () => {
         offline.value = true;
+        busy.value = false;
         conn = null;
       },
     });
@@ -78,6 +83,7 @@ export const usePatientInputStore = defineStore("patientInput", () => {
       recorder.stop();
       conn?.send({ type: "recording.stop" });
       listening.value = false;
+      busy.value = true;
       const seconds = Math.max(1, Math.round((Date.now() - listeningSince) / 1000));
       push("voice", `語音輸入（${seconds} 秒）`);
       return;

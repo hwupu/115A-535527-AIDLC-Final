@@ -101,7 +101,7 @@ function select(path: string) {
     </div>
 
     <div v-else class="grid flex-1 content-start gap-3 px-4 py-3">
-      <ExportPanel :text="reportText" />
+      <ExportPanel :text="reportText" :report="{ session_id: store.sessionId, visit_no: store.visitNo, confirmed_at: store.confirmedAt, triage_level: triageLevel, fields, flags }" />
       <Button variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
     </div>
 
