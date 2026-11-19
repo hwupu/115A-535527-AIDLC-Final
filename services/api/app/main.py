@@ -233,6 +233,15 @@ async def add_input(sid, text, role):
                 )
                 response.raise_for_status()
                 result = response.json()
+                # Reject broken envelopes before applying any draft field. A JSON
+                # value can be syntactically valid but still violate our contract.
+                if (
+                    not isinstance(result, dict)
+                    or not isinstance(result.get("fields"), dict)
+                    or not isinstance(result.get("metadata", {}), dict)
+                    or not isinstance(result.get("rejected", []), list)
+                ):
+                    raise ValueError("Invalid extraction response envelope")
             with Database.begin() as db:
                 row = get(db, sid)
                 d = deepcopy(row.data)

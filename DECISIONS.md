@@ -224,3 +224,12 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   components tighten with the `compact:` Tailwind variant (`apps/web/src/style.css`). Whether 18 px reads well on the ward
   tablet is a pilot question (E9).
 - Decided by: 吳普軒 (frontend lead)
+
+
+## 2026-11-19 - Issue #77 AI failure slice (proposal, pending team session)
+- Status: proposed by the user-authorized Codex preparation; not a ratified team decision or attendance record.
+- Context: malformed model JSON can crash extraction or be reported as success. #77 allows a Route 2 AI failure slice with fake-model tests after checking higher-priority gaps.
+- Proposed decision: validate the response envelope before applying fields and reuse the existing recoverable nurse notification. Preserve transcript and manual workflow.
+- Alternative rejected in this candidate: swallowing all exceptions or treating malformed envelopes as successful empty extraction.
+- Human owner: 劉順松 (414551016); team acceptance and session lead remain pending.
+- Evidence: services/api/tests/test_ai_failure.py; docs/cp2/ISSUE77_SESSION_PREP.md. The four-person session, actual steward review and merged session PR remain outstanding.
