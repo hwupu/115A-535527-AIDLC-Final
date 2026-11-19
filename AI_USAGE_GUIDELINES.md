@@ -1,29 +1,30 @@
-# AI Usage Guidelines (Draft v0.1)
+# AI Usage Guidelines (Draft v0.2, 2026-11-19, pending team ratification)
 
-## CP2 local candidate addendum (2026-11-04, pending team ratification)
-
-劉順松 authorized Codex to implement and verify the CP2 candidate locally. Codex drafted code, tests and documentation and collected machine outputs; all interpretations and claims require human review. No external-user findings, attendance, approvals or other members' contributions are generated or claimed. See docs/cp2/PROMPT_CARD.md and prompt-log/2026-11-04-414551016-cp2.md. Existing main rules remain: humans own decisions and review every change.
-
-The tested hardware adapter uses local Qwen/Qwen2.5-0.5B-Instruct on CPU and Whisper small int8. This substitutes for the planned unimplemented Gemma runtime only in this local review candidate. The team must confirm or replace it before declaring the project architecture final. No cloud inference, real patient audio or identifiers were used.
-
-Actual synthetic AI failures are retained with successful runs. Automated tests are not user research. Human confirmation of reported outcomes remains required. The AI does not approve or merge PRs, represent a teammate's authorship, or submit to E3.
+v0.1 was the Week 3 plan. v0.2 updates it to how we actually worked in Phase 2 (Weeks 8–11); see "Changes from v0.1"
+at the end. Items marked **(proposed)** are new rules the team still has to accept in PR review.
 
 Current code steward: see `DECISIONS.md` (rotates weekly)
 
-## 1. What AI tools we plan to use, and what we will use each for
+## 1. AI tools we use, and what we use each for
 
-| Tool | Used for | NOT used for |
-|------|----------|--------------|
-| Claude Code | Drafting code and tests, explaining unfamiliar code, refactoring suggestions, first-pass code review | Merging or pushing to `main`; architecture decisions; writing the evaluation results or interpreting user data; anything touching secrets or credentials |
-| Local models (Whisper for speech-to-text, Gemma-4 for field extraction; runtime TBD) | Transcribing simulated triage conversations and drafting structured, source-linked report fields for the nurse to review | Receiving real patient data or identifiable audio; assigning a triage level (檢傷級數); diagnosis or medical advice; writing to a real HIS; inventing values that were not said |
+| Tool | Who used it in Phase 2 | Used for | NOT used for |
+|------|------------------------|----------|--------------|
+| Claude Code (Sonnet / Opus) | 吳普軒 (frontend, repo setup, Scrum Master role), 張棨翔 (#67, #68) | Drafting code, tests and docs; first-pass review; Scrum Master facilitation and drafting `DECISIONS.md` / `prompt-log/` entries | Deciding scope, 檢傷級數 logic or evaluation conclusions; secrets |
+| Codex desktop | 劉順松 (#73) | Implementing and verifying the CP2 backend, local inference adapters, prompt suite and CP2 documents | Same limits as above |
+| Local Whisper (`small`, CPU int8) | in the app | Transcribing simulated triage conversations | Real patient audio; anything outside the local machine |
+| Local extraction LLM: Qwen2.5-0.5B-Instruct on CPU today; Gemma-4 planned (choice OPEN, see `DECISIONS.md` 2026-11-19) | in the app | Copying source-supported phrases into selected report fields for the nurse to review | Assigning a triage level; diagnosis or medical advice; writing to a real HIS; inventing unsaid values |
 
-Whisper and Gemma-4 are approved for the prototype under the scope in `DECISIONS.md` (2026-10-27). Any additional AI tool or a material expansion of scope requires a new `DECISIONS.md` entry first.
+Adding an AI tool or widening the app's AI scope needs a `DECISIONS.md` entry first. The #73 model substitution
+showed why: it shipped before the Product Owner had decided.
 
 General rules:
 - AI output is a draft. A human teammate reads, understands, and can explain every line before it is committed.
-- No secrets, credentials, or identifiable patient data are pasted into Claude Code or any public AI service.
-- Local models may receive only synthetic scenarios and consented teammate recordings inside the approved local environment. Local use does not remove the need for consent and privacy review.
-- Every PR is approved by a human reviewer other than the author, regardless of who or what wrote the code.
+- No secrets, credentials, or identifiable patient data in any AI tool. Local models get only synthetic scenarios and consented teammate recordings.
+- Every PR is approved by a human other than the author, regardless of who or what wrote the code.
+- **(proposed)** An approval must contain a substantive comment: a question, concern, or specific suggestion with what was checked. An empty approval is not a review (the CP2 rubric does not count it either).
+- **(proposed)** PR checklist boxes are ticked only after the event happens. AI tools must not tick review, approval or user-testing boxes.
+- **(proposed)** An AI agent may run `gh pr review` / `gh pr merge` only on an explicit instruction from the human approver in the same session, under that human's account. The human is accountable for the approval and merge. This amends the 2026-10-08 Scrum Master entry. It first happened with #73 on 2026-11-19.
+- AI agents never record attendance, user-test findings, approvals or a teammate's authorship that did not happen.
 
 ## 2. How we will document AI interactions
 
@@ -49,3 +50,14 @@ Trivial uses (typo fixes, explaining a single error message) need no entry.
     3. A comparison against the alternative (human-written or a different AI output) on correctness, readability, and maintenance cost.
     4. Any cited API or library behavior is checked against official documentation.
   - **Resolution:** the steward records the ruling in `DECISIONS.md` (what was chosen, why, alternative rejected, led by). The team follows the ruling; it can be revisited only with new evidence.
+
+## Changes from v0.1 and why
+
+| Change | Evidence from Phase 2 |
+|---|---|
+| Tool table lists who actually used which tool; Codex added | Commit co-author trailers (Claude) on #54–#72; `prompt-log/2026-11-04-414551016-cp2.md` (Codex) |
+| Extraction model shown as open (Qwen today, Gemma-4 planned) | #73 shipped a Qwen CPU adapter for a 4 GB-VRAM laptop; no Gemma-4 run exists |
+| Approvals need a substantive comment | Four approvals on #69–#72 had empty bodies; the CP2 rubric does not count them |
+| Checklist boxes ticked only after the fact | #73's checklist marked reviews that had not happened |
+| AI may merge only on the approver's explicit instruction | #73 was approved and merged by Claude Code on 吳普軒's instruction; v0.1 and the 2026-10-08 entry did not allow this |
+| Prompt-log gap acknowledged | Frontend PRs #69–#72 were AI-assisted but have no `prompt-log/` entry. Going forward the PR author adds the entry in the same PR |

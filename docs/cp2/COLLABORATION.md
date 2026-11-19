@@ -5,18 +5,44 @@ Contributor graph: https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contr
 PR list: https://github.com/hwupu/115A-535527-AIDLC-Final/pulls?q=is%3Apr
 Board: https://github.com/users/hwupu/projects/3/views/1
 
-Local integration preserves existing frontend work by hwupu and infrastructure by XiangLibra. This run does not establish substantive merged PRs for 414551016 or junlinwk, does not impersonate their contributions, and does not approve any PR.
+Per-member counts are in `REQUIREMENTS.md`. Only real events go here and in `DECISIONS.md`. Do not fill a template before the session happens.
 
-Each member must supply links to >=2 substantive code PRs merged before CP2, >=2 steward approvals each with a substantive comment, and a confirmed DECISIONS steward entry. A screenshot of a graph alone does not prove these details. Verify the actual PR diff/base/merge state, not just the green merged label on a non-main branch.
+## What each member still needs (as of 2026-11-19)
 
-## Walking skeleton - NOT CONDUCTED BY THIS RUN
+- **Approvals must carry a substantive comment**: a question, concern or specific suggestion. An empty "Approve" or "LGTM" does not count. Every PR needs one human approver other than the author.
+- **林均澔:** 2 merged PRs with substantive code; 2 approvals with comments; record the Week 10 steward handover.
+- **劉順松:** 1 more merged PR with substantive code; 2 approvals with comments; record the Week 9 steward handover.
+- **張棨翔:** record the Week 11 steward handover.
+- If someone is overloaded, ask their area lead to reassign. Do not split empty or doc-only PRs to hit the count.
 
-Record actual date, four attendees, what each changed, test result and merged PR URL. The technical prototype being runnable is not a substitute for the required joint session.
+## Walking skeleton (Week 9) - record when confirmed
 
-## Merge day - NOT YET CONDUCTED
+Copy into `DECISIONS.md` only with real facts:
 
-Week 11 agenda: list outstanding PRs and dependency order; agree conflict owners; resolve real conflicts; run checks from a clean checkout; verify main demo stability; record unresolved limits. Add the actual plan and result to DECISIONS.md when humans conduct it, not in advance as a fabricated event.
+```markdown
+## 2026-11-0X — Walking skeleton session
+- Status: held
+- Attendees: (all four names)
+- What each person changed: ...
+- Result: end-to-end path that ran (patient/nurse → api → doctor), test result
+- Merged PR: #...
+- What we learned: ...
+- Led by: ...
+```
 
-## Review suggestions for this work
+If the team never held a joint session, say so honestly in the submission rather than relabeling another PR.
 
-Suggested review units (not fabricated separate contributions): frontend/recorder/export and tests; backend persistence/audit/workflow and tests; local inference/prompt revision/metrics. Team chooses actual branches and authorship after understanding the changes. Do not split empty or documentation-only PRs merely to satisfy the code count.
+## Merge day (Week 11, Nov 16–22) - not yet held
+
+Agenda: list open PRs and their dependency order; agree who owns each conflict; resolve conflicts; run `./scripts/check-cp2.sh` from a clean checkout of `main`; confirm the demo runs; record unresolved limits.
+
+```markdown
+## 2026-11-2X — Merge day plan and result
+- Status: held
+- Attendees: (all four names)
+- Open PRs and merge order: #74 → ... (who owns each conflict)
+- Result: merged ..., deferred ... (why)
+- main after merge: checks pass / demo runs (commit sha)
+- What we learned: ...
+- Led by: (Week 11 steward 張棨翔)
+```

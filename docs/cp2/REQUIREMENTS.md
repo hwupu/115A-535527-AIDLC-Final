@@ -1,22 +1,43 @@
 # CP2 evidence matrix
 
-Source checked in this chat: https://csic30216-fall26.denniswang.net/project/cp2/ and https://csic30216-fall26.denniswang.net/project/ . Due 2026-11-23 end of day; prototype must run before class. Group1, 劉順松 414551016.
+Source: published CP2 page, https://csic30216-fall26.denniswang.net/project/cp2/ (checked 2026-11-19).
 
-| Requirement | Current evidence | Status |
-|---|---|---|
-| Two-person working prototype | Real API + independent-browser nurse/doctor test and screenshots | Implemented locally; team acceptance pending |
-| Design rationale including >=2 external-user test sessions | DESIGN_RATIONALE.md; blank USER_TEST_PROTOCOL.md | BLOCKED on actual external sessions |
-| Updated interim evaluation | EVALUATION_REPORT.md + machine evidence | Machine evidence available; human outcomes unmeasured |
-| System prompt + documentation card | services/llm/prompts/ + PROMPT_CARD.md; CLAUDE.md is agent policy | Local adapter documented; model substitution pending team |
-| Updated AI usage guidelines | AI_USAGE_GUIDELINES.md + CP2 addendum | Draft pending team review |
-| >=10 AI cases + failure/revision/retest | eval/cases.json; evidence/prompt-v2.jsonl, prompt-v3.jsonl | 12 synthetic dev cases; failures retained |
-| DECISIONS through Phase 2 | Existing entries + explicit pending CP2 proposal | Human confirmation and future decisions remain |
-| Four-member contributor graph | Repository links + COLLABORATION.md | Not met by local work; verify individual substantive PRs |
-| Week 9 walking-skeleton merged PR | Local technical integration is not a four-human session | Actual session + merged PR still required |
-| Week 11 merge-day decision entry | Agenda/template in COLLABORATION.md | Future human session required |
-| Per student: 2 substantive merged PRs | Local changes uncommitted/unpushed | Not yet evidenced for all four |
-| Per student: 2 substantive steward approvals | Human review required | Pending verification/completion |
-| Per student: steward recorded once | Rotation schedule exists, top-level current-steward stale | Actual handover confirmation needed |
-| One zip + repository-link text | scripts/package-cp2.py + review ZIP | Review candidate only; do not relabel as complete |
+- **Mon 2026-11-23, Week 12 lab:** peer review. The prototype must be demonstrable when we arrive.
+- **Sun 2026-11-29, end of day:** E3 deadline. One zip per group named `GroupXX_CP2` (ours: `Group01_CP2`), all deliverables plus the repository link as a plain-text file. Build with `python3 scripts/package-cp2.py`.
+- Merge day is a Week 11 session outside class (Nov 16–22).
+- Grading is on evidence, not claims. Honest gaps cost nothing.
 
-No E3 upload, remote approval or remote main merge was performed. Topic approval was confirmed by the user on 2026-11-04. This matrix intentionally prevents claiming full compliance before the human evidence exists.
+Status as of 2026-11-19. Update this table in the same PR that adds the evidence.
+
+## Deliverables and rubric (100 points)
+
+| # | Deliverable | Points | Evidence in repo | Status |
+|---|---|---:|---|---|
+| 1 | Working prototype two people can use together | 15 | #73 (merged); `README_CP2.md`; `scripts/start-cp2.sh` / `.ps1`; CI green | Runs on macOS and Windows. Needs a rehearsed demo before Nov 23 |
+| 2 | Design rationale incl. findings from ≥2 user sessions with people outside the team | 10 | `DESIGN_RATIONALE.md`; `USER_TEST_PROTOCOL.md` | **Missing: 0 of 2 sessions held** |
+| 3 | Updated evaluation report, honest about what is untested | 10 | `EVALUATION_REPORT.md`; `evidence/` | Draft done; add user-session results when held |
+| 4 | System prompt (`CLAUDE.md`) and prompt documentation card | 5 | `services/llm/prompts/v3.txt`; `PROMPT_CARD.md`; pointer in `CLAUDE.md` | Done; model choice pending PO (see `DECISIONS.md`) |
+| 5 | AI usage guidelines refined from the Week 3 draft | 4 | `AI_USAGE_GUIDELINES.md` v0.2 draft + change log | Draft; team must ratify |
+| 6 | Prompt test suite: ≥10 cases, typical + edge, ≥1 fail→fix→re-run | 6 | `eval/cases.json` (12); `evidence/prompt-v2.jsonl` → `prompt-v3.jsonl` (T01) | Done |
+| 7 | `DECISIONS.md` complete through Phase 2, cross-referenceable with PRs | 10 | `DECISIONS.md` | Partial: steward handovers Weeks 9–11 and model decision pending |
+| 8 | Contributor graph: substantive code from all four | 15 | [graph](https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors); `COLLABORATION.md` | **Not met for 林均澔; 劉順松 has 1 of 2 PRs** |
+| 9 | Walking skeleton: link to the merged PR from the Week 9 session | (in 10 "team sessions") | — | **Missing** |
+| 10 | Merge day: `DECISIONS.md` merge-plan entry from the Week 11 session | (in 10 "team sessions") | template in `COLLABORATION.md` | **Not held yet** |
+| — | Review quality and code steward role | 15 | PR reviews; `DECISIONS.md` | Partial: approvals without comments do not count |
+
+Product = rows 1–6 (50). Collaboration = 8, review quality, 7, team sessions 9–10 (50).
+
+## Per-student minimums (checked individually)
+
+At least 2 merged PRs with substantive code, at least 2 steward approvals each with a substantive comment, and code steward at least once, recorded in `DECISIONS.md`.
+
+Counted from GitHub on 2026-11-19 (PRs merged into `main`):
+
+| Member | Merged code PRs | Approvals with a comment | Steward recorded in `DECISIONS.md` |
+|---|---|---|---|
+| 吳普軒 (hwupu) | 7 (#54 #55 #56 #69 #70 #71 #72) | 3 (#67 #68 #73) | Yes (Week 8) |
+| 張棨翔 (XiangLibra) | 2 (#67 #68) | 3 (#54 #55 #56) | No (Week 11 per schedule) |
+| 劉順松 (414551016) | 1 (#73) | 0 | No (Week 9 per schedule) |
+| 林均澔 (junlinwk) | 0 | 0 (4 approvals on #69–#72 have empty bodies) | No (Week 10 per schedule) |
+
+"Substantive" is the instructor's call; #67 (uv projects) and #68 (healthcheck fix) are small. Re-count before submission.
