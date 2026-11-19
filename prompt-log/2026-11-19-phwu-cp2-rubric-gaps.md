@@ -2,7 +2,7 @@
 - Date: 2026-11-19
 - Author: 吳普軒
 - Tool / model: Claude Code / Opus 5.5
-- PR: #73 (review + merge), #74 (conflict fix), follow-up PR (this entry)
+- PR: #73 (review + merge), #74 (conflict fix), #75 (this entry)
 
 ## Prompt
 1. "I checked out the CP2 PR I haven't approved yet. The rubric was just announced on
