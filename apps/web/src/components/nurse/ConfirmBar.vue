@@ -18,18 +18,18 @@ function tryConfirm() {
 </script>
 
 <template>
-  <div class="border-t-2 border-border bg-card px-4 py-3 shadow-[0_-4px_12px_rgb(0_0_0/0.08)] print:hidden">
-    <div v-if="showBlockers && blockers.length" class="mb-3 rounded-xl border-2 border-warning-foreground/50 bg-warning p-3 text-warning-foreground" role="alert">
+  <div class="border-t border-border bg-card px-4 py-2 shadow-[0_-4px_12px_rgb(0_0_0/0.08)] print:hidden">
+    <div v-if="showBlockers && blockers.length" class="mb-2 rounded-lg bg-warning px-3 py-2 text-warning-foreground" role="alert">
       <p class="text-lg font-bold">還不能儲存：{{ blockers.join("；") }}</p>
-      <ul v-if="drafts.length" class="mt-2 flex flex-wrap gap-2">
+      <ul v-if="drafts.length" class="mt-1 flex flex-wrap gap-2">
         <li v-for="d in drafts" :key="d.path">
-          <Button variant="outline" size="sm" @click="$emit('jump', d.path)">{{ d.label }}</Button>
+          <Button variant="outline" @click="$emit('jump', d.path)">{{ d.label }}</Button>
         </li>
       </ul>
     </div>
     <div class="flex flex-wrap items-center justify-between gap-3">
       <TriageLevelInput :model-value="level" @update:model-value="$emit('update:level', $event)" />
-      <Button size="lg" class="h-14 min-w-56 text-xl" :disabled="busy" @click="tryConfirm">確認並儲存</Button>
+      <Button class="min-w-48 text-lg" :disabled="busy" @click="tryConfirm">確認並儲存</Button>
     </div>
   </div>
 </template>

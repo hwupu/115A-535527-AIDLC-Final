@@ -35,6 +35,8 @@
 }
 
 @custom-variant dark (&:is(.dark *)); /* no dark theme: keep dark: utilities inert */
+/* `compact:` utilities apply on staff screens only, so shared components can tighten there. */
+@custom-variant compact (&:where([data-density="compact"] *));
 
 /* Single light theme, high contrast (text >= 7:1 on its background). */
 :root {
@@ -72,6 +74,11 @@ html {
     font-size: 125%;
   }
 }
+/* Staff screens (nurse, physician, admin) hold more information: 18px at every width, tighter lines.
+   App.vue sets data-density from the route; entry and patient screens keep the larger text. */
+html[data-density="compact"] {
+  font-size: 112.5%;
+}
 
 @layer base {
   * {
@@ -80,6 +87,9 @@ html {
   body {
     @apply bg-background font-sans text-foreground antialiased;
     line-height: 1.6;
+  }
+  [data-density="compact"] body {
+    line-height: 1.45;
   }
   :focus-visible {
     outline: 3px solid var(--ring);
