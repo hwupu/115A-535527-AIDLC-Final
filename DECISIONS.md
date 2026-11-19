@@ -1,5 +1,13 @@
 # Decisions Log
 
+## 2026-11-04 — CP2 local candidate (proposal, not team ratification)
+- User-confirmed facts: 劉順松 (414551016) confirmed instructor topic approval and authorized local CP2 implementation. Team review precedes E3 upload, which remains the user's action.
+- Implemented candidate: integrate existing frontend stack locally; persistent SQLAlchemy/Alembic API, audit and evaluation, whole-clip Whisper small CPU int8, Qwen/Qwen2.5-0.5B-Instruct CPU adapter and source-quote prompt v3. This is a reviewable implementation, not an assertion that other team members approved a new model or scope.
+- Proposal for team: use the small CPU adapter for CP2 feasibility, retain manual fields and record its observed failures; alternatively deploy the planned model and rerun the same cases. Whole clips avoid invalid independent WebM fragments. Existing database decision is retained.
+- Consequences: limited six-field extraction and unvalidated semantic accuracy; real external-user tests and individual PR/steward/session evidence remain outstanding. No hidden model substitution in evaluation.
+- Human owner: 劉順松; led-by/team ratification: pending. See docs/cp2/REQUIREMENTS.md and prompt-log/2026-11-04-414551016-cp2.md.
+- Steward handover: README schedules Week 9 for 劉順松, but this run did not conduct a real handover. The old Current code steward line below is retained as stale pending actual human confirmation.
+
 **Current code steward: 吳普軒 (Week 8, Oct 26 – Nov 1).** Rotation schedule: `README.md`.
 Update this line via PR at every handover.
 

@@ -11,6 +11,6 @@ export default defineConfig({
   envDir: fileURLToPath(new URL("../..", import.meta.url)),
   plugins: [vue(), tailwindcss()],
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
-  test: { environment: "node", env: { VITE_API_MOCK: "1" } },
-  server: { port: 5173, proxy: { "/api": { target: apiTarget, rewrite: (p) => p.replace(/^\/api/, "") } } },
+  test: { environment: "node", exclude: ["**/node_modules/**", "**/e2e/**"], env: { VITE_API_MOCK: "1" } },
+  server: { port: 5173, proxy: { "/api": { target: apiTarget, ws: true, rewrite: (p) => p.replace(/^\/api/, "") } } },
 });

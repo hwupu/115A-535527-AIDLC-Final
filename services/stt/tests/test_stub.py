@@ -9,7 +9,15 @@ def test_health():
     assert client.get("/health").json() == {"status": "ok", "service": "stt"}
 
 
-def test_transcribe_contract():
+def test_invalid_audio_is_not_canned_success(monkeypatch):
+    class InvalidDecoder:
+        def transcribe(self, *args, **kwargs):
+            raise ValueError("invalid audio")
+
+    monkeypatch.setattr("app.main.load_model", lambda: InvalidDecoder())
     res = client.post("/transcribe", files={"audio": ("a.wav", b"x")})
-    seg = res.json()["segments"][0]
-    assert {"text", "start", "end"} <= seg.keys()
+    assert res.status_code == 422
+
+
+def test_empty_audio():
+    assert client.post("/transcribe", files={"audio": ("empty.wav", b"")}).status_code == 413
