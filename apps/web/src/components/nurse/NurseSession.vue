@@ -33,7 +33,8 @@ async function startRecording() {
 }
 function stopRecording() {
   recorder.stop();
-  store.stopRecording();
+  // Cancelling the permission prompt never started a recording on the server.
+  if (store.recording) store.stopRecording();
 }
 function leave() {
   recorder.stop();

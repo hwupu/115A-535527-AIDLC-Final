@@ -19,6 +19,10 @@ defineEmits<{ start: []; stop: [] }>();
 const recording = computed(() => props.state === "recording");
 const percent = computed(() => Math.round(Math.min(1, Math.max(0, props.level)) * 100));
 
+// Between the click and the browser's answer the permission prompt may be open (or never shown):
+// say so, and let the nurse cancel instead of staring at a button that seems dead.
+const waiting = computed(() => props.state === "requesting");
+
 // Elapsed time while recording, so the nurse can tell the microphone is really running.
 const seconds = ref(0);
 let timer: ReturnType<typeof setInterval> | undefined;
@@ -53,7 +57,11 @@ const link = computed(() =>
 <template>
   <section class="rounded-lg border border-border bg-card px-3 py-2" aria-label="錄音">
     <div class="flex flex-wrap items-center gap-3">
-      <Button v-if="!recording" class="min-w-40 text-lg" :disabled="disabled" @click="$emit('start')">
+      <Button v-if="waiting" variant="outline" class="min-w-40 text-lg" data-test="cancel" @click="$emit('stop')">
+        <Square class="size-6" aria-hidden="true" />
+        取消
+      </Button>
+      <Button v-else-if="!recording" class="min-w-40 text-lg" :disabled="disabled" @click="$emit('start')">
         <Mic class="size-6" aria-hidden="true" />
         {{ state === "denied" || state === "error" ? "重試錄音" : "開始錄音" }}
       </Button>
@@ -64,7 +72,7 @@ const link = computed(() =>
       <!-- Text plus a dot, not colour alone. -->
       <Badge :variant="recording ? 'destructive' : 'outline'" role="status" class="gap-1.5 text-base">
         <span class="size-2.5 rounded-full" :class="recording ? 'animate-pulse bg-current' : 'border border-current'" aria-hidden="true" />
-        <span>{{ recording ? `錄音中 ${elapsed}` : "未錄音" }}</span>
+        <span>{{ recording ? `錄音中 ${elapsed}` : waiting ? "等待麥克風權限…" : "未錄音" }}</span>
       </Badge>
       <div
         class="h-3 min-w-24 flex-1 overflow-hidden rounded-full bg-muted"
@@ -81,7 +89,8 @@ const link = computed(() =>
         {{ link.text }}
       </span>
     </div>
-    <p v-if="message" class="mt-2 text-lg font-semibold text-destructive" role="alert">{{ message }}</p>
+    <p v-if="waiting" class="mt-2 text-lg">請在瀏覽器跳出的提示中按「允許」使用麥克風。沒有看到提示？按「取消」後改用手動輸入。</p>
+    <p v-else-if="message" class="mt-2 text-lg font-semibold text-destructive" role="alert">{{ message }}</p>
     <p v-else-if="recording && connection === 'closed'" class="mt-2 text-lg font-semibold text-destructive" role="alert">
       與伺服器的連線中斷：錄音停止後可能無法送出，建議先停止並改用手動輸入。
     </p>

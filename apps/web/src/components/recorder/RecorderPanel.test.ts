@@ -36,6 +36,15 @@ describe("RecorderPanel", () => {
     expect(w.find('[role="status"]').text()).toBe("未錄音");
   });
 
+  it("while the permission prompt is open, says so and offers cancel (emits stop)", async () => {
+    const w = mount(RecorderPanel, { props: { ...base, state: "requesting" } });
+    expect(w.find('[role="status"]').text()).toBe("等待麥克風權限…");
+    expect(w.text()).toContain("按「允許」");
+    await w.find('[data-test="cancel"]').trigger("click");
+    expect(w.emitted("stop")).toHaveLength(1);
+    expect(w.emitted("start")).toBeUndefined();
+  });
+
   it("shows the volume as a 0–100 meter", () => {
     const w = mount(RecorderPanel, { props: { ...base, state: "recording", level: 0.42 } });
     expect(w.find('[role="meter"]').attributes("aria-valuenow")).toBe("42");

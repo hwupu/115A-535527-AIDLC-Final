@@ -3,8 +3,9 @@ import { onScopeDispose, ref, type Ref } from "vue";
 // C2 contract: the nurse screen only depends on this shape. Replace the body, keep the return type.
 //   start(onChunk): ask for the microphone, then call onChunk with audio chunks until stop().
 //   state "denied" = permission refused; "error" = no device or other failure (message in `error`).
+//   "requesting" = waiting for the browser's permission prompt (stop() cancels it).
 //   level: 0..1 input volume for the meter.
-export type RecorderState = "idle" | "recording" | "denied" | "error";
+export type RecorderState = "idle" | "requesting" | "recording" | "denied" | "error";
 
 export interface Recorder {
   state: Ref<RecorderState>;
@@ -72,7 +73,7 @@ export function useRecorder(): Recorder {
   });
 
   async function start(onChunk: (chunk: Blob) => void) {
-    if (state.value === "recording") return;
+    if (state.value === "recording" || state.value === "requesting") return;
     const mine = ++attempt;
     error.value = "";
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
@@ -80,6 +81,7 @@ export function useRecorder(): Recorder {
       error.value = RECORDER_MESSAGES.unsupported;
       return;
     }
+    state.value = "requesting";
     try {
       const s = await navigator.mediaDevices.getUserMedia({ audio: true });
       if (mine !== attempt) {

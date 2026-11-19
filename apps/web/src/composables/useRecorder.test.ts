@@ -116,7 +116,9 @@ describe("useRecorder", () => {
     getUserMedia.mockReturnValueOnce(new Promise((res) => (allow = res)));
     const r = useRecorder();
     const pending = r.start(vi.fn());
+    expect(r.state.value).toBe("requesting");
     r.stop();
+    expect(r.state.value).toBe("idle");
     allow(stream);
     await pending;
     expect(r.state.value).toBe("idle");
