@@ -17,7 +17,12 @@ gemma4:e4b as the official model once testing is satisfactory.
 - Ran the 12 dev cases on gemma3:1b, gemma3:4b and gemma4:e4b with v3 and v4; outputs in
   `docs/cp2/evidence/ollama-2026-11-21/`. `DECISIONS.md`: Ollama runtime entry; CP2 model entry accepted.
 
-Checked: llm ruff clean and 8 tests passed; compose config valid with and without the GPU file; on the workstation
+Follow-up the same day: in the user's own test, switching to gemma4:e4b returned empty answers. gemma4 is a
+thinking model and spent the whole output budget reasoning, so `generate()` now sends `think: false` to models that
+report the `thinking` capability (not to gemma3, whose answers it emptied). Reran all three models; e4b went from
+8/12 / 7/12 to 10/12 / 9/12.
+
+Checked: llm ruff clean and 9 tests passed; compose config valid with and without the GPU file; on the workstation
 Ollama ran on CUDA, `ollama-pull` fetched the model, llm became ready after 83 s and the first extraction then took
 0.07 s; switching `LLM_MODEL` to gemma4:e4b worked without code changes. Not yet checked: the full app with a real
 microphone (needs #83 as well).

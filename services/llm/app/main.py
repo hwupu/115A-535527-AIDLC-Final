@@ -6,6 +6,7 @@ import re
 import threading
 import time
 from contextlib import asynccontextmanager
+from functools import lru_cache
 from pathlib import Path
 
 import httpx
@@ -135,6 +136,17 @@ def guard(raw, transcript):
     return fields, rejected
 
 
+@lru_cache(maxsize=1)
+def thinks():
+    """Thinking models (gemma4) spend the whole output budget reasoning and return no answer."""
+    try:
+        response = httpx.post(OLLAMA_URL + "/api/show", json={"model": MODEL}, timeout=10)
+        response.raise_for_status()
+        return "thinking" in response.json().get("capabilities", [])
+    except (httpx.HTTPError, ValueError):
+        return False
+
+
 def generate(transcript, version="v2"):
     prompt = (Path(__file__).resolve().parents[1] / "prompts" / f"{version}.txt").read_text(
         encoding="utf-8"
@@ -146,18 +158,18 @@ def generate(transcript, version="v2"):
             "content": json.dumps({"untrusted_transcript": transcript}, ensure_ascii=False),
         },
     ]
-    response = httpx.post(
-        OLLAMA_URL + "/api/chat",
-        json={
-            "model": MODEL,
-            "messages": messages,
-            "stream": False,
-            "format": "json",
-            # Deterministic, same output budget as the earlier local adapter.
-            "options": {"temperature": 0, "num_predict": 450},
-        },
-        timeout=120,
-    )
+    body = {
+        "model": MODEL,
+        "messages": messages,
+        "stream": False,
+        "format": "json",
+        # Deterministic, same output budget as the earlier local adapter.
+        "options": {"temperature": 0, "num_predict": 450},
+    }
+    # Only for thinking models: sending think=false to gemma3 changed its answers to empty.
+    if thinks():
+        body["think"] = False
+    response = httpx.post(OLLAMA_URL + "/api/chat", json=body, timeout=120)
     response.raise_for_status()
     return response.json()["message"]["content"]
 

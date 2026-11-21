@@ -16,6 +16,8 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   volume, CPU by default, NVIDIA GPU with `docker-compose.gpu.yml`. The script path (`start-cp2.*`) needs a local
   Ollama. The llm service sends one warm-up extraction at start and reports `/ready` after it (even if it fails), and
   the web waits for that, because the first chat after Ollama loads a model took 38–89 s on the workstation.
+  Thinking models (gemma4) get `think: false`, detected from Ollama's model capabilities: with thinking on, gemma4
+  used the whole output budget reasoning and returned no answer, while `think: false` emptied gemma3's answers.
 - Consequences: switching models is an `.env` change. The workstation's system Ollama (0.20.5) is too old for
   `gemma3:1b`, so the demo there uses the compose Ollama. Measured results: `docs/cp2/evidence/ollama-2026-11-21/`.
 - Decided by: 張棨翔 (LLM lead)
@@ -54,9 +56,10 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   12 cases on it; (B) deploy Gemma-4 before Nov 23 and rerun the cases; (C) other.
 - Decision: (C) start with `gemma3:1b`; once testing is satisfactory, the official model is `gemma4:e4b`. Qwen 0.5B
   is no longer used. Both run on Ollama (entry above). Prompt v3 stays the default; v4 is kept for comparison.
-- Measured on the workstation, same 12 dev cases (v3 / v4): gemma3:1b 4/12 / 4/12, gemma3:4b 9/12 / 9/12,
-  gemma4:e4b 8/12 / 7/12. gemma3:1b returns no fields for almost every case, so its AI draft is mostly empty;
-  `gemma4:e4b` is one `.env` change away. v3's examples repeat three of the cases, which inflates v3 scores.
+- Measured on the workstation, same 12 dev cases (v3 / v4): gemma3:1b 4/12 / 4/12, gemma3:4b 8/12 / 9/12,
+  gemma4:e4b 10/12 / 9/12 (thinking off, about 0.2 s per case). gemma3:1b returns no fields for almost every case,
+  so its AI draft is mostly empty; `gemma4:e4b` is one `.env` change away. v3's examples repeat three of the cases,
+  which inflates v3 scores.
 - Consequences: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and `docs/cp2/EVALUATION_REPORT.md`
   to match (before Nov 29).
 - Decided by: 張棨翔 (PO and LLM lead)
