@@ -1,24 +1,39 @@
-"""Local CPU extraction. No canned result; failures are explicit."""
+"""Local extraction through Ollama. No canned result; failures are explicit."""
 
 import json
 import os
 import re
 import threading
 import time
-from functools import lru_cache
+from contextlib import asynccontextmanager
 from pathlib import Path
 
+import httpx
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Group1 local extraction")
-MODEL = os.getenv("LLM_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
-ROOT = (
-    Path(__file__).resolve().parents[3]
-    if len(Path(__file__).resolve().parents) > 3
-    else Path("/srv")
-)
-MODEL_LOCK = threading.Lock()
+MODEL = os.getenv("LLM_MODEL", "gemma3:1b")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
+WARMED = threading.Event()
+
+
+def warm_up():
+    """The first chat after Ollama loads a model is slow; pay that before the first nurse turn."""
+    try:
+        generate("病患：咳嗽。", ExtractRequest.model_fields["prompt_version"].default)
+    except Exception:  # noqa: BLE001 - a failed warm-up only means the first real request is slow
+        pass
+    finally:
+        WARMED.set()
+
+
+@asynccontextmanager
+async def lifespan(app):
+    threading.Thread(target=warm_up, daemon=True).start()
+    yield
+
+
+app = FastAPI(title="Group1 local extraction", lifespan=lifespan)
 ALLOWED = {
     "chief_complaint",
     "hpi.onset",
@@ -59,20 +74,6 @@ FORBIDDEN = re.compile(
 class ExtractRequest(BaseModel):
     transcript: str = Field(max_length=12000)
     prompt_version: str = "v3"
-
-
-@lru_cache(maxsize=1)
-def load_model():
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    torch.set_num_threads(min(4, os.cpu_count() or 2))
-    cache = str(ROOT / "data" / "models")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL, cache_dir=cache, trust_remote_code=False)
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL, cache_dir=cache, trust_remote_code=False, torch_dtype=torch.float32
-    )
-    return tokenizer, model.eval()
 
 
 def ground_quotes(raw, transcript):
@@ -135,12 +136,9 @@ def guard(raw, transcript):
 
 
 def generate(transcript, version="v2"):
-    import torch
-
     prompt = (Path(__file__).resolve().parents[1] / "prompts" / f"{version}.txt").read_text(
         encoding="utf-8"
     )
-    tokenizer, model = load_model()
     messages = [
         {"role": "system", "content": prompt},
         {
@@ -148,13 +146,20 @@ def generate(transcript, version="v2"):
             "content": json.dumps({"untrusted_transcript": transcript}, ensure_ascii=False),
         },
     ]
-    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    encoded = tokenizer(text, return_tensors="pt")
-    with torch.inference_mode():
-        output = model.generate(
-            **encoded, max_new_tokens=450, do_sample=False, pad_token_id=tokenizer.eos_token_id
-        )
-    return tokenizer.decode(output[0][encoded["input_ids"].shape[1] :], skip_special_tokens=True)
+    response = httpx.post(
+        OLLAMA_URL + "/api/chat",
+        json={
+            "model": MODEL,
+            "messages": messages,
+            "stream": False,
+            "format": "json",
+            # Deterministic, same output budget as the earlier local adapter.
+            "options": {"temperature": 0, "num_predict": 450},
+        },
+        timeout=120,
+    )
+    response.raise_for_status()
+    return response.json()["message"]["content"]
 
 
 @app.get("/health")
@@ -162,9 +167,17 @@ def health():
     return {"status": "ok", "service": "llm"}
 
 
+@app.get("/ready")
+def ready():
+    """Ready once the warm-up has run, even if it failed: manual entry never waits on the model."""
+    if not WARMED.is_set():
+        raise HTTPException(503, "Warming up the extraction model")
+    return {"status": "ready", "model": MODEL}
+
+
 @app.post("/extract")
 def extract(req: ExtractRequest):
-    if req.prompt_version not in ("v1", "v2", "v3"):
+    if req.prompt_version not in ("v1", "v2", "v3", "v4"):
         raise HTTPException(422, "Unknown prompt version")
     started = time.perf_counter()
     if not req.transcript.strip():
@@ -178,18 +191,17 @@ def extract(req: ExtractRequest):
                 "inference": "empty_input_skipped",
             },
         }
-    with MODEL_LOCK:
-        try:
-            raw = generate(req.transcript, req.prompt_version)
-            cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
-            parsed = json.loads(cleaned)
-            if req.prompt_version == "v3":
-                parsed = ground_quotes(parsed, req.transcript)
-            fields, rejected = guard(parsed, req.transcript)
-        except (ValueError, RuntimeError, OSError) as exc:
-            raise HTTPException(
-                503, f"Extraction failed: {type(exc).__name__}; manual entry remains available"
-            ) from exc
+    try:
+        raw = generate(req.transcript, req.prompt_version)
+        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
+        parsed = json.loads(cleaned)
+        if req.prompt_version in ("v3", "v4"):
+            parsed = ground_quotes(parsed, req.transcript)
+        fields, rejected = guard(parsed, req.transcript)
+    except (httpx.HTTPError, ValueError, KeyError, TypeError, RuntimeError, OSError) as exc:
+        raise HTTPException(
+            503, f"Extraction failed: {type(exc).__name__}; manual entry remains available"
+        ) from exc
     return {
         "fields": fields,
         "rejected": rejected,

@@ -1,8 +1,53 @@
+import httpx
 from fastapi.testclient import TestClient
 
 from app.main import app
 
 client = TestClient(app)
+
+
+def test_generate_asks_ollama_for_deterministic_json(monkeypatch):
+    sent = {}
+
+    def fake_post(url, json, timeout):
+        sent.update(url=url, body=json)
+        return httpx.Response(
+            200,
+            json={"message": {"role": "assistant", "content": '{"fields":{}}'}},
+            request=httpx.Request("POST", url),
+        )
+
+    monkeypatch.setattr("app.main.httpx.post", fake_post)
+    from app.main import generate
+
+    assert generate("咳嗽", "v3") == '{"fields":{}}'
+    assert sent["url"].endswith("/api/chat")
+    assert sent["body"]["format"] == "json" and sent["body"]["stream"] is False
+    assert sent["body"]["options"]["temperature"] == 0
+    assert "咳嗽" in sent["body"]["messages"][1]["content"]
+
+
+def test_ready_after_warm_up_even_if_it_failed(monkeypatch):
+    from app import main
+
+    def refuse(url, **kwargs):
+        raise httpx.ConnectError("connection refused", request=httpx.Request("POST", url))
+
+    monkeypatch.setattr("app.main.httpx.post", refuse)
+    main.WARMED.clear()
+    assert client.get("/ready").status_code == 503
+    main.warm_up()
+    assert client.get("/ready").json()["status"] == "ready"
+
+
+def test_ollama_unreachable_is_a_503(monkeypatch):
+    def refuse(url, **kwargs):
+        raise httpx.ConnectError("connection refused", request=httpx.Request("POST", url))
+
+    monkeypatch.setattr("app.main.httpx.post", refuse)
+    res = client.post("/extract", json={"transcript": "咳嗽"})
+    assert res.status_code == 503
+    assert "manual entry remains available" in res.json()["detail"]
 
 
 def test_health():

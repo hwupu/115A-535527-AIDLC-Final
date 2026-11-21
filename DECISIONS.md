@@ -7,6 +7,19 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-21 — Ollama as the extraction runtime (spike B2)
+- Status: accepted
+- Context: the CP2 model decision (entry below) needs Gemma models. On Transformers they need a Hugging Face licence
+  and token on every machine and a CPU torch install; the 2026-10-27 stack entry left the runtime open (B2).
+- Decision: the llm service calls Ollama (`/api/chat`, `temperature 0`, `format: json`) at `OLLAMA_URL`; the model is
+  `LLM_MODEL`. torch and transformers are removed. `docker compose` runs `ollama/ollama:0.33.2` with the models in a
+  volume, CPU by default, NVIDIA GPU with `docker-compose.gpu.yml`. The script path (`start-cp2.*`) needs a local
+  Ollama. The llm service sends one warm-up extraction at start and reports `/ready` after it (even if it fails), and
+  the web waits for that, because the first chat after Ollama loads a model took 38–89 s on the workstation.
+- Consequences: switching models is an `.env` change. The workstation's system Ollama (0.20.5) is too old for
+  `gemma3:1b`, so the demo there uses the compose Ollama. Measured results: `docs/cp2/evidence/ollama-2026-11-21/`.
+- Decided by: 張棨翔 (LLM lead)
+
 ## 2026-11-19 — CP2 dates from the published rubric
 - Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
 - Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
@@ -32,16 +45,21 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   (submitted by Codex on their instruction) and merged it the same day.
 - Decided by: 吳普軒 (approver and merger)
 
-## 2026-11-19 — Extraction model for CP2 (OPEN, needs the Product Owner)
-- Status: open; needs 張棨翔 (PO and LLM lead)
+## 2026-11-19 — Extraction model for CP2
+- Status: accepted (PO 張棨翔: Gemma 3 1B in the #75 review on 2026-11-21; plan for Gemma-4 the same day)
 - Context: CP1 and the 2026-10-27 stack entry chose Gemma-4, runtime TBD (spike B2). #73 ships a local CPU adapter for
   Qwen/Qwen2.5-0.5B-Instruct, chosen for a 4 GB-VRAM laptop. On 12 synthetic dev cases, v3 passes 8/12 whole cases.
   No Gemma-4 run exists.
 - Options: (A) present Qwen 0.5B as the CP2 feasibility adapter, keep Gemma-4 as the CP3 target and rerun the same
   12 cases on it; (B) deploy Gemma-4 before Nov 23 and rerun the cases; (C) other.
-- Consequences of any choice: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and
-  `docs/cp2/EVALUATION_REPORT.md` to match.
-- Decided by: (pending)
+- Decision: (C) start with `gemma3:1b`; once testing is satisfactory, the official model is `gemma4:e4b`. Qwen 0.5B
+  is no longer used. Both run on Ollama (entry above). Prompt v3 stays the default; v4 is kept for comparison.
+- Measured on the workstation, same 12 dev cases (v3 / v4): gemma3:1b 4/12 / 4/12, gemma3:4b 9/12 / 9/12,
+  gemma4:e4b 8/12 / 7/12. gemma3:1b returns no fields for almost every case, so its AI draft is mostly empty;
+  `gemma4:e4b` is one `.env` change away. v3's examples repeat three of the cases, which inflates v3 scores.
+- Consequences: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and `docs/cp2/EVALUATION_REPORT.md`
+  to match (before Nov 29).
+- Decided by: 張棨翔 (PO and LLM lead)
 
 ## 2026-11-04 — CP2 local candidate (proposal, not team ratification)
 - User-confirmed facts: 劉順松 (414551016) confirmed instructor topic approval and authorized local CP2 implementation. Team review precedes E3 upload, which remains the user's action.

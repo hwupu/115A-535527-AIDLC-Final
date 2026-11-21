@@ -12,7 +12,10 @@ Merging #73 does not mean E3 submission and the outstanding collaboration/user-t
 
 ## Requirements and launch
 
-Node 24+, pnpm, Python 3.12 and uv (https://docs.astral.sh/uv/getting-started/installation/). From the repository root:
+Node 24+, pnpm, Python 3.12 and uv (https://docs.astral.sh/uv/getting-started/installation/). The extraction model
+runs in Ollama: for the scripts below install Ollama (https://ollama.com/download) and run `ollama pull gemma3:1b`
+once (or the model named by `LLM_MODEL`). `docker compose up` starts its own Ollama and downloads the model; on an
+NVIDIA machine add `docker-compose.gpu.yml` (see `.env.example`). From the repository root:
 
 ```bash
 # macOS / Linux
