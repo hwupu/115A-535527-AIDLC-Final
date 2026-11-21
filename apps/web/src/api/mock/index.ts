@@ -47,7 +47,8 @@ function seed() {
   });
   make({
     minutesAgo: 12, status: "in_progress", fields: seedFever.fields,
-    segments: seedFever.segments.map((x, i) => ({ segment_id: `s${i}`, speaker: x.speaker, text: x.text, start: 0, end: 0, final: true })),
+    // About 4 s per line so the transcript shows realistic timestamps in the demo.
+    segments: seedFever.segments.map((x, i) => ({ segment_id: `s${i}`, speaker: x.speaker, text: x.text, start: i * 4, end: i * 4 + 3.5, final: true })),
   });
   make({
     minutesAgo: 3, status: "ready",
