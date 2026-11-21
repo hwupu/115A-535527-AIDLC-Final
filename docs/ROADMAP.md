@@ -10,7 +10,7 @@ backlog and sprint plan are superseded by the board and this file.
 | Milestone | Date | Weight |
 |---|---|---|
 | CP1 Discovery | past; submission status to confirm | 5% |
-| **CP2 Building** (walking skeleton, prototype, test suite, peer review) | **Mon Nov 23** (start of Week 12) | 15% |
+| **CP2 Building** (walking skeleton, prototype, test suite, peer review) | Peer-review demo **Mon Nov 23**; E3 due **Sun Nov 29** | 15% |
 | **CP3 Synthesising** (evidence, final report, presentation prep) | **Mon Dec 14** (start of Week 15) | 12% |
 | **Week 16 class: DEMO** | **Mon Dec 21** | |
 | Final deliverables: demo video + peer evaluation | after Week 16 class (page says Dec 21; confirm whether later) | |
@@ -27,7 +27,7 @@ Course checkpoint requirements beyond the page summary are still to be read on t
 |---|---|---|---|---|
 | **S0** | 8 | Oct 26 – Nov 1 | Setup: repo, GitHub Project, decisions, plan | |
 | **S1** | 9–10 | Nov 2 – Nov 15 | Foundations + walking skeleton | |
-| **S2** | 11–12 | Nov 16 – Nov 29 | Reviewable draft, traceability, harness | **CP2 Mon Nov 23** |
+| **S2** | 11–12 | Nov 16 – Nov 29 | Reviewable draft, traceability, harness | **CP2 demo Mon Nov 23, due Sun Nov 29** |
 | **S3** | 13–14 | Nov 30 – Dec 13 | Safety, pilot, evaluation | **CP3 Mon Dec 14** |
 | **Buffer** | 15 | Dec 14 – Dec 20 | Bug fixes, analysis, write-up, poster, rehearsals | feature freeze |
 | **DEMO** | 16 | Mon Dec 21 | Lightning talk + poster/demo session | |
@@ -44,7 +44,7 @@ Keep about 20% buffer; velocity is unknown.
 |---|---|---|
 | S0 (Week 8) | Setup | repo and board ready; plan confirmed. Spikes A1 (Whisper) and B2 (Gemma-4) may start early; they are on the critical path |
 | S1 | Walking skeleton | `docker compose up` runs the stack; scenario S01 works end to end (speak → transcript → draft JSON → UI); a second member can run it from scratch; spike results in `DECISIONS.md` |
-| S2 | Reviewable draft | nurse can edit fields; JSON valid on dev scenarios; harness reports baseline metrics; 10 scenarios nurse-reviewed; **CP2 submitted Nov 23** |
+| S2 | Reviewable draft | nurse can edit fields; JSON valid on dev scenarios; harness reports baseline metrics; 10 scenarios nurse-reviewed; **CP2 demo Nov 23, submitted by Nov 29** |
 | S3 | Safety, pilot, evaluation | safety tests pass; pilot done in Week 13; minimum-evidence data collected by about Dec 11; **CP3 submitted Dec 14** |
 | Buffer (Week 15) | Freeze and polish | blocker fixes only; analysis and write-up finished; poster and two rehearsals; `main` demo-ready |
 | Week 16 | DEMO | demo, demo video, peer evaluation submitted |

@@ -8,6 +8,13 @@ AI voice triage assistant (web app). The nurse decides 檢傷級數; the AI neve
 Keep clinical terms in Traditional Chinese as in the glossary in
 `docs/references/HANDOFF_scrum_setup.md` §6. Simulated data only.
 
+## The product's AI (system prompt)
+
+This file instructs the coding agent. The prompt the app sends to its extraction model is
+`services/llm/prompts/v3.txt` (earlier versions v1, v2 kept for the test history). What it does, its
+limits and known failure modes: `docs/cp2/PROMPT_CARD.md`. Prompt test suite: `eval/cases.json`,
+results in `docs/cp2/evidence/`. Change a prompt only with a new version file and a re-run of the suite.
+
 ## Language
 
 - Course submissions: English. Messages to teammates, GitHub Projects cards, issues: 繁體中文（台灣）.

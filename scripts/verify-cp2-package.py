@@ -2,13 +2,20 @@
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import time
 import zipfile
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-archive = root / 'submission' / 'Group1_CP2_REVIEW.zip'
+archive = root / 'submission' / 'Group01_CP2.zip'
+
+
+def venv_python(service):
+    sub = ('Scripts', 'python.exe') if os.name == 'nt' else ('bin', 'python')
+    return str(root / 'services' / service / '.venv' / sub[0] / sub[1])
+
 destination = root / 'submission' / ('clean-check-' + time.strftime('%Y%m%d-%H%M%S'))
 destination.mkdir()
 with zipfile.ZipFile(archive) as z:
@@ -31,9 +38,9 @@ def run(name, command, cwd, env=None):
 
 
 for service in ('api','stt','llm'):
-    run(service, [str(root/'services'/service/'.venv/Scripts/python.exe'), '-m', 'pytest', '-q'], source/'services'/service)
-run('metrics', [str(root/'services/api/.venv/Scripts/python.exe'), '-m', 'pytest', 'eval', '-q'], source)
-pnpm = str(Path(os.environ['USERPROFILE'])/'.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback/pnpm.cmd')
+    run(service, [venv_python(service), '-m', 'pytest', '-q'], source/'services'/service)
+run('metrics', [venv_python('api'), '-m', 'pytest', 'eval', '-q'], source)
+pnpm = shutil.which('pnpm') or 'pnpm'
 run('install', [pnpm,'install','--offline','--frozen-lockfile'], source)
 run('web-build', [pnpm,'build'], source)
 run('web-test', [pnpm,'test'], source)
