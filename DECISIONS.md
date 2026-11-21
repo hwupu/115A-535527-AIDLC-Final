@@ -54,8 +54,9 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   No Gemma-4 run exists.
 - Options: (A) present Qwen 0.5B as the CP2 feasibility adapter, keep Gemma-4 as the CP3 target and rerun the same
   12 cases on it; (B) deploy Gemma-4 before Nov 23 and rerun the cases; (C) other.
-- Decision: (C) start with `gemma3:1b`; once testing is satisfactory, the official model is `gemma4:e4b`. Qwen 0.5B
-  is no longer used. Both run on Ollama (entry above). Prompt v3 stays the default; v4 is kept for comparison.
+- Decision: (C) `gemma3:1b` is the default (`.env.example`) for everyone's development and testing. Official runs
+  (demos, evaluation sessions) use `gemma4:e4b`, set by 張棨翔 in the workstation's own `.env`. Qwen 0.5B is no
+  longer used. Both run on Ollama (entry above). Prompt v3 stays the default; v4 is kept for comparison.
 - Measured on the workstation, same 12 dev cases (v3 / v4): gemma3:1b 4/12 / 4/12, gemma3:4b 8/12 / 9/12,
   gemma4:e4b 10/12 / 9/12 (thinking off, about 0.2 s per case). gemma3:1b returns no fields for almost every case,
   so its AI draft is mostly empty; `gemma4:e4b` is one `.env` change away. v3's examples repeat three of the cases,
