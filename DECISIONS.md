@@ -40,7 +40,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   are unassigned (frontend lead). #77's team session needs a slice other than #80, which is merged. Before E3
   (Nov 29): the two outside-team user sessions (0 of 2), walking skeleton and merge day, and regenerating
   `docs/cp2/Group1_CP2_Report.md`.
-- Handover walk-through with 劉順松: (to fill after it happens)
+- Handover to 劉順松: no separate walk-through meeting; handed over through this entry and a LINE message.
 - Recorded by: 張棨翔 (outgoing steward)
 
 ## 2026-11-19 — CP2 dates from the published rubric
