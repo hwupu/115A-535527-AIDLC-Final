@@ -12,7 +12,10 @@ Merging #73 does not mean E3 submission and the outstanding collaboration/user-t
 
 ## Requirements and launch
 
-Node 24+, pnpm, Python 3.12 and uv (https://docs.astral.sh/uv/getting-started/installation/). From the repository root:
+Node 24+, pnpm, Python 3.12 and uv (https://docs.astral.sh/uv/getting-started/installation/). The extraction model
+runs in Ollama: for the scripts below install Ollama (https://ollama.com/download) and run `ollama pull gemma3:1b`
+once (or the model named by `LLM_MODEL`). `docker compose up` starts its own Ollama and downloads the model; on an
+NVIDIA machine add `docker-compose.gpu.yml` (see `.env.example`). From the repository root:
 
 ```bash
 # macOS / Linux
@@ -37,7 +40,7 @@ No authentication: roles are demo interfaces, not access control. Bind localhost
 - Existing Vue nurse/doctor/patient/admin UI integrated locally from origin/feat/62-patient-and-admin (stack #69-72); upstream authorship preserved in Git.
 - FastAPI with SQLAlchemy SQLite JSON encounter records and Alembic initial migration; persistence across reload/restart; never store audio.
 - API session lifecycle, visit numbers, source-linked drafts, per-field review, nurse-only decision path in UI, confirmed read-only report, ETag polling, audit and delete.
-- Local Transformers CPU Qwen/Qwen2.5-0.5B-Instruct validation adapter with prompts v1/v2/v3; v3 has a restricted six-field scope. This is a proposed local substitute for the unimplemented planned Gemma runtime, not evidence for Gemma-4.
+- Local extraction through Ollama (`LLM_MODEL`: `gemma3:1b` by default, `gemma4:e4b` for official runs) with prompts v1–v4; v3 is the default and has a restricted six-field scope. Until 2026-11-21 this was a Transformers CPU Qwen2.5-0.5B adapter; its results stay in `docs/cp2/evidence/` and are not Gemma results.
 - Whisper CPU int8 and OpenCC s2twp. Whole recordings processed on stop, not live streaming. Text entry is a real fallback, never secretly substituted for inference.
 - Evaluation-mode runs/events/JSON/CSV; 12 synthetic development prompt cases and comparison functions.
 

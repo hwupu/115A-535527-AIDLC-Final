@@ -6,7 +6,7 @@ We preserve the existing team's four-role Vue interface and make the API the sha
 
 Every accepted AI field has a literal source quote. This helps checking, but containment alone cannot establish that a quote supports the field label. The small-model experiment exposed this: travel-history statements were put into chief complaint. Manual review is essential, and no clinical use is supported.
 
-For a 4GB-VRAM development machine, a CPU Qwen 0.5B adapter is implemented as a reviewable validation proposal. The planned Gemma-4 runtime remains unimplemented. The v3 adapter asks for copied spans and deterministically converts selected fields; it is not a broad report generator. Remaining UI fields can be entered manually. Whisper processes whole clips after stop, making each WebM decodable. The design sacrifices streaming latency for a thinner reliable end-to-end path.
+Extraction runs on Ollama so the model is a configuration choice: `gemma3:1b` by default, so laptops without a GPU can run it, and `gemma4:e4b` on the workstation GPU for official runs (until 2026-11-21 a CPU Qwen 0.5B adapter filled this role). The v3 adapter asks for copied spans and deterministically converts selected fields; it is not a broad report generator. Remaining UI fields can be entered manually. Whisper processes whole clips after stop, making each WebM decodable. The design sacrifices streaming latency for a thinner reliable end-to-end path.
 
 SQLite avoids a separate database service; SQLAlchemy/Alembic preserve the team's chosen tooling. Every nurse edit stores before/after values. Confirmed encounters are immutable. The evaluation UI reuses audit events rather than inventing a second source of timing truth.
 
