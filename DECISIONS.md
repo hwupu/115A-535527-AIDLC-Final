@@ -1,11 +1,47 @@
 # Decisions Log
 
-**Current code steward: 張棨翔 (Week 11, Nov 16 – 22), per the confirmed rotation.** Rotation schedule: `README.md`.
+**Current code steward: 劉順松 (Week 12, Nov 23 – 29), per the confirmed rotation.** Rotation schedule: `README.md`.
 Update this line via PR at every handover. The Week 9 (劉順松) and Week 10 (林均澔) handovers were not recorded
 when they happened. Each person adds a short entry with what they actually did as steward, or says the week was
 missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
+
+## 2026-11-22 — Patient screen asks one question at a time and shows the patient's own answers
+- Status: accepted
+- Context: 2026-10-29 the PO chose fixed guided questions on the patient screen (option B, #86) and deferred the
+  read-back, scoped to repeating only the patient's own words ("Frontend choices" entry;
+  `docs/frontend/PERSONAS_STORIES.md`).
+- Decision: the patient screen becomes a step-by-step questionnaire: one fixed question per screen, answered by voice
+  or text, skippable, with simple pre-written follow-ups and no AI choosing the next question (#86). The read-back is
+  pulled forward into #86 with the same scope: the screen shows only what the patient said or typed (voice as its
+  transcript), never the AI draft, danger-sign flags or a triage level. Questions are not read aloud for now; reading
+  the fixed questions with Fish Speech may follow later in its own card, after checking its licence and speed and
+  only for fixed text, never AI output.
+- Consequences: each answer is stored with its question (e.g. "過去兩個月內，有去過國內或國外旅遊嗎？沒有") so prompt v5 can
+  tell what a bare 「沒有」 answers; the frontend shows the patient's own `transcript.segment`, which the api already
+  sends to the patient connection. #86 grew from S to M; the frontend lead assigns it.
+- Decided by: 張棨翔 (PO)
+
+## 2026-11-22 — Week 11 code steward handover (張棨翔 → 劉順松)
+- Status: record
+- What the steward did (Nov 16 – 22):
+  - Approved four PRs with written reviews: #75 (吳普軒; ran the Python half of `check-cp2.sh` on the Linux
+    workstation, found that `start-cp2.sh`'s `lsof` check misses root-owned listeners), #80 (劉順松; reran tests on
+    the latest `main`, confirmed the new test fails on the unfixed code, agreed as backend lead), #81 and #82
+    (林均澔).
+  - While reviewing #81, found that the api dropped the recording because `recording.stop` arrives before the audio
+    (#83); fixed in #84 (merged). While reviewing #82, found that recorded lines had no timestamps (#91).
+  - PO decisions this week: extraction on Ollama with gemma3:1b by default and gemma4:e4b for official runs (#85),
+    Whisper small by default and medium for official runs (A1, #90), prompt v5 for every field (#92), the patient
+    screen entry above (#86).
+- Open at handover (as of Nov 22): #85, #90, #91 and #92 await review (#85, #90 and #92 each add entries at the top
+  of this file, so whoever merges later keeps both sides). The `start-cp2.sh` port check is not fixed. #86 and #87
+  are unassigned (frontend lead). #77's team session needs a slice other than #80, which is merged. Before E3
+  (Nov 29): the two outside-team user sessions (0 of 2), walking skeleton and merge day, and regenerating
+  `docs/cp2/Group1_CP2_Report.md`.
+- Handover walk-through with 劉順松: (to fill after it happens)
+- Recorded by: 張棨翔 (outgoing steward)
 
 ## 2026-11-19 — CP2 dates from the published rubric
 - Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
