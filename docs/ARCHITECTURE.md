@@ -32,7 +32,7 @@ Frontend details (personas, flows, `apps/web` structure, proposed API for patien
         │ HTTP/gRPC (TBD)             │ HTTP
 ┌───────▼────────┐            ┌───────▼─────────────┐
 │ services/stt   │            │ services/llm        │
-│ Whisper        │            │ Gemma-4 (runtime TBD)│
+│ Whisper        │            │ Ollama (Gemma)      │
 └────────────────┘            └─────────────────────┘
 ```
 
@@ -92,7 +92,7 @@ Defence in depth, because a prompt alone is not enough:
 ## 7. Deployment
 
 - `docker-compose` services: `web`, `api`, `stt`, `llm`. Profiles: `dev` and `demo`. `.env` for configuration (P3).
-- GPU for `stt` and `llm` is TBD (spikes A1, B2). A CPU-only or smaller-model path must exist for development laptops.
+- `llm` calls Ollama (`ollama` service in compose, CPU by default, NVIDIA GPU with `docker-compose.gpu.yml`); `gemma3:1b` by default, `gemma4:e4b` on the workstation for official runs. GPU for `stt` is open (A1). A CPU-only or smaller-model path must exist for development laptops.
 - Microphone access needs a secure context: `localhost` works; a second device needs HTTPS via reverse proxy (P4, scope lever: demo from `localhost`).
 - Node.js LTS everywhere (local, CI, Docker images). `n` is optional for local version management. Python services use `uv` (Docker, local, CI).
 - CI (P2): lint, typecheck, test, build, docker build.
@@ -120,7 +120,7 @@ Layout proposal: `eval/` with `scenarios/` (script, reference JSON, key terms, a
 | # | Question | Resolved by | Default if unresolved |
 |---|---|---|---|
 | 1 | Backend language and framework | decided 2026-10-27 | **FastAPI** |
-| 2 | Gemma-4 runtime (Ollama / vLLM / llama.cpp), model size, GPU, latency | B2 | decide by end of S1 (Nov 15) |
+| 2 | Gemma-4 runtime (Ollama / vLLM / llama.cpp), model size, GPU, latency | decided 2026-11-21 (#85) | **Ollama**; gemma3:1b default, gemma4:e4b official |
 | 3 | Whisper variant and latency/CER on Taiwan Mandarin | A1 | faster-whisper |
 | 4 | Service-to-service protocol (HTTP vs gRPC) | 張棨翔 | HTTP |
 | 5 | Is speaker separation needed | A4 | skip (scope lever) |
@@ -137,7 +137,7 @@ Record each answer in `DECISIONS.md` (spikes: with the measured numbers).
 apps/web/            Vue 3 + Vite + TypeScript + Tailwind + shadcn-vue
 services/api/        session API, validation, guard, audit
 services/stt/        Whisper wrapper
-services/llm/        Gemma-4 wrapper, prompts (versioned)
+services/llm/        Ollama client, prompts (versioned)
 eval/                scenarios, metrics, runner
 docker-compose.yml   web, api, stt, llm
 pnpm-workspace.yaml

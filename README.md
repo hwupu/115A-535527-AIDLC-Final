@@ -135,10 +135,10 @@ git push -u origin HEAD               # 開 PR 並連結 issue
 ## 📁 Repo 結構
 ```
 apps/web/         前端（Vue 3 + Vite + TS + Tailwind；shadcn-vue 待確認）
-services/api/     Session API、驗證、稽核紀錄（目前 stub）
-services/stt/     Whisper 語音轉文字（目前 stub，POST /transcribe）
-services/llm/     Gemma-4 欄位擷取（目前 stub，POST /extract）
-eval/             情境、指標、評估程式                         ⏳ 尚未建立
+services/api/     Session API、驗證、稽核紀錄（FastAPI + SQLite）
+services/stt/     Whisper 語音轉文字（POST /transcribe）
+services/llm/     欄位擷取，經由 Ollama（POST /extract；預設 gemma3:1b）
+eval/             prompt 測試案例、指標、評估程式
 docs/             路線圖、架構、評估、情境、Scrum、訪談
 prompt-log/       AI 協作紀錄
 CLAUDE.md         給 AI 代理的規則（AGENTS.md 是指向它的連結，給其他工具用）
