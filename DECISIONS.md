@@ -7,6 +7,23 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-22 — The AI drafts every report field it hears (prompt v5)
+- Status: accepted
+- Context: prompt v3 (#73) lets the AI fill six fields; in a recorded test, vitals, date of birth, accompaniment and
+  TOCC answers stayed empty, and a travel answer without the word 旅遊 was dropped by the v3 adapter.
+- Decision: prompt v5 drafts every field in `contracts.py` that the transcript states, and is the default
+  (`LLM_PROMPT_VERSION`, v3 and v4 stay available). Safeguards: Ollama structured output with a JSON Schema (only
+  known fields, each `{value, source_span}`, so no `triage_level`); the quote must appear in the transcript; numbers
+  and the date of birth are computed in code from the quote and dropped if it cannot support them; a temperature
+  from a sentence about a home reading is dropped; the api's type checks and the nurse's confirmation stay.
+- Measured (`docs/cp2/evidence/prompt-v5-2026-11-22/`, 12 dev cases plus S01 and a synthetic STT-style case):
+  gemma4:e4b v5 10/12 whole cases on T01–T12 (v3 10/12), 36/43 fields correct, no wrong yes/no, number or date.
+  gemma3:1b fills few fields (8/43) but gave no wrong typed value.
+- Consequences: more fields means more to review; the extra drafts are still 「AI 草稿」 until the nurse confirms.
+  T13 and T14 are development cases written while tuning v5; held-out cases and a nurse review of the answer key are
+  still needed. `CLAUDE.md` and `docs/cp2/PROMPT_CARD.md` now name v5.
+- Decided by: 張棨翔 (PO and LLM lead)
+
 ## 2026-11-21 — Ollama as the extraction runtime (spike B2)
 - Status: accepted
 - Context: the CP2 model decision (entry below) needs Gemma models. On Transformers they need a Hugging Face licence

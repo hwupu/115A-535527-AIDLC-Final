@@ -11,7 +11,7 @@ Keep clinical terms in Traditional Chinese as in the glossary in
 ## The product's AI (system prompt)
 
 This file instructs the coding agent. The prompt the app sends to its extraction model is
-`services/llm/prompts/v3.txt` (earlier versions v1, v2 kept for the test history). What it does, its
+`services/llm/prompts/v5.txt` (default; v1–v4 kept for the test history and comparison). What it does, its
 limits and known failure modes: `docs/cp2/PROMPT_CARD.md`. Prompt test suite: `eval/cases.json`,
 results in `docs/cp2/evidence/`. Change a prompt only with a new version file and a re-run of the suite.
 
