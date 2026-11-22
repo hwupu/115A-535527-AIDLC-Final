@@ -1,5 +1,48 @@
 # Decisions Log
 
+**Current code steward: 張棨翔 (Week 11, Nov 16 – 22), per the confirmed rotation.** Rotation schedule: `README.md`.
+Update this line via PR at every handover. The Week 9 (劉順松) and Week 10 (林均澔) handovers were not recorded
+when they happened. Each person adds a short entry with what they actually did as steward, or says the week was
+missed.
+
+Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
+
+## 2026-11-19 — CP2 dates from the published rubric
+- Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
+- Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
+  2026-11-19 says the Week 12 lab on Mon Nov 23 is peer review, where the prototype must be demonstrable, and the E3
+  deadline is Sun Nov 29. The TA's CP2 guidance (2026-11-19) orders the team sessions: walking skeleton, then merge
+  day, both before submission (worksheets in `docs/walking_skeleton.md` and `docs/merge_day.md`).
+- Decision: be demo-ready on Nov 23 and submit `Group01_CP2.zip` to E3 by Nov 29. This supersedes the CP2 date in
+  "Two-week sprints and schedule". Evidence matrix: `docs/cp2/REQUIREMENTS.md`.
+- Consequences: six extra days for the two outside-team user sessions and the per-member PR minimums.
+- Decided by: (team to confirm)
+
+## 2026-11-19 — #73 merged as the CP2 prototype base
+- Status: accepted
+- Decision: #73 (author 劉順松: persistent api, audit, local Whisper/Qwen adapters, prompt suite, CP2 docs) is merged
+  into `main`. 吳普軒 approved it with a written review listing follow-ups (fixed in the follow-up PR).
+- Context: #73 had no review before this, but its checklist marked "reviewed by another member" and "area lead
+  reviewed". Checklist boxes are ticked only after the event happens.
+- Process note: Claude Code ran the approve and merge commands on 吳普軒's explicit instruction, under their
+  account. This departs from "AI agent as Scrum Master" (2026-10-08: the agent does not merge to `main`). The team
+  should ratify or reject the amendment proposed in `AI_USAGE_GUIDELINES.md` §1.
+- Consequences: the Qwen adapter is now on `main` while the model choice is still open (next entry). #74's conflict
+  with #73 in `NurseSession.vue` was resolved on the #74 branch; 劉順松 then approved #74 with a written review
+  (submitted by Codex on their instruction) and merged it the same day.
+- Decided by: 吳普軒 (approver and merger)
+
+## 2026-11-19 — Extraction model for CP2 (OPEN, needs the Product Owner)
+- Status: open; needs 張棨翔 (PO and LLM lead)
+- Context: CP1 and the 2026-10-27 stack entry chose Gemma-4, runtime TBD (spike B2). #73 ships a local CPU adapter for
+  Qwen/Qwen2.5-0.5B-Instruct, chosen for a 4 GB-VRAM laptop. On 12 synthetic dev cases, v3 passes 8/12 whole cases.
+  No Gemma-4 run exists.
+- Options: (A) present Qwen 0.5B as the CP2 feasibility adapter, keep Gemma-4 as the CP3 target and rerun the same
+  12 cases on it; (B) deploy Gemma-4 before Nov 23 and rerun the cases; (C) other.
+- Consequences of any choice: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and
+  `docs/cp2/EVALUATION_REPORT.md` to match.
+- Decided by: (pending)
+
 ## 2026-11-04 — CP2 local candidate (proposal, not team ratification)
 - User-confirmed facts: 劉順松 (414551016) confirmed instructor topic approval and authorized local CP2 implementation. Team review precedes E3 upload, which remains the user's action.
 - Implemented candidate: integrate existing frontend stack locally; persistent SQLAlchemy/Alembic API, audit and evaluation, whole-clip Whisper small CPU int8, Qwen/Qwen2.5-0.5B-Instruct CPU adapter and source-quote prompt v3. This is a reviewable implementation, not an assertion that other team members approved a new model or scope.
@@ -7,11 +50,6 @@
 - Consequences: limited six-field extraction and unvalidated semantic accuracy; real external-user tests and individual PR/steward/session evidence remain outstanding. No hidden model substitution in evaluation.
 - Human owner: 劉順松; led-by/team ratification: pending. See docs/cp2/REQUIREMENTS.md and prompt-log/2026-11-04-414551016-cp2.md.
 - Steward handover: README schedules Week 9 for 劉順松, but this run did not conduct a real handover. The old Current code steward line below is retained as stale pending actual human confirmation.
-
-**Current code steward: 吳普軒 (Week 8, Oct 26 – Nov 1).** Rotation schedule: `README.md`.
-Update this line via PR at every handover.
-
-Entry format: Status, Context, Decision, Consequences, Decided by.
 
 ## 2026-09-21 — Initial code steward
 - Status: superseded by the 2026-10-27 rotation entry
@@ -224,3 +262,12 @@ Entry format: Status, Context, Decision, Consequences, Decided by.
   components tighten with the `compact:` Tailwind variant (`apps/web/src/style.css`). Whether 18 px reads well on the ward
   tablet is a pilot question (E9).
 - Decided by: 吳普軒 (frontend lead)
+
+
+## 2026-11-19 - Issue #77 AI failure slice (proposal, pending team session)
+- Status: proposed by the user-authorized Codex preparation; not a ratified team decision or attendance record.
+- Context: malformed model JSON can crash extraction or be reported as success. #77 allows a Route 2 AI failure slice with fake-model tests after checking higher-priority gaps.
+- Proposed decision: validate the response envelope before applying fields and reuse the existing recoverable nurse notification. Preserve transcript and manual workflow.
+- Alternative rejected in this candidate: swallowing all exceptions or treating malformed envelopes as successful empty extraction.
+- Human owner: 劉順松 (414551016); team acceptance and session lead remain pending.
+- Evidence: services/api/tests/test_ai_failure.py; docs/cp2/ISSUE77_SESSION_PREP.md. The four-person session, actual steward review and merged session PR remain outstanding.

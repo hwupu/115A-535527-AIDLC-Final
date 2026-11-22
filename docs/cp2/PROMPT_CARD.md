@@ -1,5 +1,7 @@
 # Prompt documentation card
 
+- Where the system prompt is: `services/llm/prompts/v3.txt` (in use), loaded by `services/llm/app/main.py`. `CLAUDE.md` is the coding agent's policy and links here; it is not sent to the product model.
+
 - Owner: 劉順松 / Group1. Status: local CP2 proposal pending team review.
 - Task: copy source-supported phrases from synthetic triage transcripts into six selected fields; nurse reviews them before saving.
 - Actual model: Qwen/Qwen2.5-0.5B-Instruct, local Transformers, CPU float32, deterministic greedy generation, max 450 new tokens, no hosted API/key. Model files downloaded from the named Hugging Face repository without remote code execution.
