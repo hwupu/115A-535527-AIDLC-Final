@@ -12,7 +12,7 @@ Current code steward: see `DECISIONS.md` (rotates weekly)
 | Claude Code (Sonnet / Opus) | 吳普軒 (frontend, repo setup, Scrum Master role), 張棨翔 (#67, #68) | Drafting code, tests and docs; first-pass review; Scrum Master facilitation and drafting `DECISIONS.md` / `prompt-log/` entries | Deciding scope, 檢傷級數 logic or evaluation conclusions; secrets |
 | Codex desktop | 劉順松 (#73) | Implementing and verifying the CP2 backend, local inference adapters, prompt suite and CP2 documents | Same limits as above |
 | Local Whisper (`small`, CPU int8) | in the app | Transcribing simulated triage conversations | Real patient audio; anything outside the local machine |
-| Local extraction LLM: Qwen2.5-0.5B-Instruct on CPU today; Gemma-4 planned (choice OPEN, see `DECISIONS.md` 2026-11-19) | in the app | Copying source-supported phrases into selected report fields for the nurse to review | Assigning a triage level; diagnosis or medical advice; writing to a real HIS; inventing unsaid values |
+| Local extraction LLM on Ollama: `gemma3:1b` by default, `gemma4:e4b` for official runs on the workstation (`DECISIONS.md` 2026-11-19, 2026-11-21); Qwen2.5-0.5B on Transformers CPU until 2026-11-21 | in the app | Copying source-supported phrases into selected report fields for the nurse to review | Assigning a triage level; diagnosis or medical advice; writing to a real HIS; inventing unsaid values |
 
 Adding an AI tool or widening the app's AI scope needs a `DECISIONS.md` entry first. The #73 model substitution
 showed why: it shipped before the Product Owner had decided.
@@ -56,7 +56,7 @@ Trivial uses (typo fixes, explaining a single error message) need no entry.
 | Change | Evidence from Phase 2 |
 |---|---|
 | Tool table lists who actually used which tool; Codex added | Commit co-author trailers (Claude) on #54–#72; `prompt-log/2026-11-04-414551016-cp2.md` (Codex) |
-| Extraction model shown as open (Qwen today, Gemma-4 planned) | #73 shipped a Qwen CPU adapter for a 4 GB-VRAM laptop; no Gemma-4 run exists |
+| Extraction model and runtime recorded (Ollama; gemma3:1b default, gemma4:e4b official) | #73 shipped a Qwen CPU adapter for a 4 GB-VRAM laptop before the PO decided; #85 moved to Ollama after measuring three models (`docs/cp2/evidence/ollama-2026-11-21/`) |
 | Approvals need a substantive comment | Four approvals on #69–#72 had empty bodies; the CP2 rubric does not count them |
 | Checklist boxes ticked only after the fact | #73's checklist marked reviews that had not happened |
 | AI may merge only on the approver's explicit instruction | #73 (Claude Code, for 吳普軒) and #74 (Codex, for 劉順松) were approved by AI agents on the approver's instruction; v0.1 and the 2026-10-08 entry did not allow this |
