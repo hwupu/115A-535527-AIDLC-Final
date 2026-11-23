@@ -2,7 +2,7 @@
 - Date: 2026-11-23
 - Author: 張棨翔
 - Tool / model: Claude Code / Opus 5.5
-- PR: (to fill)
+- PR: #99
 
 ## Prompt
 Make the printout of a confirmed report follow the layout of a real ED record that I provided as a PDF, but
