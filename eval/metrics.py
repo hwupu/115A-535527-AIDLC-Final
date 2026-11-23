@@ -24,6 +24,34 @@ def cer(reference, prediction):
     return previous[-1] / len(a)
 
 
+ZH_DIGITS = {'零': 0, '〇': 0, '一': 1, '二': 2, '兩': 2, '三': 3, '四': 4,
+             '五': 5, '六': 6, '七': 7, '八': 8, '九': 9}
+ZH_UNITS = {'十': 10, '百': 100, '千': 1000}
+
+
+def zh_digits(text):
+    """Chinese numerals to Arabic digits (一百二十二→122, 三十八點五→38.5).
+
+    Used on both sides so STT CER compares the values, not how the numbers are written.
+    """
+    def integer(chars):
+        if not any(c in ZH_UNITS for c in chars):  # read digit by digit, e.g. 九七 → 97
+            return ''.join(str(ZH_DIGITS[c]) for c in chars)
+        total = current = 0
+        for c in chars:
+            if c in ZH_DIGITS:
+                current = ZH_DIGITS[c]
+            else:
+                total, current = total + (current or 1) * ZH_UNITS[c], 0
+        return str(total + current)
+
+    def convert(match):
+        fraction = ''.join(str(ZH_DIGITS[c]) for c in match[2] or '')
+        return integer(match[1]) + ('.' + fraction if fraction else '')
+
+    return re.sub(r'([零〇一二兩三四五六七八九十百千]+)(?:點([零〇一二三四五六七八九]+))?', convert, text)
+
+
 def score(expected, fields):
     predicted = {p: f.get('value') for p, f in fields.items() if isinstance(f, dict) and f.get('value') not in (None, '', [])}
     keys = set(expected) | set(predicted)
