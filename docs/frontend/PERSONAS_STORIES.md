@@ -48,8 +48,9 @@ Traditional Chinese as in the handoff glossary.
 - **Screen scope (decided 2026-10-28):** voice input and text input, then an ending screen that shows the **就診號** the system assigned. No code entry, no personal information.
 - **Needs from the UI:** very large text and buttons, a very visible recording state, plain wording, nothing that looks like medical advice or a triage result.
 - **Privacy:** the patient is never asked for a name, 身分證字號 or phone number; the 就診號 is a simulated number given at the end. 就診號 identifies a visit; the prototype does not handle 病歷號 (the permanent record number) because there is no HIS.
-- **Deferred (PO, 2026-10-29):** a read-back that **only repeats what the patient said**, so they can tell whether speech recognition
-  heard it wrongly. It never shows the AI draft, danger-sign flags or a triage level. Not in scope now.
+- **Read-back (PO, 2026-10-29; brought into #86 on 2026-11-22):** the patient screen asks one fixed question at a time and shows
+  **only what the patient said or typed**, so they can tell whether speech recognition heard it wrongly. It never shows the AI
+  draft, danger-sign flags or a triage level. Questions are not read aloud for now (Fish Speech may follow in its own card).
 
 ### P-A: 管理者 / 評估人員 (admin, evaluation mode)
 

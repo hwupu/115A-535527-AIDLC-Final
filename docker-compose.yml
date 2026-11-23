@@ -1,6 +1,6 @@
 # Profiles: dev = vite hot reload; demo = built web served by nginx.
 # `docker compose up` uses COMPOSE_PROFILES from .env (default in .env.example: dev).
-# CP2 local candidate: real CPU models, model caches persisted in volumes.
+# CP2 local candidate: real local models (Whisper, Ollama), model caches persisted in volumes.
 services:
   web:
     profiles: [dev]
@@ -9,13 +9,13 @@ services:
     volumes: ["./apps/web/src:/repo/apps/web/src"]
     environment:
       VITE_API_MOCK: ${VITE_API_MOCK:-0}
-    depends_on: { api: { condition: service_healthy } }
+    depends_on: { api: { condition: service_healthy }, llm: { condition: service_healthy } }
   web-demo:
     profiles: [demo]
     # VITE_* values are baked in at build time, so the mock flag is passed as a build arg.
     build: { context: ., dockerfile: apps/web/Dockerfile.demo, args: { VITE_API_MOCK: "${VITE_API_MOCK:-0}" } }
     ports: ["127.0.0.1:${WEB_PORT:-5173}:80"]
-    depends_on: { api: { condition: service_healthy } }
+    depends_on: { api: { condition: service_healthy }, llm: { condition: service_healthy } }
   api:
     build: services/api
     ports: ["127.0.0.1:${API_PORT:-8000}:8000"]
@@ -39,11 +39,37 @@ services:
   llm:
     build: services/llm
     ports: ["127.0.0.1:${LLM_PORT:-8002}:8000"]
-    volumes: ["cp2-llm-cache:/srv/data"]
     environment:
-      LLM_MODEL: ${LLM_MODEL:-Qwen/Qwen2.5-0.5B-Instruct}
+      OLLAMA_URL: http://ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-gemma3:1b}
+    depends_on: { ollama-pull: { condition: service_completed_successfully } }
+    # /ready turns 200 after one warm-up extraction (or its failure), so the first nurse turn is not a cold start.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready')"]
+      interval: 3s
+      timeout: 2s
+      retries: 100
+  # Extraction model runtime. CPU by default; on a machine with an NVIDIA GPU add docker-compose.gpu.yml.
+  ollama:
+    image: ollama/ollama:0.33.2
+    volumes: ["ollama-models:/root/.ollama"]
+    environment:
+      # The first request after loading takes over a minute; keep the model in memory between demo turns.
+      OLLAMA_KEEP_ALIVE: 24h
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+  # One-shot: download LLM_MODEL into the volume (quick once it is there), then exit.
+  ollama-pull:
+    image: ollama/ollama:0.33.2
+    entrypoint: ["ollama", "pull", "${LLM_MODEL:-gemma3:1b}"]
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    depends_on: { ollama: { condition: service_healthy } }
 
 volumes:
   cp2-api-data:
   cp2-stt-cache:
-  cp2-llm-cache:
+  ollama-models:

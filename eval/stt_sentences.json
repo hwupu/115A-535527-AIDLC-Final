@@ -1,0 +1,20 @@
+[
+  {"id": "P01", "text": "從昨天晚上開始發燒，咳嗽，喉嚨很痛。", "tags": ["symptoms"]},
+  {"id": "P02", "text": "過去兩個月沒有出國旅遊，我都在新竹。", "tags": ["tocc"]},
+  {"id": "P03", "text": "我是國小老師，班上有好幾個小朋友得流感。", "tags": ["tocc", "medical"]},
+  {"id": "P04", "text": "最近有接觸到類似症狀的人。", "tags": ["tocc"]},
+  {"id": "P05", "text": "左手有洗腎瘻管，不能量血壓。", "tags": ["medical", "restrictions"]},
+  {"id": "P06", "text": "血壓一百二十二，八十，脈搏九十二，血氧九十七。", "tags": ["numbers", "vitals"]},
+  {"id": "P07", "text": "耳溫三十八點五度。", "tags": ["numbers", "vitals"]},
+  {"id": "P08", "text": "吃了退燒藥還是退不下來，全身痠痛。", "tags": ["medical"]},
+  {"id": "P09", "text": "走路會喘，胸悶，晚上躺平會更喘。", "tags": ["medical"]},
+  {"id": "P10", "text": "腳腫了一個禮拜，這幾天尿量變少。", "tags": ["medical"]},
+  {"id": "P11", "text": "我對盤尼西林過敏。", "tags": ["medical"]},
+  {"id": "P12", "text": "我有高血壓跟糖尿病，固定在吃藥。", "tags": ["medical", "history"]},
+  {"id": "P13", "text": "我坐輪椅來的，女兒陪我一起來。", "tags": ["patient"]},
+  {"id": "P14", "text": "民國八十七年五月十四日出生。", "tags": ["numbers", "patient"]},
+  {"id": "P15", "text": "肚子痛，拉肚子拉了三次，有一點想吐。", "tags": ["symptoms"]},
+  {"id": "P16", "text": "騎機車摔車，右手手腕很痛，有擦傷。", "tags": ["symptoms"]},
+  {"id": "P17", "text": "不對，更正一下，是前天開始發燒的。", "tags": ["correction"]},
+  {"id": "P18", "text": "阮阿公昨天開始發燒，頭很痛，攏吃不下。", "tags": ["taiwanese-mix"]}
+]

@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Current code steward: 張棨翔 (Week 11, Nov 16 – 22), per the confirmed rotation.** Rotation schedule: `README.md`.
+**Current code steward: 劉順松 (Week 12, Nov 23 – 29), per the confirmed rotation.** Rotation schedule: `README.md`.
 Update this line via PR at every handover. The Week 9 (劉順松) and Week 10 (林均澔) handovers were not recorded
 when they happened. Each person adds a short entry with what they actually did as steward, or says the week was
 missed.
@@ -21,6 +21,73 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   Accuracy is measured on S01, S03 and S04 before relying on it.
 - Decided by: 張棨翔 (PO)
 
+## 2026-11-22 — Patient screen asks one question at a time and shows the patient's own answers
+- Status: accepted
+- Context: 2026-10-29 the PO chose fixed guided questions on the patient screen (option B, #86) and deferred the
+  read-back, scoped to repeating only the patient's own words ("Frontend choices" entry;
+  `docs/frontend/PERSONAS_STORIES.md`).
+- Decision: the patient screen becomes a step-by-step questionnaire: one fixed question per screen, answered by voice
+  or text, skippable, with simple pre-written follow-ups and no AI choosing the next question (#86). The read-back is
+  pulled forward into #86 with the same scope: the screen shows only what the patient said or typed (voice as its
+  transcript), never the AI draft, danger-sign flags or a triage level. Questions are not read aloud for now; reading
+  the fixed questions with Fish Speech may follow later in its own card, after checking its licence and speed and
+  only for fixed text, never AI output.
+- Consequences: each answer is stored with its question (e.g. "過去兩個月內，有去過國內或國外旅遊嗎？沒有") so prompt v5 can
+  tell what a bare 「沒有」 answers; the frontend shows the patient's own `transcript.segment`, which the api already
+  sends to the patient connection. #86 grew from S to M; the frontend lead assigns it.
+- Decided by: 張棨翔 (PO)
+
+## 2026-11-22 — Week 11 code steward handover (張棨翔 → 劉順松)
+- Status: record
+- What the steward did (Nov 16 – 22):
+  - Approved four PRs with written reviews: #75 (吳普軒; ran the Python half of `check-cp2.sh` on the Linux
+    workstation, found that `start-cp2.sh`'s `lsof` check misses root-owned listeners), #80 (劉順松; reran tests on
+    the latest `main`, confirmed the new test fails on the unfixed code, agreed as backend lead), #81 and #82
+    (林均澔).
+  - While reviewing #81, found that the api dropped the recording because `recording.stop` arrives before the audio
+    (#83); fixed in #84 (merged). While reviewing #82, found that recorded lines had no timestamps (#91).
+  - PO decisions this week: extraction on Ollama with gemma3:1b by default and gemma4:e4b for official runs (#85),
+    Whisper small by default and medium for official runs (A1, #90), prompt v5 for every field (#95), the patient
+    screen entry above (#86).
+- Open at handover (as of Nov 22): #85 was merged. #90, #91 and #95 await review; #95 replaces #92, which GitHub
+  closed when #85's branch was deleted (#92 was stacked on it). #90 and #95 add entries at the top of this file, so
+  whoever merges later keeps both sides. The `start-cp2.sh` port check is not fixed. #86 and #87 are assigned to
+  吳普軒 but not started. #77's team session needs a slice other than #80, which is merged. Before E3
+  (Nov 29): the two outside-team user sessions (0 of 2), walking skeleton and merge day, and regenerating
+  `docs/cp2/Group1_CP2_Report.md`.
+- Handover to 劉順松: no separate walk-through meeting; handed over through this entry and a LINE message.
+- Recorded by: 張棨翔 (outgoing steward)
+
+## 2026-11-22 — Whisper model size (A1, #6)
+- Status: accepted
+- Context: A1 asks for latency and CER of at least two Whisper sizes, including masked speech and medical terms.
+  Measured with `eval/stt_benchmark.py`: one speaker, 18 fictional sentences, plain and masked, browser webm, the
+  STT service's own settings (CPU int8). CER without punctuation and with numerals scored as values:
+  tiny 0.35 / 0.31, base 0.22 / 0.20, small 0.15 / 0.13, medium 0.10 / 0.07 (plain / mask); median 0.4, 0.6, 1.7 and
+  4.7 s per 6 s clip. Only medium handled the Taiwanese-accented sentence (CER 0.31; small 0.75). Every size
+  misheard 瘻管 and 盤尼西林. Evidence: `docs/cp2/evidence/stt-2026-11-22/`.
+- Decision: `small` stays the default (`WHISPER_MODEL`) for everyone's development and testing. Official runs on
+  the workstation use `medium`, set in its own `.env`. STT should try the GPU first and fall back to the CPU when no
+  GPU is available (#88). Medical vocabulary hints are tried separately, with a check for invented terms (#89).
+- Consequences: on the CPU, medium makes a 30 s turn wait about 22 s, so official runs need #88 first. The lower
+  masked CER is likely a practice effect (the mask round came second, one speaker); later speakers record the mask
+  round first.
+- Decided by: 張棨翔 (STT lead and PO)
+
+## 2026-11-21 — Ollama as the extraction runtime (spike B2)
+- Status: accepted
+- Context: the CP2 model decision (entry below) needs Gemma models. On Transformers they need a Hugging Face licence
+  and token on every machine and a CPU torch install; the 2026-10-27 stack entry left the runtime open (B2).
+- Decision: the llm service calls Ollama (`/api/chat`, `temperature 0`, `format: json`) at `OLLAMA_URL`; the model is
+  `LLM_MODEL`. torch and transformers are removed. `docker compose` runs `ollama/ollama:0.33.2` with the models in a
+  volume, CPU by default, NVIDIA GPU with `docker-compose.gpu.yml`. The script path (`start-cp2.*`) needs a local
+  Ollama. The llm service sends one warm-up extraction at start and reports `/ready` after it (even if it fails), and
+  the web waits for that, because the first chat after Ollama loads a model took 38–89 s on the workstation.
+  Thinking models (gemma4) get `think: false`, detected from Ollama's model capabilities: with thinking on, gemma4
+  used the whole output budget reasoning and returned no answer, while `think: false` emptied gemma3's answers.
+- Consequences: switching models is an `.env` change. The workstation's system Ollama (0.20.5) is too old for
+  `gemma3:1b`, so the demo there uses the compose Ollama. Measured results: `docs/cp2/evidence/ollama-2026-11-21/`.
+- Decided by: 張棨翔 (LLM lead)
 ## 2026-11-19 — CP2 dates from the published rubric
 - Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
 - Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
@@ -46,16 +113,23 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   (submitted by Codex on their instruction) and merged it the same day.
 - Decided by: 吳普軒 (approver and merger)
 
-## 2026-11-19 — Extraction model for CP2 (OPEN, needs the Product Owner)
-- Status: open; needs 張棨翔 (PO and LLM lead)
+## 2026-11-19 — Extraction model for CP2
+- Status: accepted (PO 張棨翔: Gemma 3 1B in the #75 review on 2026-11-21; plan for Gemma-4 the same day)
 - Context: CP1 and the 2026-10-27 stack entry chose Gemma-4, runtime TBD (spike B2). #73 ships a local CPU adapter for
   Qwen/Qwen2.5-0.5B-Instruct, chosen for a 4 GB-VRAM laptop. On 12 synthetic dev cases, v3 passes 8/12 whole cases.
   No Gemma-4 run exists.
 - Options: (A) present Qwen 0.5B as the CP2 feasibility adapter, keep Gemma-4 as the CP3 target and rerun the same
   12 cases on it; (B) deploy Gemma-4 before Nov 23 and rerun the cases; (C) other.
-- Consequences of any choice: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and
-  `docs/cp2/EVALUATION_REPORT.md` to match.
-- Decided by: (pending)
+- Decision: (C) `gemma3:1b` is the default (`.env.example`) for everyone's development and testing. Official runs
+  (demos, evaluation sessions) use `gemma4:e4b`, set by 張棨翔 in the workstation's own `.env`. Qwen 0.5B is no
+  longer used. Both run on Ollama (entry above). Prompt v3 stays the default; v4 is kept for comparison.
+- Measured on the workstation, same 12 dev cases (v3 / v4): gemma3:1b 4/12 / 4/12, gemma3:4b 8/12 / 9/12,
+  gemma4:e4b 10/12 / 9/12 (thinking off, about 0.2 s per case). gemma3:1b returns no fields for almost every case,
+  so its AI draft is mostly empty; `gemma4:e4b` is one `.env` change away. v3's examples repeat three of the cases,
+  which inflates v3 scores.
+- Consequences: update `AI_USAGE_GUIDELINES.md` §1, `docs/cp2/PROMPT_CARD.md` and `docs/cp2/EVALUATION_REPORT.md`
+  to match (before Nov 29).
+- Decided by: 張棨翔 (PO and LLM lead)
 
 ## 2026-11-04 — CP2 local candidate (proposal, not team ratification)
 - User-confirmed facts: 劉順松 (414551016) confirmed instructor topic approval and authorized local CP2 implementation. Team review precedes E3 upload, which remains the user's action.
