@@ -12,7 +12,7 @@ from app.main import ExtractRequest, extract  # noqa: E402
 from metrics import score  # noqa: E402
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--version', choices=['v1', 'v2', 'v3'], default='v3')
+parser.add_argument('--version', choices=['v1', 'v2', 'v3', 'v4'], default='v3')
 parser.add_argument('--ids', nargs='*')
 args = parser.parse_args()
 output = ROOT / 'evidence' / f'prompt-{args.version}.jsonl'

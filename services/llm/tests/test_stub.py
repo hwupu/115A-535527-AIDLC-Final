@@ -1,8 +1,71 @@
+import httpx
 from fastapi.testclient import TestClient
 
 from app.main import app
 
 client = TestClient(app)
+
+
+def fake_ollama(monkeypatch, capabilities):
+    """Fake /api/show (given capabilities) and /api/chat (empty draft); return the chat body."""
+    from app import main
+
+    main.thinks.cache_clear()
+    sent = {}
+
+    def fake_post(url, json, timeout):
+        request = httpx.Request("POST", url)
+        if url.endswith("/api/show"):
+            return httpx.Response(200, json={"capabilities": capabilities}, request=request)
+        sent.update(url=url, body=json)
+        reply = {"message": {"role": "assistant", "content": '{"fields":{}}'}}
+        return httpx.Response(200, json=reply, request=request)
+
+    monkeypatch.setattr("app.main.httpx.post", fake_post)
+    return sent
+
+
+def test_generate_asks_ollama_for_deterministic_json(monkeypatch):
+    from app.main import generate
+
+    sent = fake_ollama(monkeypatch, ["completion"])
+    assert generate("咳嗽", "v3") == '{"fields":{}}'
+    assert sent["url"].endswith("/api/chat")
+    assert sent["body"]["format"] == "json" and sent["body"]["stream"] is False
+    assert sent["body"]["options"]["temperature"] == 0
+    assert "咳嗽" in sent["body"]["messages"][1]["content"]
+    assert "think" not in sent["body"]
+
+
+def test_thinking_models_are_asked_not_to_think(monkeypatch):
+    from app.main import generate
+
+    sent = fake_ollama(monkeypatch, ["completion", "thinking"])
+    generate("咳嗽", "v3")
+    assert sent["body"]["think"] is False
+
+
+def test_ready_after_warm_up_even_if_it_failed(monkeypatch):
+    from app import main
+
+    def refuse(url, **kwargs):
+        raise httpx.ConnectError("connection refused", request=httpx.Request("POST", url))
+
+    monkeypatch.setattr("app.main.httpx.post", refuse)
+    main.WARMED.clear()
+    assert client.get("/ready").status_code == 503
+    main.warm_up()
+    assert client.get("/ready").json()["status"] == "ready"
+
+
+def test_ollama_unreachable_is_a_503(monkeypatch):
+    def refuse(url, **kwargs):
+        raise httpx.ConnectError("connection refused", request=httpx.Request("POST", url))
+
+    monkeypatch.setattr("app.main.httpx.post", refuse)
+    res = client.post("/extract", json={"transcript": "咳嗽"})
+    assert res.status_code == 503
+    assert "manual entry remains available" in res.json()["detail"]
 
 
 def test_health():

@@ -1,0 +1,9 @@
+# Run Ollama on an NVIDIA GPU (needs the NVIDIA Container Toolkit). Use it on top of docker-compose.yml:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
+# or set COMPOSE_FILE=docker-compose.yml:docker-compose.gpu.yml in .env.
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]

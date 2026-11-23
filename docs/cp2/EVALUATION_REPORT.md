@@ -25,6 +25,18 @@ T01 is the recorded revision cycle: v2 returned flat values, which the nested va
 
 Remaining v3 failures: T02 and T12 misclassify travel statements as chief complaint; T03 expresses the symptom differently from the strict reference; T06 returns invalid output on correction. Whole-case pass is not field accuracy and includes successful abstentions. Source containment does not prevent wrong semantic labels. Failures remain in the evidence rather than being deleted.
 
+### Update 2026-11-22: extraction on Ollama (張棨翔)
+
+The runtime moved to Ollama and the model to Gemma (see `DECISIONS.md` 2026-11-19 and 2026-11-21). The same twelve development cases and pipeline were run on the workstation (RTX 3090, Ollama 0.33.2, temperature 0, thinking off for gemma4). Raw outputs: `docs/cp2/evidence/ollama-2026-11-21/`.
+
+| Model | v3 | v4 | Median s per case |
+|---|---:|---:|---:|
+| gemma3:1b (default) | 4/12 | 4/12 | 0.06 |
+| gemma3:4b | 8/12 | 9/12 | 0.2 |
+| gemma4:e4b (official runs) | 10/12 | 9/12 | 0.2 |
+
+gemma3:1b answers with no fields for most cases; its four passes are the cases whose answer is empty, so its draft is mostly empty in use. v3's examples repeat T01, T04 and T10, so v3 scores are inflated for every model; v4's examples do not appear in the cases. Even at temperature 0, one-case differences between runs occurred (gemma3:4b v3 scored 9/12 and 8/12). These are still developer-written cases, not clinical validation or held-out results.
+
 ## Actual speech experiment
 
 Windows Hanhan generated one fictional sentence: 從昨天開始發燒，咳嗽，沒有旅遊史。 No human voice was recorded. CPU int8 Whisper tiny and base produced incorrect travel-history text; small produced the intended content with punctuation differences. See stt-synthetic.json, stt-base.json, stt-small.json and synthetic-fever.wav. PyAV 19 failed the decoder interface; pinning av>=14,<17 fixed it. One synthetic TTS clip cannot establish real accent/noise/mask accuracy or throughput. small is the candidate default, not a clinically validated choice.
