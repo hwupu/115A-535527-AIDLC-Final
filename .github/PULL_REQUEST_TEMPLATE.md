@@ -1,16 +1,24 @@
-## What this PR does / 這個 PR 做了什麼
-[One sentence]
+## What and why
+<!-- One or two sentences. Link the issue or DECISIONS.md entry. -->
 
-Linked issue / 關聯 issue: #
+Closes #
 
-## Decision (required if a significant choice was made) / 決策
-Decision:
-Why:
-Alternative rejected:
-Led by:
+## AI assistance
+- Tool and model: <!-- none / Claude Code / chat / ... -->
+- What it generated: <!-- files or functions -->
+- Instruction given: <!-- one-line summary; link the prompt or spec if long -->
+- What I changed afterwards, and why:
 
-## Checklist
-- [ ] Tests pass, or this PR explains why none apply
+## How I checked it
+- [ ] I read every line of this change myself and can explain it without the AI
+- [ ] Tests added or updated, and all tests pass locally (and in CI, if we have it)
+- [ ] Prompt changed? Before/after results from our prompt test suite are below
+- Other checks (manual tries, screenshots):
+
+## Risks and alternatives
+<!-- What could break; what I considered and rejected. -->
+
+## Before merge
 - [ ] Reviewed by at least one other member (not only the author)
 - [ ] `DECISIONS.md` updated if this is a design choice
 - [ ] `prompt-log/` entry added if AI produced or changed content here
