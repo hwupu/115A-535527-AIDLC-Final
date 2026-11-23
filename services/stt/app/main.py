@@ -44,6 +44,7 @@ class Segment(BaseModel):
 class TranscribeResponse(BaseModel):
     segments: list[Segment]
     model: str = MODEL
+    duration: float = 0.0  # seconds of audio, so the api can place later recordings after this one
 
 
 @app.get("/health")
@@ -60,13 +61,13 @@ async def transcribe(audio: UploadFile) -> TranscribeResponse:
         raise HTTPException(413, "Audio must be nonempty and at most 16 MiB")
     try:
         with INFERENCE_LOCK:
-            segments, _ = load_model().transcribe(
+            segments, info = load_model().transcribe(
                 io.BytesIO(data), language="zh", beam_size=5, vad_filter=True
             )
             converter = OpenCC("s2twp")
             result = [
                 Segment(text=converter.convert(s.text), start=s.start, end=s.end) for s in segments
             ]
-        return TranscribeResponse(segments=result)
+        return TranscribeResponse(segments=result, duration=round(info.duration, 2))
     except Exception as exc:
         raise HTTPException(422, "Unable to decode/transcribe audio; use text input") from exc

@@ -199,7 +199,8 @@ def claim(sid: str):
         return {"status": d["status"], "visit_no": d["visit_no"]}
 
 
-async def add_input(sid, text, role):
+async def add_input(sid, text, role, start=0, end=0):
+    """start/end: seconds into the session's recorded audio; 0/0 for typed text (shown as —)."""
     async with locks.setdefault(sid, asyncio.Lock()):
         with Database.begin() as db:
             row = get(db, sid)
@@ -211,8 +212,8 @@ async def add_input(sid, text, role):
                 "segment_id": str(uuid4()),
                 "speaker": role,
                 "text": text,
-                "start": 0,
-                "end": 0,
+                "start": start,
+                "end": end,
                 "final": True,
             }
             if role == "patient":
@@ -600,14 +601,24 @@ async def socket(ws: WebSocket, sid: str, role: Literal["patient", "nurse"] = "n
                         )
                         r.raise_for_status()
                     transcription = r.json()
-                    text = "".join(s["text"] for s in transcription["segments"])
+                    parts = transcription["segments"]
+                    text = "".join(s["text"] for s in parts)
                     with Database.begin() as db:
                         row = get(db, sid)
                         data = deepcopy(row.data)
                         data["whisper_model"] = transcription.get("model", "unknown")
+                        # Each recording starts at 0 in Whisper; place it after the audio recorded
+                        # earlier in this session so the transcript timeline keeps going (#8).
+                        offset = data.get("audio_seconds", 0)
+                        heard = (
+                            (parts[0].get("start", 0), parts[-1].get("end", 0)) if parts else (0, 0)
+                        )
+                        length = transcription.get("duration") or heard[1]
+                        data["audio_seconds"] = round(offset + length, 2)
                         row.data = data
                     if text.strip():
-                        await add_input(sid, text, role)
+                        start, end = round(offset + heard[0], 2), round(offset + heard[1], 2)
+                        await add_input(sid, text, role, start, end)
                 except (httpx.HTTPError, ValueError):
                     await ws.send_json(
                         {
