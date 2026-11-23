@@ -96,3 +96,14 @@ html[data-density="compact"] {
     outline-offset: 2px;
   }
 }
+
+/* Printed triage record (components/nurse/PrintRecord.vue): plain A4 on a white page. */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+  body {
+    background: #fff;
+  }
+}
