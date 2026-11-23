@@ -29,9 +29,9 @@ Remaining v3 failures: T02 and T12 misclassify travel statements as chief compla
 
 Windows Hanhan generated one fictional sentence: 從昨天開始發燒，咳嗽，沒有旅遊史。 No human voice was recorded. CPU int8 Whisper tiny and base produced incorrect travel-history text; small produced the intended content with punctuation differences. See stt-synthetic.json, stt-base.json, stt-small.json and synthetic-fever.wav. PyAV 19 failed the decoder interface; pinning av>=14,<17 fixed it. One synthetic TTS clip cannot establish real accent/noise/mask accuracy or throughput. small is the candidate default, not a clinically validated choice.
 
-## External testing still required
+## External testing
 
-Conduct at least two sessions before CP2, using USER_TEST_PROTOCOL.md. Record baseline/tool time, actual errors and handoff questions, observed design friction and resulting changes. Do not claim 30% improvement without these data. Formal larger evaluation remains CP3 work.
+Two outside-team sessions have been held so far (U01, U02 in USER_TEST_PROTOCOL.md), and more will follow. Only their questionnaire answers are recorded yet: both participants rated all three items 5 of 5, and their suggestions and the resulting changes are in DESIGN_RATIONALE.md. Roles, timing, edits and AI draft accuracy are still to be filled in from the facilitator's forms, so there is no measured task-time or error result yet and no time-saving claim. The paper-vs-tool time comparison and the larger evaluation remain CP3 work.
 
 ## Limits and next actions
 

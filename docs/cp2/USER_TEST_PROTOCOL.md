@@ -1,6 +1,6 @@
-# External user testing protocol - not yet conducted
+# External user testing protocol
 
-Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. These forms are blank templates and must remain marked NOT CONDUCTED until actual sessions occur.
+Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. Two sessions have been held (U01, U02 under Sessions below) and more will follow; each new session gets its own record there, copied from the facilitator's form. The Session form below is the blank template.
 
 ## Keep the participant's load small (about 15 minutes)
 
@@ -45,7 +45,7 @@ If the participant is a physician, add one question after they read the confirme
 
 ## Session form (repeat once for each session)
 
-- Status: NOT CONDUCTED
+- Status: CONDUCTED / STOPPED (reason)
 - Anonymous code / role / outside-team confirmation:
 - Date / facilitator / consent read and given:
 - Software revision / prompt / model / scenario:
@@ -54,6 +54,35 @@ If the participant is a physician, add one question after they read the confirme
 - Ratings (1–3) and answers to the open questions (4–5), anonymized:
 - Design change proposed / implemented / retest outcome:
 - Evidence file and limitations:
+
+## Sessions
+
+Fields marked 待補 were not reported yet; they are filled from the facilitator's form (`USER_TEST_FORM.md` page 2),
+never estimated. Follow-up: #101.
+
+### U01 (測試者 A)
+
+- Status: CONDUCTED; questionnaire answers recorded, other fields 待補
+- Anonymous code / role / outside-team confirmation: U01 / 待補 / 待補
+- Date / facilitator / consent read and given: 待補 / 待補 / 待補
+- Software revision / prompt / model / scenario: 待補
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
+- Help needed and where the participant hesitated: 待補
+- Ratings (1–3) and answers to the open questions (4–5), anonymized: 5 / 5 / 5. Q4: 「更正式的 PDF 格式，又或者對接醫院系統。」 Q5: 「有沒有考慮到多台裝置負載的問題」
+- Design change proposed / implemented / retest outcome: formal printout → #99 (ED-style printed triage record, implemented, retest 待補); hospital-system integration → not doing, because the scope excludes writing to a real HIS; multi-device load → #100 (load test, not started)
+- Evidence file and limitations: paper form (to be destroyed after transcription); one participant
+
+### U02 (測試者 B)
+
+- Status: CONDUCTED; questionnaire answers recorded, other fields 待補
+- Anonymous code / role / outside-team confirmation: U02 / 待補 / 待補
+- Date / facilitator / consent read and given: 待補 / 待補 / 待補
+- Software revision / prompt / model / scenario: 待補
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
+- Help needed and where the participant hesitated: 待補
+- Ratings (1–3) and answers to the open questions (4–5), anonymized: 5 / 5 / 5. Q4: 「如果可以辨別對話的角色。」 Q5: 「會比較在意資料摘要的精準度。」
+- Design change proposed / implemented / retest outcome: speaker roles → #102 (AI labels each line's speaker from its content, the nurse can correct it; PO decision 2026-11-23), voice-based separation with pyannote kept for later in #9; summary accuracy → #45 (formal evaluation with held-out cases and a nurse-checked answer key), #89 (medical vocabulary hints)
+- Evidence file and limitations: paper form (to be destroyed after transcription); one participant
 
 ## Measures
 

@@ -14,7 +14,7 @@ Status as of 2026-11-19. Update this table in the same PR that adds the evidence
 | # | Deliverable | Points | Evidence in repo | Status |
 |---|---|---:|---|---|
 | 1 | Working prototype two people can use together | 15 | #73 (merged); `README_CP2.md`; `scripts/start-cp2.sh` / `.ps1`; CI green | Runs on macOS and Windows. Needs a rehearsed demo before Nov 23 |
-| 2 | Design rationale incl. findings from ≥2 user sessions with people outside the team | 10 | `DESIGN_RATIONALE.md`; `USER_TEST_PROTOCOL.md` | **Missing: 0 of 2 sessions held** |
+| 2 | Design rationale incl. findings from ≥2 user sessions with people outside the team | 10 | `DESIGN_RATIONALE.md`; `USER_TEST_PROTOCOL.md` | Partial: 2 sessions held (U01, U02), more planned; roles, timing and AI accuracy still to be filled in (#101) |
 | 3 | Updated evaluation report, honest about what is untested | 10 | `EVALUATION_REPORT.md`; `evidence/` | Draft done; add user-session results when held |
 | 4 | System prompt (`CLAUDE.md`) and prompt documentation card | 5 | `services/llm/prompts/v3.txt`; `PROMPT_CARD.md`; pointer in `CLAUDE.md` | Done; model choice pending PO (see `DECISIONS.md`) |
 | 5 | AI usage guidelines refined from the Week 3 draft | 4 | `AI_USAGE_GUIDELINES.md` v0.2 draft + change log | Draft; team must ratify |

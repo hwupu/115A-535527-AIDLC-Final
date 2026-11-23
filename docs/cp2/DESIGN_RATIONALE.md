@@ -10,6 +10,14 @@ For a 4GB-VRAM development machine, a CPU Qwen 0.5B adapter is implemented as a 
 
 SQLite avoids a separate database service; SQLAlchemy/Alembic preserve the team's chosen tooling. Every nurse edit stores before/after values. Confirmed encounters are immutable. The evaluation UI reuses audit events rather than inventing a second source of timing truth.
 
-## External-user findings - required, not yet available
+## External-user findings
 
-No CP2 external-user session was conducted by this automated run. Consequently this document does NOT yet satisfy the course requirement of findings from at least two such sessions. Complete USER_TEST_PROTOCOL.md, then add observed problems, changes made and any retest. Developer/browser tests and CP1 interviews cannot fill this section.
+Two outside-team sessions so far (U01, U02; records in `USER_TEST_PROTOCOL.md`, follow-up #101), with more to follow. So far only the questionnaire answers are recorded; participant roles, scenario, timing, edits, AI draft accuracy and observations are still to be filled in from the facilitator's forms, so the findings below are the participants' own words, not measured outcomes. Both rated all three items 5 of 5; with two participants this is encouraging, not a general result.
+
+| Finding (participant's words) | Change |
+|---|---|
+| A more formal PDF format (U01) | Implemented: the confirmed report prints as an ED-style triage record (#99); retest pending |
+| Integration with the hospital system (U01) | Not doing: the scope excludes writing to a real HIS; the nurse prints or copies the report |
+| Load with several devices at once (U01) | Load test planned (#100); STT currently transcribes one clip at a time |
+| Telling the speakers' roles apart (U02) | Planned (#102): the AI labels each transcript line's speaker from its content and the nurse can correct it; voice-based separation (pyannote) stays for later (#9) |
+| Accuracy of the summary (U02) | Formal evaluation on held-out cases with a nurse-checked answer key (#45); medical vocabulary hints (#89) |
