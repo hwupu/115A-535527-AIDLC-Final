@@ -42,7 +42,8 @@ describe("nurse session screen", () => {
     await vi.waitFor(() => expect(store.confirmed).toBe(true)); // the mock api answers after a short delay
     await flushPromises();
     expect(wrapper.text()).toContain("報告已儲存");
-    expect(wrapper.text()).toContain("檢傷級數（護理師填寫）：3");
+    // The printed record carries the level the nurse picked.
+    expect(wrapper.text()).toContain("檢傷級數：第 3 級（護理師判定）");
   });
 
   it("shows the 量測禁忌 reminder and asks for the wristband", async () => {

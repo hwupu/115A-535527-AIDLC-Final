@@ -8,6 +8,7 @@ import ConfirmBar from "./ConfirmBar.vue";
 import ConnectionBanner from "./ConnectionBanner.vue";
 import ConsentGate from "./ConsentGate.vue";
 import ExportPanel from "./ExportPanel.vue";
+import PrintRecord from "./PrintRecord.vue";
 import RecorderPanel from "@/components/recorder/RecorderPanel.vue";
 import FlagList from "@/components/report/FlagList.vue";
 import ReportForm from "@/components/report/ReportForm.vue";
@@ -104,6 +105,7 @@ function select(path: string) {
 
     <div v-else class="grid flex-1 content-start gap-3 px-4 py-3">
       <ExportPanel :text="reportText" :report="{ session_id: store.sessionId, visit_no: store.visitNo, confirmed_at: store.confirmedAt, triage_level: triageLevel, fields, flags }" />
+      <PrintRecord :fields="fields" :visit-no="store.visitNo" :triage-level="triageLevel" :flags="flags" :confirmed-at="store.confirmedAt" />
       <Button variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
     </div>
 
