@@ -199,7 +199,8 @@ def claim(sid: str):
         return {"status": d["status"], "visit_no": d["visit_no"]}
 
 
-async def add_input(sid, text, role):
+async def add_input(sid, text, role, start=0, end=0):
+    """start/end: seconds into the session's recorded audio; 0/0 for typed text (shown as —)."""
     async with locks.setdefault(sid, asyncio.Lock()):
         with Database.begin() as db:
             row = get(db, sid)
@@ -211,8 +212,8 @@ async def add_input(sid, text, role):
                 "segment_id": str(uuid4()),
                 "speaker": role,
                 "text": text,
-                "start": 0,
-                "end": 0,
+                "start": start,
+                "end": end,
                 "final": True,
             }
             if role == "patient":
@@ -233,6 +234,15 @@ async def add_input(sid, text, role):
                 )
                 response.raise_for_status()
                 result = response.json()
+                # Reject broken envelopes before applying any draft field. A JSON
+                # value can be syntactically valid but still violate our contract.
+                if (
+                    not isinstance(result, dict)
+                    or not isinstance(result.get("fields"), dict)
+                    or not isinstance(result.get("metadata", {}), dict)
+                    or not isinstance(result.get("rejected", []), list)
+                ):
+                    raise ValueError("Invalid extraction response envelope")
             with Database.begin() as db:
                 row = get(db, sid)
                 d = deepcopy(row.data)
@@ -561,14 +571,18 @@ async def socket(ws: WebSocket, sid: str, role: Literal["patient", "nurse"] = "n
     listeners.setdefault(sid, []).append(pair)
     await ws.send_json({"type": "status", "stt": "ok", "llm": "ok"})
     recording = False
+    # The browser hands over the whole recording in MediaRecorder.onstop, which runs after the
+    # client has already sent recording.stop. So one blob is still expected after a stop (#83).
+    awaiting_final = False
     try:
         while True:
             message = await ws.receive()
             if message["type"] == "websocket.disconnect":
                 break
             if message.get("bytes") is not None:
-                if not recording:
+                if not (recording or awaiting_final):
                     continue
+                awaiting_final = False
                 audio = message["bytes"]
                 if len(audio) > 16 * 1024 * 1024:
                     await ws.send_json(
@@ -587,14 +601,24 @@ async def socket(ws: WebSocket, sid: str, role: Literal["patient", "nurse"] = "n
                         )
                         r.raise_for_status()
                     transcription = r.json()
-                    text = "".join(s["text"] for s in transcription["segments"])
+                    parts = transcription["segments"]
+                    text = "".join(s["text"] for s in parts)
                     with Database.begin() as db:
                         row = get(db, sid)
                         data = deepcopy(row.data)
                         data["whisper_model"] = transcription.get("model", "unknown")
+                        # Each recording starts at 0 in Whisper; place it after the audio recorded
+                        # earlier in this session so the transcript timeline keeps going (#8).
+                        offset = data.get("audio_seconds", 0)
+                        heard = (
+                            (parts[0].get("start", 0), parts[-1].get("end", 0)) if parts else (0, 0)
+                        )
+                        length = transcription.get("duration") or heard[1]
+                        data["audio_seconds"] = round(offset + length, 2)
                         row.data = data
                     if text.strip():
-                        await add_input(sid, text, role)
+                        start, end = round(offset + heard[0], 2), round(offset + heard[1], 2)
+                        await add_input(sid, text, role, start, end)
                 except (httpx.HTTPError, ValueError):
                     await ws.send_json(
                         {
@@ -607,6 +631,10 @@ async def socket(ws: WebSocket, sid: str, role: Literal["patient", "nurse"] = "n
                 try:
                     event = json.loads(message["text"])
                     if event.get("type") in ("recording.start", "recording.stop"):
+                        if event["type"] == "recording.start":
+                            awaiting_final = False
+                        else:
+                            awaiting_final = awaiting_final or recording
                         recording = event["type"] == "recording.start"
                         await broadcast(
                             sid,

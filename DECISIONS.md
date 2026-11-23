@@ -24,6 +24,22 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   still needed. `CLAUDE.md` and `docs/cp2/PROMPT_CARD.md` now name v5.
 - Decided by: 張棨翔 (PO and LLM lead)
 
+## 2026-11-22 — Whisper model size (A1, #6)
+- Status: accepted
+- Context: A1 asks for latency and CER of at least two Whisper sizes, including masked speech and medical terms.
+  Measured with `eval/stt_benchmark.py`: one speaker, 18 fictional sentences, plain and masked, browser webm, the
+  STT service's own settings (CPU int8). CER without punctuation and with numerals scored as values:
+  tiny 0.35 / 0.31, base 0.22 / 0.20, small 0.15 / 0.13, medium 0.10 / 0.07 (plain / mask); median 0.4, 0.6, 1.7 and
+  4.7 s per 6 s clip. Only medium handled the Taiwanese-accented sentence (CER 0.31; small 0.75). Every size
+  misheard 瘻管 and 盤尼西林. Evidence: `docs/cp2/evidence/stt-2026-11-22/`.
+- Decision: `small` stays the default (`WHISPER_MODEL`) for everyone's development and testing. Official runs on
+  the workstation use `medium`, set in its own `.env`. STT should try the GPU first and fall back to the CPU when no
+  GPU is available (#88). Medical vocabulary hints are tried separately, with a check for invented terms (#89).
+- Consequences: on the CPU, medium makes a 30 s turn wait about 22 s, so official runs need #88 first. The lower
+  masked CER is likely a practice effect (the mask round came second, one speaker); later speakers record the mask
+  round first.
+- Decided by: 張棨翔 (STT lead and PO)
+
 ## 2026-11-21 — Ollama as the extraction runtime (spike B2)
 - Status: accepted
 - Context: the CP2 model decision (entry below) needs Gemma models. On Transformers they need a Hugging Face licence
@@ -301,3 +317,12 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   components tighten with the `compact:` Tailwind variant (`apps/web/src/style.css`). Whether 18 px reads well on the ward
   tablet is a pilot question (E9).
 - Decided by: 吳普軒 (frontend lead)
+
+
+## 2026-11-19 - Issue #77 AI failure slice (proposal, pending team session)
+- Status: proposed by the user-authorized Codex preparation; not a ratified team decision or attendance record.
+- Context: malformed model JSON can crash extraction or be reported as success. #77 allows a Route 2 AI failure slice with fake-model tests after checking higher-priority gaps.
+- Proposed decision: validate the response envelope before applying fields and reuse the existing recoverable nurse notification. Preserve transcript and manual workflow.
+- Alternative rejected in this candidate: swallowing all exceptions or treating malformed envelopes as successful empty extraction.
+- Human owner: 劉順松 (414551016); team acceptance and session lead remain pending.
+- Evidence: services/api/tests/test_ai_failure.py; docs/cp2/ISSUE77_SESSION_PREP.md. The four-person session, actual steward review and merged session PR remain outstanding.
