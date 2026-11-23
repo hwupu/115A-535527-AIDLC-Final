@@ -44,6 +44,22 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Handover to 劉順松: no separate walk-through meeting; handed over through this entry and a LINE message.
 - Recorded by: 張棨翔 (outgoing steward)
 
+## 2026-11-22 — Whisper model size (A1, #6)
+- Status: accepted
+- Context: A1 asks for latency and CER of at least two Whisper sizes, including masked speech and medical terms.
+  Measured with `eval/stt_benchmark.py`: one speaker, 18 fictional sentences, plain and masked, browser webm, the
+  STT service's own settings (CPU int8). CER without punctuation and with numerals scored as values:
+  tiny 0.35 / 0.31, base 0.22 / 0.20, small 0.15 / 0.13, medium 0.10 / 0.07 (plain / mask); median 0.4, 0.6, 1.7 and
+  4.7 s per 6 s clip. Only medium handled the Taiwanese-accented sentence (CER 0.31; small 0.75). Every size
+  misheard 瘻管 and 盤尼西林. Evidence: `docs/cp2/evidence/stt-2026-11-22/`.
+- Decision: `small` stays the default (`WHISPER_MODEL`) for everyone's development and testing. Official runs on
+  the workstation use `medium`, set in its own `.env`. STT should try the GPU first and fall back to the CPU when no
+  GPU is available (#88). Medical vocabulary hints are tried separately, with a check for invented terms (#89).
+- Consequences: on the CPU, medium makes a 30 s turn wait about 22 s, so official runs need #88 first. The lower
+  masked CER is likely a practice effect (the mask round came second, one speaker); later speakers record the mask
+  round first.
+- Decided by: 張棨翔 (STT lead and PO)
+
 ## 2026-11-21 — Ollama as the extraction runtime (spike B2)
 - Status: accepted
 - Context: the CP2 model decision (entry below) needs Gemma models. On Transformers they need a Hugging Face licence
