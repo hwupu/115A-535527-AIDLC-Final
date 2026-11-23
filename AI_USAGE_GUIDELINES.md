@@ -4,7 +4,7 @@ v0.1 was the Week 3 plan. v0.2 updated it to how we actually worked in Phase 2 (
 so that a teammate can check them from a PR, using the evidence from the Week 12 lab; see "Changes from v0.2" at the
 end. Items marked **(proposed)** are new rules the team still has to accept in PR review.
 
-Current code steward: see `DECISIONS.md` (rotates weekly)
+Current code steward: see the rotation schedule in `README.md` (rotates weekly, Monday to Sunday)
 
 ## 1. AI tools we use, and what we use each for
 
@@ -56,7 +56,7 @@ its `DECISIONS.md` entry, which records what was chosen, why, the alternative re
 
 ## 3. How we will handle disagreements about AI output quality
 
-  - **Decision-maker:** the current code steward (rotates weekly, see `DECISIONS.md`) makes the final call. If the steward is the author of the disputed change, another teammate designated in `DECISIONS.md` decides instead. Until that designation is recorded, the team decides by majority vote excluding the author.
+  - **Decision-maker:** the current code steward (rotates weekly, schedule in `README.md`) makes the final call. If the steward is the author of the disputed change, another teammate designated in `DECISIONS.md` decides instead. Until that designation is recorded, the team decides by majority vote excluding the author.
   - **Evidence required for approval** (the side wanting to keep the AI output supplies it):
     1. Tests pass, or a new test demonstrates the behavior.
     2. The author can explain the code in review without re-prompting the AI.
