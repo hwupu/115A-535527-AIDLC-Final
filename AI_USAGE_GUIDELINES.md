@@ -19,9 +19,12 @@ Adding an AI tool or widening the app's AI scope needs a `DECISIONS.md` entry fi
 showed why: it shipped before the Product Owner had decided.
 
 General rules:
-- AI output is a draft. **(proposed, v0.3)** A PR changes at most about 400 lines, not counting lock files and
-  evidence files. A bigger PR says in its description why it can't be split, and is reviewed in a call where the
-  author walks through it without using the AI. Each commit has one purpose and passes the tests on its own.
+- AI output is a draft. A human teammate reads, understands, and can explain every line before it is committed.
+  **(proposed, v0.3)** To make that checkable, a PR changes at most about 400 lines (additions + deletions), not
+  counting lock files and generated data-only evidence outputs; eval code and tests do count. A bigger PR says in its
+  description why it can't be split, and is reviewed in a call where the author walks through it without using the
+  AI. Each commit has one purpose and passes the tests on its own. Staying under 400 lines does not by itself show
+  that the author understands the change.
 - No secrets, credentials, or identifiable patient data in any AI tool. Local models get only synthetic scenarios and consented teammate recordings.
 - **(proposed, v0.3)** Every PR is approved by a human other than the author, and an approval counts only if it has
   a written comment. The comment names at least one thing the reviewer ran or checked, and asks at least one
@@ -45,11 +48,11 @@ Trivial uses (typo fixes, explaining a single error message) need no entry.
 - **`DECISIONS.md`**: records *what the team decided and why* (e.g. adopting a library, changing scope, ruling on a disagreement). It is not a transcript; it can link to a prompt-log entry as evidence.
 
 **PR template.** **(proposed, v0.3)** Every PR fills in the "AI assistance" section of the PR template
-(`.github/pull_request_template.md`, from the Week 12 lab): the tool and model, what it generated, and what the author
+(`.github/PULL_REQUEST_TEMPLATE.md`, from the Week 12 lab, #96): the tool and model, what it generated, and what the author
 changed afterwards. If no AI was used, it says "none". Every commit that is mostly AI-written has an
 `Assisted-by: <tool>` or `Co-Authored-By:` trailer. A reviewer doesn't approve a PR whose AI section is empty, or
-whose `prompt-log/` entry still says "(to fill)". If a significant choice was made, the "Decision" section names it
-and "Led by" names the human who owns it; significant decisions are also copied to `DECISIONS.md`.
+whose `prompt-log/` entry still says "(to fill)". If a significant choice was made, the "What and why" section links
+its `DECISIONS.md` entry, which records what was chosen, why, the alternative rejected, and the human who led it.
 
 ## 3. How we will handle disagreements about AI output quality
 
@@ -65,13 +68,14 @@ and "Led by" names the human who owns it; significant decisions are also copied 
 
 Evidence: the 8 PRs merged between Nov 9 and Nov 23 (#73, #74, #75, #80, #81, #82, #84, #85). 6 were mostly
 AI-generated (for #81 and #82 we can't tell), 7 got a written review from someone other than the author, and only 4
-say what the AI did.
+say what the AI did. These counts are indicators read from GitHub, not direct evidence of how well anyone understood
+a change; a written review from a non-author is used as a proxy.
 
 | Rule | Old wording | New wording | Evidence |
 |---|---|---|---|
-| Saying what the AI did (§2) | "Every PR fills in `.github/PULL_REQUEST_TEMPLATE.md`. If AI contributed, the 'Decision' section names the choice made and the 'Led by' field names the human who owns it." | Every PR fills in the template's "AI assistance" section (or says "none"); mostly AI-written commits have an `Assisted-by` or `Co-Authored-By` trailer; no approval while the AI section is empty or the prompt-log says "(to fill)" | Only 4 of 8 PRs say what the AI did. #81 and #82 don't say whether AI was used. #84 and #85 were merged with prompt-log outcomes still "(to fill)" |
+| Saying what the AI did (§2) | "Every PR fills in `.github/PULL_REQUEST_TEMPLATE.md`. If AI contributed, the 'Decision' section names the choice made and the 'Led by' field names the human who owns it." | Every PR fills in the template's "AI assistance" section (or says "none"); mostly AI-written commits have an `Assisted-by` or `Co-Authored-By` trailer; no approval while the AI section is empty or the prompt-log says "(to fill)"; significant choices are linked from "What and why" to `DECISIONS.md` (chosen, why, rejected, human lead) | Only 4 of 8 PRs say what the AI did. #81 and #82 don't say whether AI was used. #84 and #85 were merged with prompt-log outcomes still "(to fill)" |
 | Reviews (§1) | "Every PR is approved by a human reviewer other than the author, regardless of who or what wrote the code." | An approval counts only with a written comment that names what was checked and asks a question or raises a concern; follow-up work in a review becomes linked issues before the merge | #84 was approved with an empty comment, like #69–#72 before it. The #85 review listed four risks "to open issues for later", and none were opened |
-| Explaining every line (§1) | "AI output is a draft. A human teammate reads, understands, and can explain every line before it is committed." | About 400 changed lines per PR at most (lock and evidence files excluded); bigger PRs explain why and get a walk-through call; one purpose per commit, tests pass at each commit | #73 added 3,589 lines in one commit and #85 changed 823 lines across 25 files, so "can explain every line" could not be checked. Week 12 lecture, small PRs and atomic commits |
+| Explaining every line (§1) | "AI output is a draft. A human teammate reads, understands, and can explain every line before it is committed." | Keeps the old sentence, and adds: about 400 changed lines (additions + deletions) per PR at most, excluding lock files and data-only evidence outputs but not eval code or tests; bigger PRs explain why and get a walk-through call; one purpose per commit, tests pass at each commit | #73 added 3,589 lines in one commit and #85 changed 823 lines across 25 files, so "can explain every line" could not be checked. Week 12 lecture, small PRs and atomic commits |
 
 ## Changes from v0.1 and why
 

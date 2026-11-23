@@ -21,3 +21,9 @@ bodies), drafted the three old/new/evidence rows for the lab submission, and cop
   lines; the team should decide whether to keep it in the count.
 - Rejected (and why): putting the PR template change in this PR. The lab treats it as its own item and the steward
   merges it, and one purpose per PR is one of the rules this PR adds.
+- Update after 414551016's review (2026-11-23), prompt "address the feedback on #96, then #98": Claude Code
+  aligned §2 with #96 (path `.github/PULL_REQUEST_TEMPLATE.md`; significant choices linked from "What and why" to
+  `DECISIONS.md` instead of the removed "Decision / Led by" fields), kept the original "explain every line" sentence
+  with the 400-line rule added on top (changed lines = additions + deletions; only lock files and data-only evidence
+  outputs excluded), and noted that the PR counts are indicators, not evidence of understanding. Rules stay
+  (proposed) until the team accepts them.
