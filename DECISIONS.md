@@ -7,6 +7,20 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
+- Status: accepted
+- Context: an outside-team participant (U02, #101) asked for the conversation's speaker roles. Today every line
+  recorded on the nurse screen is labelled 護理師; only patient-screen input is labelled 病患. Whisper does not tell
+  speakers apart.
+- Decision: each transcript line gets a speaker (`nurse`, `patient`, `family`, `unknown`) judged by the extraction
+  model from its content and context; when unsure it says `unknown` rather than guessing. The nurse can correct it,
+  and the correction is audited. Voice-based speaker separation (pyannote) is left for later (#9), after checking
+  its licence, GPU needs and results on short, masked, Mandarin speech. Implementation: #102.
+- Consequences: one recording becomes several transcript lines (one per Whisper segment). Speaker labels go into
+  the transcript prompt v5 sees, which should help tell a patient's own reading from the nurse's measurement.
+  Accuracy is measured on S01, S03 and S04 before relying on it.
+- Decided by: 張棨翔 (PO)
+
 ## 2026-11-22 — The AI drafts every report field it hears (prompt v5)
 - Status: accepted
 - Context: prompt v3 (#73) lets the AI fill six fields; in a recorded test, vitals, date of birth, accompaniment and
@@ -91,7 +105,6 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Consequences: switching models is an `.env` change. The workstation's system Ollama (0.20.5) is too old for
   `gemma3:1b`, so the demo there uses the compose Ollama. Measured results: `docs/cp2/evidence/ollama-2026-11-21/`.
 - Decided by: 張棨翔 (LLM lead)
-
 ## 2026-11-19 — CP2 dates from the published rubric
 - Status: proposed (drafted by the AI Scrum Master; confirm in PR review)
 - Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
