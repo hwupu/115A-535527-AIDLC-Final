@@ -66,8 +66,8 @@ not been checked by a nurse.
 
 | Run | Start to confirm | AI draft wait | Nurse edits | AI drafts vs S03 answer key |
 |---|---|---|---:|---|
-| 2026-11-23 (U01 nurse, U02 patient) | 5 min 02 s | 117 s | 1 | 17 drafted: 14 correct, 2 wrong, 1 doubtful; 3 missing; 0 filled although not said |
-| 2026-11-24 (U03 nurse, U04 patient) | 3 min 28 s | 51 s | 1 | 19 drafted: 18 correct, 0 wrong, 1 doubtful; 2 missing; 0 filled although not said |
+| 2026-11-23 (U01 operates nurse screen, U02 plays patient) | 5 min 02 s | 117 s | 1 | 17 drafted: 14 correct, 2 wrong, 1 doubtful; 3 missing; 0 filled although not said |
+| 2026-11-24 (U03 operates nurse screen, U04 plays patient) | 3 min 28 s | 51 s | 1 | 19 drafted: 18 correct, 0 wrong, 1 doubtful; 2 missing; 0 filled although not said |
 
 Ratings (speed, draft visibility, willingness to use): 5/5/5 from three participants, 4/5/5 from one. **Safety
 finding:** in the first run STT heard 血壓 as 「斜壓兩」 and the number check took 「兩」, so systolic BP became 2; the
@@ -80,7 +80,7 @@ running on the CPU after its container lost the GPU; on the GPU the same draft t
   `EVALUATION_PLAN.md` are still hypotheses; this is CP3 work.
 - **Accuracy on held-out cases:** all 14 prompt cases are development cases we tuned on, and their answer key has
   not been checked by a nurse (#45).
-- **Real speakers:** one team member's voice only. No noise, accent or Taiwanese-mix study beyond 18 sentences.
+- **Controlled STT benchmark:** one team member read 18 sentences. The outside-user runs are not a controlled multi-speaker/noise/accent accuracy benchmark.
 - **Outside-user sessions:** two runs with four participants and no paper baseline, so the timings show what happened,
   not time saved. The answer-key comparison still needs a nurse's check.
 - **Load:** one STT request at a time; several devices at once is untested (#100).

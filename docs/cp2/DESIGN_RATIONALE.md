@@ -27,7 +27,7 @@ is unconfirmed. We keep both.
 
 ## Decisions shaped by user feedback (outside-team sessions)
 
-Four outside-team sessions so far (U01–U04; records in `USER_TEST_PROTOCOL.md`, follow-up #101), with more to follow; U03 is a nurse, U04 a physician, U01 and U02 are neither (role 其他). They worked in pairs on scenario S03 (one at the nurse screen, one as the patient), with the PO as facilitator. Timing and AI accuracy come from the demo database (see `EVALUATION_REPORT.md`); the findings below are the participants' own words and the facilitator's observations, not measured outcomes. Ratings were 5/5/5 three times and 4/5/5 once; with four participants this is encouraging, not a general result.
+Four outside-team participants across two prototype runs (U01–U04; records in `USER_TEST_PROTOCOL.md`, follow-up #101), with more to follow; U03 is a nurse, U04 a physician, U01 and U02 are neither (role 其他). They worked in pairs on scenario S03 (one at the nurse screen, one as the patient), with the PO as facilitator. Timing and AI accuracy come from the demo database (see `EVALUATION_REPORT.md`); the findings below distinguish participant feedback, facilitator observations and recorded run metrics; none establishes time saved without a baseline. Ratings were 5/5/5 three times and 4/5/5 once; with four participants this is encouraging, not a general result.
 
 | Finding (participant's words) | Change |
 |---|---|
