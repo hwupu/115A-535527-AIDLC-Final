@@ -52,10 +52,17 @@ def zh_digits(text):
     return re.sub(r'([零〇一二兩三四五六七八九十百千]+)(?:點([零〇一二三四五六七八九]+))?', convert, text)
 
 
-def score(expected, fields):
+def score(expected, fields, loose=()):
+    """loose: free-text/list fields counted correct when both sides are filled (wording varies)."""
     predicted = {p: f.get('value') for p, f in fields.items() if isinstance(f, dict) and f.get('value') not in (None, '', [])}
     keys = set(expected) | set(predicted)
-    matches = sum(type(predicted.get(p)) is type(expected.get(p)) and normalize(predicted.get(p)) == normalize(expected.get(p)) for p in keys)
+
+    def same(p):
+        if p in loose:
+            return expected.get(p) not in (None, '', []) and p in predicted
+        return type(predicted.get(p)) is type(expected.get(p)) and normalize(predicted.get(p)) == normalize(expected.get(p))
+
+    matches = sum(same(p) for p in keys)
     omissions = [p for p, v in expected.items() if v not in (None, '', []) and p not in predicted]
     unsupported = [p for p, v in predicted.items() if expected.get(p) in (None, '', [])]
     return {'correct': matches, 'total': len(keys), 'exact_match': matches / len(keys) if keys else None,
