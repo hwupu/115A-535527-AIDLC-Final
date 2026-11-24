@@ -1,4 +1,4 @@
-param([switch]$Setup)
+param([switch]$Setup, [switch]$AllowUnavailableModel)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location $root
@@ -8,6 +8,12 @@ if (-not (Test-Path $uv)) {
     if (-not $found) { throw 'Install uv from https://docs.astral.sh/uv/getting-started/installation/ first.' }
     $uv = $found.Source
 }
+if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) { throw 'Install Node 24 and pnpm first.' }
+if (-not $AllowUnavailableModel) {
+    $ollamaUrl = if ($env:OLLAMA_URL) { $env:OLLAMA_URL.TrimEnd('/') } else { 'http://127.0.0.1:11434' }
+    try { $null = Invoke-RestMethod "$ollamaUrl/api/tags" -TimeoutSec 5 }
+    catch { throw 'Start Ollama and pull LLM_MODEL (default gemma3:1b). For explicit manual-fallback testing only, pass -AllowUnavailableModel.' }
+} else { Write-Warning 'Explicit manual-fallback mode; no model-success claim.' }
 if ($Setup) {
     pnpm install --frozen-lockfile
     if ($LASTEXITCODE) { throw 'pnpm install failed' }
@@ -38,7 +44,7 @@ try {
         $processes += $p
     }
     $processes.Id | ConvertTo-Json | Set-Content evidence/server-pids.json
-    Write-Host 'Group1 CP2: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops this session.'
+    Write-Host 'Triage assistant: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops this session.'
     pnpm --filter web dev --host 127.0.0.1
 } finally {
     $processes | Where-Object { -not $_.HasExited } | Stop-Process

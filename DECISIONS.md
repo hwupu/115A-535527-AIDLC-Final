@@ -7,6 +7,45 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — AI usage guidelines v0.3 approved
+- Status: accepted
+- Context: v0.3 (#98) rewrote three rules so they can be checked from a PR, from the Week 12 lab evidence: PRs of
+  about 400 changed lines at most, an approval counts only with a written comment, and every PR fills in the
+  template's "AI assistance" section (#96). It was merged as a draft pending team ratification.
+- Decision: the team approves v0.3 as written. The "(proposed)" markers become "(v0.3)".
+- Consequences: reviewers check these three rules on every PR from now on; the PR template already asks for them.
+- Decided by: the team (recorded by 吳普軒)
+
+## 2026-11-24 — One README, and course files kept in `docs/cp2/` (#97, #103)
+- Status: proposed by 吳普軒 (README area lead) in #103; pending review
+- Context: Group 03 found two conflicting quick starts in the Week 12 lab (`README.md` and `README_CP2.md`, #97). The
+  repository root and `docs/` also held course working notes (`CP2_WORK_LOG.md`, personal handoff files, an old
+  archive), mixed in with the documentation for the code.
+- Decision: `README.md` is the only run guide. Everything handed in for a checkpoint lives in `docs/cp2/` (starting
+  at `docs/cp2/README.md`, with the deliverables table); the instructor's blank worksheets go in `docs/references/`.
+  Scripts are named for what they do (`scripts/start.*`, `scripts/check.*`); the zip builder is `docs/cp2/_package.py`
+  and packs only the deliverables plus the repository link.
+- Rejected: keeping the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md` as the worksheet text says;
+  `docs/cp2/README.md` points graders to the actual location. Packing the whole source tree in the zip: the code is
+  graded from GitHub.
+- Consequences: removed files stay in git history (`56a8b38`). The CP2 report and the zip read from `docs/cp2/`.
+- Decided by: 吳普軒 (README area lead); the team confirms in the #103 review
+
+## 2026-11-24 - Week 12 steward actions and future merge plan
+- Status: observed repository actions plus a proposed future plan; not joint-session minutes.
+- Human owner: 劉順松 (current Week 12 steward). On explicit instruction, Codex reviewed, corrected and approved/merged #96 -> #98 -> #95 -> #94, with written review records. #95 fixes cover labelled values, home vitals and invalid dates; #94 fixes clarify participant codes and unverified metadata. Integrated API/eval 26 tests and LLM 29 passed on that revision; latest premerge CI passed.
+- Authorship boundary: these were AI-assisted actions under the user's account, not a claim of independent personal line-by-line review or four-member collaboration. Week 9 actions have not been supplied; no retrospective service is invented. Week 10 remains for the actual participant to confirm.
+- Proposed next decision: use one reproducible quick start and a non-author fresh-copy check to address #97. Evaluate CP2 with one tool task and honest feedback, retaining formal timing comparison for CP3. Team acceptance remains pending.
+- Alternative rejected in preparation: claiming current Qwen/v3 or no merged code for 劉順松/林均澔 from stale November 4/19 documents; inventing missing user metadata.
+
+### Future merge-day plan (prepared before the session; not executed)
+- Target: after the 2026-11-26 walking skeleton, before E3. Exact start and attendees unconfirmed.
+- At planning baseline 48a41b8, no open PRs remained after the four merges. The closeout branch and the session's new skeleton PR must be enumerated with the live open-PR list at the call.
+- Order: complete the genuine skeleton slice and review first; then reviewed independent documentation/startup work; any shared contract change before consumers. Run tests and the primary task after each merge, stop on failure. Do not add new features during merge day.
+- Expected overlap: DECISIONS.md, README and CP2 report. Preserve separate dated decisions; do not overwrite teammate notes. Rotate drivers and require explanation of any AI conflict suggestion.
+- Done: clean main; every open PR merged or closed with reason; a non-steward clones fresh and completes nurse confirmation -> doctor report from README only; actual outcome and reflection recorded in docs/merge_day.md.
+- Outcome, driver rotation, fresh-copy tester, result and evidence: PENDING ACTUAL SESSION. Agent-only merges on 2026-11-24 do not satisfy this activity.
+
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted
 - Context: an outside-team participant (U02, #101) asked for the conversation's speaker roles. Today every line
@@ -71,7 +110,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   whoever merges later keeps both sides. The `start-cp2.sh` port check is not fixed. #86 and #87 are assigned to
   吳普軒 but not started. #77's team session needs a slice other than #80, which is merged. Before E3
   (Nov 29): the two outside-team user sessions (0 of 2), walking skeleton and merge day, and regenerating
-  `docs/cp2/Group1_CP2_Report.md`.
+  `docs/cp2/Group01_CP2_Report.md`.
 - Handover to 劉順松: no separate walk-through meeting; handed over through this entry and a LINE message.
 - Recorded by: 張棨翔 (outgoing steward)
 
@@ -110,9 +149,9 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Context: the 2026-10-27 schedule entry records CP2 as "due Mon Nov 23 (team-confirmed)". The CP2 page published
   2026-11-19 says the Week 12 lab on Mon Nov 23 is peer review, where the prototype must be demonstrable, and the E3
   deadline is Sun Nov 29. The TA's CP2 guidance (2026-11-19) orders the team sessions: walking skeleton, then merge
-  day, both before submission (worksheets in `docs/walking_skeleton.md` and `docs/merge_day.md`).
+  day, both before submission (worksheets in `docs/cp2/WALKING_SKELETON.md` and `docs/cp2/MERGE_DAY.md`; instructor originals in `docs/references/`).
 - Decision: be demo-ready on Nov 23 and submit `Group01_CP2.zip` to E3 by Nov 29. This supersedes the CP2 date in
-  "Two-week sprints and schedule". Evidence matrix: `docs/cp2/REQUIREMENTS.md`.
+  "Two-week sprints and schedule". Deliverable checklist: `docs/cp2/Group01_CP2_Report.md`.
 - Consequences: six extra days for the two outside-team user sessions and the per-member PR minimums.
 - Decided by: (team to confirm)
 
@@ -153,7 +192,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Implemented candidate: integrate existing frontend stack locally; persistent SQLAlchemy/Alembic API, audit and evaluation, whole-clip Whisper small CPU int8, Qwen/Qwen2.5-0.5B-Instruct CPU adapter and source-quote prompt v3. This is a reviewable implementation, not an assertion that other team members approved a new model or scope.
 - Proposal for team: use the small CPU adapter for CP2 feasibility, retain manual fields and record its observed failures; alternatively deploy the planned model and rerun the same cases. Whole clips avoid invalid independent WebM fragments. Existing database decision is retained.
 - Consequences: limited six-field extraction and unvalidated semantic accuracy; real external-user tests and individual PR/steward/session evidence remain outstanding. No hidden model substitution in evaluation.
-- Human owner: 劉順松; led-by/team ratification: pending. See docs/cp2/REQUIREMENTS.md and prompt-log/2026-11-04-414551016-cp2.md.
+- Human owner: 劉順松; led-by/team ratification: pending. See docs/cp2/Group01_CP2_Report.md and prompt-log/2026-11-04-414551016-cp2.md.
 - Steward handover: README schedules Week 9 for 劉順松, but this run did not conduct a real handover. The old Current code steward line below is retained as stale pending actual human confirmation.
 
 ## 2026-09-21 — Initial code steward
@@ -172,7 +211,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Led by: 張棨翔
 - Note: the local-inference principle carries over to the new topic; the
   runtime for Gemma-4 is still open (spike B2). Old plan archived in
-  `docs/archive/discharge-summary/`.
+  `docs/archive/discharge-summary/` (removed 2026-11-24; still in git history).
 
 ## 2026-10-08 — AI agent as Scrum Master
 - Status: accepted
@@ -369,10 +408,13 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Decided by: 吳普軒 (frontend lead)
 
 
-## 2026-11-19 - Issue #77 AI failure slice (proposal, pending team session)
+## 2026-11-19 - AI failure handling, prepared as a candidate slice for the walking skeleton (#77, merged in #80)
 - Status: proposed by the user-authorized Codex preparation; not a ratified team decision or attendance record.
-- Context: malformed model JSON can crash extraction or be reported as success. #77 allows a Route 2 AI failure slice with fake-model tests after checking higher-priority gaps.
+- Context: malformed model JSON can crash extraction or be reported as success. #77 is the whole walking-skeleton
+  session, not only this slice. Its Route 2 picks the next slice in order: something still faked or hard-coded, then
+  the second user, and only then one AI failure state with fake-model tests. This entry covers only that third option,
+  prepared in advance; it was merged in #80, so the session needs a different slice.
 - Proposed decision: validate the response envelope before applying fields and reuse the existing recoverable nurse notification. Preserve transcript and manual workflow.
 - Alternative rejected in this candidate: swallowing all exceptions or treating malformed envelopes as successful empty extraction.
 - Human owner: 劉順松 (414551016); team acceptance and session lead remain pending.
-- Evidence: services/api/tests/test_ai_failure.py; docs/cp2/ISSUE77_SESSION_PREP.md. The four-person session, actual steward review and merged session PR remain outstanding.
+- Evidence: services/api/tests/test_ai_failure.py (merged in #80). The four-person session, actual steward review and merged session PR remain outstanding.

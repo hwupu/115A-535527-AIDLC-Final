@@ -3,7 +3,7 @@
 > Provisional. Targets are proposals to finalize after the Week 13 pilot, with a
 > nurse's input. Source: `docs/references/HANDOFF_scrum_setup.md` §5. Simulated
 > scenarios only (`docs/SCENARIOS.md`); no real patient data. The earlier
-> discharge-summary plan is in `docs/archive/discharge-summary/`.
+> discharge-summary plan was removed; it is in git history (`docs/archive/discharge-summary/`, before 2026-11-24).
 
 ## Problem grounding
 
@@ -63,3 +63,14 @@ finish by about Dec 11; Week 15 is buffer.
 - Tune prompts on dev scenarios only; a scenario used for tuning becomes dev.
 - Log model, prompt version, Whisper model, and git commit for every run.
 - Synthetic data only; audio fixtures need speaker consent (see `docs/SCENARIOS.md` §5).
+
+
+## 2026-11-24 CP2 revision after Week 12 feedback (proposal pending human confirmation)
+
+Sources: Group03 fresh-Mac setup finding in #97; author-reported U01/U02 feedback in #94/#101. CP3 timing targets above remain proposals, not measured outcomes.
+
+For CP2 use one tool task and the five-question form to limit participant burden. Record actual role, outside-team status, date, consent, revision, prompt/model, scenario, assistance and observed problems. Subjective speed ratings are not time savings; no missing baseline or session metadata is estimated.
+
+Add a reproducibility layer: a non-author follows only README on a fresh copy and completes nurse confirmation -> doctor read-only handoff. Record operating system, missing prerequisites and actual result. A dependency-reused extraction check is not a fresh-machine validation.
+
+Report safety-critical numeric/date failures separately from loose free-text presence scores. Historical Gemma results predate the #95 review guards; rerun with exact revision before claiming current performance. Load (#100) and speaker-role (#102) suggestions remain PO scope decisions.

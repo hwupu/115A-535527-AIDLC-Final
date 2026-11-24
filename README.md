@@ -1,6 +1,43 @@
 # 🩺🎙️ 115A-535527 AIDLC — AI 語音檢傷問診輔助系統
 
-> **CP2（#73 已於 2026-11-19 合併）：**啟動、實作範圍與驗證請先讀 [README_CP2.md](README_CP2.md)（macOS/Linux：`./scripts/start-cp2.sh --setup`）；繳交前缺口見 [docs/cp2/REQUIREMENTS.md](docs/cp2/REQUIREMENTS.md)。以下原始規劃保留作為團隊歷史背景。尚未完成外部使用者測試，未上傳 E3。
+## 🚀 快速開始（demo）
+
+需求：Git、Node.js 24 與 pnpm、Python 3.12 與 [uv](https://docs.astral.sh/uv/getting-started/installation/)，以及已啟動的 [Ollama](https://ollama.com/download)。第一次安裝和下載模型需要網路，之後在本機推論，不需要雲端 API 或金鑰。
+
+1. Clone 本 repo 並進入目錄。
+2. 啟動 Ollama，執行 `ollama pull gemma3:1b`（預設模型；有 GPU 的工作站正式測試用 `gemma4:e4b`）。
+3. 啟動全部服務（api、stt、llm、web）：
+   - macOS／Linux：`./scripts/start.sh --setup`
+   - Windows PowerShell：`./scripts/start.ps1 -Setup`
+
+   之後啟動可省略 `--setup`／`-Setup`。終端保持開啟，Ctrl+C 會停止全部服務。
+4. 開啟 http://localhost:5173 。
+
+**主要任務（兩個人一起用，只用虛構案例）：**
+1. 護理師：選「開始新的問診」，同意錄音後說一段話，例如「從昨天開始發燒，咳嗽，沒有旅遊史」，然後停止。錄音停止後才會轉成文字。語音不清楚時，可以直接在逐字稿欄輸入文字。
+2. 等 AI 草稿出現，點來源核對每個欄位，錯的就改，逐欄確認。**檢傷級數由護理師自己選。**
+3. 醫師：另一個人用不同的瀏覽器（或無痕視窗）開醫師畫面。護理師確認前看不到報告；確認後看得到同一份報告，而且不能編輯。
+
+腳本啟動的 Python 服務只讀程序環境變數，**不會讀根目錄的 `.env`**（Docker Compose 和 Vite 會讀）。要換模型：先 `ollama pull`，再設定 `LLM_MODEL`（bash：`export LLM_MODEL=gemma4:e4b`；PowerShell：`$env:LLM_MODEL='gemma4:e4b'`）。Whisper small 第一次辨識語音時會下載權重。
+
+### 其他啟動方式
+
+- **Docker：** 先 `cp .env.example .env`（裡面的 `COMPOSE_PROFILES=dev` 決定啟動哪個前端），再 `docker compose up --build`（會自己啟動 Ollama 並下載模型）。有 NVIDIA GPU 的機器再加上 `docker-compose.gpu.yml`（見 `.env.example`）。`COMPOSE_PROFILES=demo docker compose up --build` 用建置後的前端（nginx）。
+- **手動逐一啟動：** `pnpm install --frozen-lockfile`；在每個服務目錄執行 `uv sync --locked`；在 `services/api` 執行 `uv run alembic upgrade head`。再分別開終端：在 `services/api`、`services/stt`、`services/llm` 執行 `uv run uvicorn app.main:app --host 127.0.0.1 --port <埠>`（8000、8001、8002；api 要評估工具時設 `EVAL_MODE=1`）。前端：設定 `VITE_API_MOCK=0` 後執行 `pnpm --filter web dev --host 127.0.0.1`。
+- **只開發前端：** `VITE_API_MOCK=1 pnpm dev`，使用記憶體中的假 API，不需要後端。
+
+### 檢查與測試
+
+- 全部檢查（lint、typecheck、單元與整合測試、build）：macOS／Linux `./scripts/check.sh`；Windows `./scripts/check.ps1`。結果寫在 `evidence/`（不 commit）。單元測試用明確的假模型，不下載模型。
+- Prompt 測試（需要 Ollama 與模型）：`uv run --directory services/llm python -X utf8 ../../eval/run_prompt_suite.py --version v5`。說明見 [`docs/cp2/PROMPT_CARD.md`](docs/cp2/PROMPT_CARD.md)。
+- 瀏覽器測試（Playwright）：`pnpm --filter web exec playwright install chromium`，再 `pnpm --filter web exec playwright test`。麥克風測試用的合成音檔在 Windows 上以 `./scripts/make-synthetic-audio.ps1` 產生。
+- API 文件：http://localhost:8000/docs 。`GET /health` 只代表伺服器活著，不代表模型已載入。`GET /sessions/{id}/audit` 看欄位修改前後；`DELETE /sessions/{id}` 刪除就診、稽核與評估紀錄（不保證 SQLite 空頁、備份或匯出檔被安全抹除）。
+
+### 範圍與已知限制
+
+- 沒有登入：角色畫面只是展示介面，不是權限控管。只綁定本機，不要對外開放，絕對不要輸入真實病患資料。
+- 小模型可能放錯欄位、處理不了更正、輸出無效 JSON。逐字引用來源檢查與護理師確認能降低風險，但不保證臨床正確。
+- 不做：檢傷級數預測、醫療建議、寫入真實 HIS。
 
 **AI 語音檢傷問診輔助系統**：在急診檢傷站聽護理師與病人的對話，轉成文字，並草擬結構化的檢傷紀錄（主訴、現在病史、TOCC、量測禁忌⋯⋯）。**護理師負責檢查、修改、確認**，而且只有護理師能決定檢傷級數。AI 不判斷檢傷級數、不給醫療建議、不直接寫入真實 HIS。
 
@@ -17,12 +54,12 @@
 - 只用模擬資料；AI 的重大決定與修改記在 `DECISIONS.md` 和 `prompt-log/`。
 
 ## 👥 團隊與分工
-| 成員 | GitHub | 負責領域（area lead） |
-|---|---|---|
-| 吳普軒 | [@hwupu](https://github.com/hwupu) | 前端、CI、`.env`、README 快速開始 |
-| 張棨翔 | [@XiangLibra](https://github.com/XiangLibra) | LLM、後端／API、STT、docker-compose |
-| 劉順松 | [@414551016](https://github.com/414551016) | 稽核紀錄、評估指標 |
-| 林均澔 | [@junlinwk](https://github.com/junlinwk) | 情境與測試資料、英文文件與報告 |
+| 成員 | 學號 | GitHub | 負責領域（area lead） |
+|---|---|---|---|
+| 吳普軒 | 314553047 | [@hwupu](https://github.com/hwupu) | 前端、CI、`.env`、README 快速開始 |
+| 張棨翔 | 414551004 | [@XiangLibra](https://github.com/XiangLibra) | LLM、後端／API、STT、docker-compose |
+| 劉順松 | 414551016 | [@414551016](https://github.com/414551016) | 稽核紀錄、評估指標 |
+| 林均澔 | 112550026 | [@junlinwk](https://github.com/junlinwk) | 情境與測試資料、英文文件與報告 |
 
 其他角色：**Product Owner** = 張棨翔（排 backlog 優先順序、決定要不要驗收，也是需求與護理師／醫師意見的窗口）；**Scrum Master** = Claude Code；**Code steward** 每週輪替，見下表。
 
@@ -64,11 +101,12 @@
 | 決策紀錄（含目前 code steward） | [`DECISIONS.md`](DECISIONS.md) |
 | AI 使用規則 | [`AI_USAGE_GUIDELINES.md`](AI_USAGE_GUIDELINES.md)、[`CLAUDE.md`](CLAUDE.md) |
 | 評估計畫、測試情境 | [`docs/EVALUATION_PLAN.md`](docs/EVALUATION_PLAN.md)、[`docs/SCENARIOS.md`](docs/SCENARIOS.md) |
-| 訪談與原始資料 | [`docs/interviews/`](docs/interviews/)、[`docs/references/`](docs/references/)（歷史資料，不再更新） |
+| 課程繳交（CP2 報告、設計理由、評估報告、prompt 卡、team session 紀錄） | [`docs/cp2/`](docs/cp2/)，從 [`Group01_CP2_Report.md`](docs/cp2/Group01_CP2_Report.md) 開始 |
+| 訪談與原始資料 | [`docs/interviews/`](docs/interviews/)、[`docs/references/`](docs/references/)（歷史資料與課程提供的原始文件，不再修改） |
 | Backlog 與每個人的 ticket | [GitHub 看板](https://github.com/users/hwupu/projects/3)（唯一來源，文件裡不重複） |
 
 **🚀 你的第一張 ticket。**
-1. 完成下方的**一次性設定**。
+1. 完成上方的**快速開始**與**開發者一次性設定**。
 2. 開[看板](https://github.com/users/hwupu/projects/3)，篩選 Assignee 是你、Sprint 是目前 Sprint 的卡片。
 3. 在 repo 裡啟動 Claude Code，用下方的「簡報」與「挑下一張 ticket」提示。
 4. 用「開始一張 ticket」。代理會開分支並實作。
@@ -86,36 +124,19 @@
 
 日期與每個 Sprint 的目標以 [`docs/ROADMAP.md`](docs/ROADMAP.md) 為準；每個 Sprint 的項目在[看板](https://github.com/users/hwupu/projects/3)。
 
-## 🛠️ 一次性設定
-> 專案骨架已建立，服務目前是 stub（回傳固定假資料）。
+## 🛠️ 開發者一次性設定
 
-1. **安裝：** Git 2.40+、Git LFS 3.x、Node.js **LTS**（`.nvmrc` 是 24；`n` 選用）+ **pnpm**（`corepack enable`）、Python 3.12 + **uv**、Docker（含 compose，沒有也能跑，見下方啟動）、**Claude Code**、GitHub CLI **`gh`**、你慣用的 IDE。
-2. **Git LFS：** `brew install git-lfs`（Mac）或 `winget install GitHub.GitLFS`（Windows），然後 `git lfs install`。
-3. **Clone：**
-   ```bash
-   git clone https://github.com/hwupu/115A-535527-AIDLC-Final.git
-   cd 115A-535527-AIDLC-Final
-   ```
-4. **設定自己的 git 身分**（程式貢獻會依作者統計）：
+先完成上方的快速開始，再補上協作設定：
+
+1. **Git 身分**（程式貢獻依作者統計，email 要是 GitHub 帳號使用的）：
    ```bash
    git config user.name  "你的名字"
    git config user.email "GitHub 帳號使用的 email"
    ```
-5. **登入：** 執行 `gh auth login`，並啟動 `claude` 依指示登入。
-6. **環境變數：** `cp .env.example .env`（埠號與 compose profile，預設即可用；`VITE_API_MOCK=1` 讓前端用 mock、不需後端）。**不要 commit `.env`。**
-7. **啟動（二選一）：**
-   ```bash
-   pnpm install
-   # A. 有 Docker：web http://localhost:5173、api :8000、stt :8001、llm :8002（皆為 stub）
-   docker compose up --build                        # dev profile（熱更新，由 .env 的 COMPOSE_PROFILES 決定）
-   COMPOSE_PROFILES=demo docker compose up --build  # demo：建置後的前端（nginx）
-   # B. 沒有 Docker：直接在本機跑四個服務（Ctrl-C 全部停止）
-   pnpm dev:all
-   ```
-   - 方式 B 需要 Node 24+、Python 3.12 與 [`uv`](https://docs.astral.sh/uv/)（Python 套件與版本管理一律用 uv，不用 pip；`uv` 會自動抓 3.12）。Node 版本管理 [`n`](https://github.com/tj/n) 為選用（`n auto` 會讀 `.nvmrc`）。
-   - Python 服務（`services/api`、`stt`、`llm`）各自是一個 uv 專案（`pyproject.toml` + `uv.lock`）。在該服務目錄下：`uv sync` 建環境、`uv run pytest` 跑測試、`uv add <套件>`（開發工具用 `uv add --dev`）新增套件，並一起 commit `uv.lock`。
-   - 沒有 corepack 時（Node 25+ 不內建）：`npm i -g pnpm` 即可。
-   - 需要 GPU 的部分見 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
+2. **Git LFS：** `brew install git-lfs`（Mac）或 `winget install GitHub.GitLFS`（Windows），然後 `git lfs install`。模型權重不 commit。
+3. **環境變數：** `cp .env.example .env`，預設即可用。**不要 commit `.env`。**
+4. **登入（選用）：** `gh auth login`，並啟動 `claude` 依指示登入。
+5. Python 依賴以 `uv.lock` 鎖定：在服務目錄用 `uv sync --locked`；新增套件用 `uv add <套件>`，並一起 commit `uv.lock`。
 
 ## 🔄 日常流程
 ```bash
@@ -139,7 +160,7 @@ services/api/     Session API、驗證、稽核紀錄（FastAPI + SQLite）
 services/stt/     Whisper 語音轉文字（POST /transcribe）
 services/llm/     欄位擷取，經由 Ollama（POST /extract；預設 gemma3:1b）
 eval/             prompt 測試案例、指標、評估程式
-docs/             路線圖、架構、評估、情境、Scrum、訪談
+docs/             路線圖、架構、評估、情境、Scrum、訪談；docs/cp2/ 是課程繳交文件
 prompt-log/       AI 協作紀錄
 CLAUDE.md         給 AI 代理的規則（AGENTS.md 是指向它的連結，給其他工具用）
 ```

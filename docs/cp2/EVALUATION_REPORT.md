@@ -1,50 +1,88 @@
-# Interim evaluation report - Group1 CP2
+# Interim evaluation report - Group01 CP2
 
-Prepared for team review by 劉順松 (414551016), 2026-11-04. This is an interim technical report, not evidence of external-user benefit or full course compliance.
+First version: 劉順松, 2026-11-04. Ollama, prompt v5 and Whisper updates: 張棨翔, 2026-11-22. Restructured for the
+CP2 submission: 2026-11-24. The full plan is `docs/EVALUATION_PLAN.md`; metric definitions are in `METRICS.md`.
 
-## Question and evidence boundary
+## Question and what this checkpoint can answer
 
-Does the tool reduce duplicate triage documentation and incomplete nurse-to-physician handoff? CP1 identified these problems through two external interviews. This run tests technical feasibility only. No nurse/physician prototype sessions were conducted. Human time saving, satisfaction, repeated questions, error catch rate and nurse-reviewed HPI recall are NOT MEASURED. The 30% time-saving and 90% field targets remain hypotheses.
+Does the tool reduce duplicate triage documentation and incomplete nurse-to-physician handoff? CP1 found these
+problems in two interviews; the nurse's "extra 2-3 minutes" is an estimate, not a measured baseline. At CP2 we can
+report technical evidence (does it run, how accurate are the speech and extraction steps on our own cases) and the
+first outside-user feedback. We cannot yet report time saved, error-catch rate or nurse-reviewed accuracy.
 
-## Prototype and machine verification
+## What is tested, and the results
 
-The candidate integrates upstream Vue workflows and adds persistent sessions, audit, confirmation, physician report polling, export, local model and speech services. Independent browser contexts test the human-role workflow automatically using synthetic data; this is not two real users. Unit tests explicitly mock hardware/model transport and are reported separately from actual-model runs. Exact check counts/status are stored in evidence/checks.json and browser-tests.json after the final run.
+| Area | Evidence | Result |
+|---|---|---|
+| Prototype runs end to end | CI on every PR (web lint/typecheck/test/build; api, stt, llm ruff + pytest; Docker build); `scripts/check.*` | Green on `main`. Unit tests use a fake model; they test our code, not the model |
+| Two-person workflow | Playwright test with two independent browser contexts (`apps/web/e2e/workflow.spec.ts`, formerly `cp2.spec.ts`; `evidence/browser-tests.json`) | Nurse confirms, physician sees the confirmed read-only report. Automated, not two real users |
+| AI failure handling | `services/api/tests/test_ai_failure.py` (#80): timeout, HTTP 503, invalid or wrongly shaped JSON | The nurse gets an error, the transcript and edits survive, the report can be finished by hand |
+| Extraction (prompt suite) | 14 development cases in `eval/cases.json`; raw outputs in `evidence/` | See below |
+| Speech to text | 18 fictional sentences read by one team member, with and without a mask (`evidence/stt-2026-11-22/`) | See below |
+| Outside users | U01–U04: four people outside the team (U03 a nurse, U04 a physician, U01 and U02 neither) in two runs of scenario S03, questionnaires plus the demo database (`USER_TEST_PROTOCOL.md`) | See below; findings in `DESIGN_RATIONALE.md` |
 
-## Actual prompt experiment
+### Extraction
 
-Twelve synthetic DEVELOPMENT cases (eval/cases.json) cover typical input, missing information, measured vs self-reported temperature, restrictions/correction, prompt injection, triage requests, mobility and empty input. They have developer-written expected outputs and are not clinically validated or held out. Case T11 deliberately skips inference for empty input.
+Current setup: Ollama, temperature 0, prompt v5 (`services/llm/prompts/v5.txt`), every field as `{value, source_span}`
+under a JSON Schema. Workstation run 2026-11-22 (`evidence/prompt-v5-2026-11-22/`):
 
-Model: Qwen/Qwen2.5-0.5B-Instruct, Transformers CPU float32. No claim is made for the originally planned Gemma-4. Prompt hashes, raw outputs, rejection details and times are saved in prompt-v2.jsonl and prompt-v3.jsonl.
+| Model | Prompt | T01–T12 whole cases | Fields correct (T01–T14) | Wrong yes/no, number or date |
+|---|---|---:|---:|---:|
+| gemma4:e4b (official runs) | v3 | 10/12 | 10/19 (six fields only) | 0 |
+| gemma4:e4b | **v5** | **10/12** | **36/43** | **0** |
+| gemma3:1b (default on laptops) | v5 | 4/12 | 8/43 | 0 |
 
-| Version | Whole cases passing | Interpretation |
-|---|---:|---|
-| v2 | 4/12 | Mostly abstention/safety cases; nested JSON shape often wrong |
-| v3 | 8/12 | Raw quote interface plus deterministic adapter improves normal extraction; still insufficient for the 90% target |
+gemma3:1b leaves most fields empty; its four passes are the cases whose correct answer is empty. It still gave no
+wrong typed value. The 2026-11-22 outputs predate the stricter number, date and home-reading guards added while
+reviewing #95; they have not been re-run since.
 
-T01 is the recorded revision cycle: v2 returned flat values, which the nested validator rejected, yielding 0/3 compared fields correct. v3 asks for copied phrases and grounds them in code, yielding 3/3 and a case pass. This is a genuine machine failure→change→retest, not a fabricated user finding.
+**Fail → fix → re-run cycles** (the prompt-suite requirement):
+1. *T01, v2 → v3 (2026-11-04, Qwen2.5-0.5B on CPU):* v2 returned flat values that the nested validator rejected
+   (0/3 fields). v3 asks for copied quotes and converts them in code: 3/3, case passes. Suite: v2 4/12 → v3 8/12
+   (`evidence/prompt-v2.jsonl`, `prompt-v3.jsonl`).
+2. *v5 first run (2026-11-22, gemma4:e4b):* T13 was cut off at 450 tokens, unmentioned fields were filled with 「無」,
+   T14 came back in the wrong shape, the model turned 民國87 into 1997, and T07 took the patient's home reading
+   「體溫39度」 as the measured temperature. Fixes: a JSON Schema as Ollama's `format`, 1500 tokens, numbers and dates
+   computed in code from the quote, home readings dropped. Re-run: 36/43 fields, no wrong typed value.
 
-Remaining v3 failures: T02 and T12 misclassify travel statements as chief complaint; T03 expresses the symptom differently from the strict reference; T06 returns invalid output on correction. Whole-case pass is not field accuracy and includes successful abstentions. Source containment does not prevent wrong semantic labels. Failures remain in the evidence rather than being deleted.
+### Speech to text
 
-### Update 2026-11-22: extraction on Ollama (張棨翔)
+faster-whisper on CPU, int8, the same settings as `services/stt`. Character error rate, digits normalised:
 
-The runtime moved to Ollama and the model to Gemma (see `DECISIONS.md` 2026-11-19 and 2026-11-21). The same twelve development cases and pipeline were run on the workstation (RTX 3090, Ollama 0.33.2, temperature 0, thinking off for gemma4). Raw outputs: `docs/cp2/evidence/ollama-2026-11-21/`.
-
-| Model | v3 | v4 | Median s per case |
+| Model | Plain | Masked | Median s per clip |
 |---|---:|---:|---:|
-| gemma3:1b (default) | 4/12 | 4/12 | 0.06 |
-| gemma3:4b | 8/12 | 9/12 | 0.2 |
-| gemma4:e4b (official runs) | 10/12 | 9/12 | 0.2 |
+| small (default) | 0.146 | 0.131 | 1.7 |
+| medium (official runs) | 0.102 | 0.069 | 4.7 |
 
-gemma3:1b answers with no fields for most cases; its four passes are the cases whose answer is empty, so its draft is mostly empty in use. v3's examples repeat T01, T04 and T10, so v3 scores are inflated for every model; v4's examples do not appear in the cases. Even at temperature 0, one-case differences between runs occurred (gemma3:4b v3 scored 9/12 and 8/12). These are still developer-written cases, not clinical validation or held-out results.
+One speaker; the masked round was recorded second, so its lower error is probably practice, not evidence that masks
+do not matter. Every model misheard rare terms (瘻管, 盤尼西林; follow-up #89).
 
-## Actual speech experiment
+### Outside users
 
-Windows Hanhan generated one fictional sentence: 從昨天開始發燒，咳嗽，沒有旅遊史。 No human voice was recorded. CPU int8 Whisper tiny and base produced incorrect travel-history text; small produced the intended content with punctuation differences. See stt-synthetic.json, stt-base.json, stt-small.json and synthetic-fever.wav. PyAV 19 failed the decoder interface; pinning av>=14,<17 fixed it. One synthetic TTS clip cannot establish real accent/noise/mask accuracy or throughput. small is the candidate default, not a clinically validated choice.
+Two runs of scenario S03, each by a pair (one at the nurse screen, one playing the patient), facilitated by the PO:
+U01/U02 on 2026-11-23, U03/U04 on 2026-11-24. Workstation demo, prompt v5, gemma4:e4b, Whisper small. Numbers from
+the demo database (session times and audit log); the answer-key comparison was made by the coding assistant and has
+not been checked by a nurse.
 
-## External testing
+| Run | Start to confirm | AI draft wait | Nurse edits | AI drafts vs S03 answer key |
+|---|---|---|---:|---|
+| 2026-11-23 (U01 nurse, U02 patient) | 5 min 02 s | 117 s | 1 | 17 drafted: 14 correct, 2 wrong, 1 doubtful; 3 missing; 0 filled although not said |
+| 2026-11-24 (U03 nurse, U04 patient) | 3 min 28 s | 51 s | 1 | 19 drafted: 18 correct, 0 wrong, 1 doubtful; 2 missing; 0 filled although not said |
 
-Four outside-team sessions have been held so far (U01–U04 in USER_TEST_PROTOCOL.md; U03 a nurse, U04 a physician), and more will follow. Only their questionnaire answers are recorded yet: three participants rated all three items 5 of 5 and one rated them 4/5/5, and their suggestions and the resulting changes are in DESIGN_RATIONALE.md. The four participants did two runs of scenario S03 in pairs, one operating the nurse screen and one playing the patient (U01/U02 on 2026-11-23, U03/U04 on 2026-11-24; facilitator 張棨翔). From the demo database: start to confirm took 5 min 02 s and 3 min 28 s; the AI draft took 117 s and 51 s; against the S03 answer key the drafts had 14 and 18 correct fields, 2 and 0 wrong, 3 and 2 missing, none filled although not said (comparison not yet checked by a nurse). One safety finding: in the first run STT heard 血壓 as 「斜壓兩」 and systolic BP became 2; the nurse first confirmed it and corrected it 11 s later. Two runs without a paper baseline do not support a time-saving claim. The paper-vs-tool time comparison and the larger evaluation remain CP3 work.
+Ratings (speed, draft visibility, willingness to use): 5/5/5 from three participants, 4/5/5 from one. **Safety
+finding:** in the first run STT heard 血壓 as 「斜壓兩」 and the number check took 「兩」, so systolic BP became 2; the
+nurse confirmed it and corrected it to 158 eleven seconds later. The long draft waits came from the demo's Ollama
+running on the CPU after its container lost the GPU; on the GPU the same draft takes about 1 s.
 
-## Limits and next actions
+## What is not tested yet
 
-Team must ratify/replace the small-model adapter, validate more fields and scenarios, test actual consenting speakers, review safety/clinical wording and complete collaborative PR evidence. Docker daemon was unavailable during initial inspection; container configuration/build status must be reported separately from the tested Windows path. Authentication, real HIS writes, clinical advice and automated triage remain out of scope.
+- **Time saved and edit burden:** no paper-versus-tool comparison has been run. The 30% time and 90% field targets in
+  `EVALUATION_PLAN.md` are still hypotheses; this is CP3 work.
+- **Accuracy on held-out cases:** all 14 prompt cases are development cases we tuned on, and their answer key has
+  not been checked by a nurse (#45).
+- **Real speakers:** one team member's voice only. No noise, accent or Taiwanese-mix study beyond 18 sentences.
+- **Outside-user sessions:** two runs with four participants and no paper baseline, so the timings show what happened,
+  not time saved. The answer-key comparison still needs a nurse's check.
+- **Load:** one STT request at a time; several devices at once is untested (#100).
+- **Safety:** the guards are tested on selected inputs only. Quote containment does not prove a quote supports the
+  field it was put in; the nurse's review is the safeguard. No clinical use is supported.
