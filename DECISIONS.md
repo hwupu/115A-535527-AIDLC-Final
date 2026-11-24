@@ -1,11 +1,19 @@
 # Decisions Log
 
 **Current code steward: 劉順松 (Week 12, Nov 23 – 29), per the confirmed rotation.** Rotation schedule: `README.md`.
-Update this line via PR at every handover. The Week 9 (劉順松) and Week 10 (林均澔) handovers were not recorded
-when they happened. Each person adds a short entry with what they actually did as steward, or says the week was
-missed.
+Update this line via PR at every handover. The Week 9 (劉順松) handover was not recorded when it happened; Week 10
+(林均澔) was recorded late (entry below). Each person adds a short entry with what they actually did as steward, or
+says the week was missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
+
+## 2026-11-15 — Week 10 steward (林均澔): no pull requests that week
+- Status: recorded late (2026-11-24)
+- Context: 林均澔 was the code steward for Week 10 (Nov 9–15) under the confirmed rotation.
+- What happened: no pull requests were opened or merged and nothing was committed to main that week (checked
+  on GitHub); the team had not started implementation yet, so there was nothing to review or approve.
+- Consequences: no steward approvals in Week 10. 林均澔's review work is in later PRs (#74, #75, #90, #91, #94).
+- Recorded by: 林均澔
 
 ## 2026-11-24 — Whisper on the GPU first, CPU fallback (#88)
 - Status: accepted
