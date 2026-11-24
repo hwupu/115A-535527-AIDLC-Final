@@ -1,8 +1,15 @@
-# Run Ollama on an NVIDIA GPU (needs the NVIDIA Container Toolkit). Use it on top of docker-compose.yml:
+# Run Ollama and Whisper (stt) on an NVIDIA GPU (needs the NVIDIA Container Toolkit). Use it on top of docker-compose.yml:
 #   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
 # or set COMPOSE_FILE=docker-compose.yml:docker-compose.gpu.yml in .env.
 services:
   ollama:
+    deploy:
+      resources:
+        reservations:
+          devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+  stt:
+    # Builds the stt image with the CUDA libraries; Whisper still falls back to the CPU if the GPU does not work.
+    build: { context: services/stt, args: { STT_GPU: "1" } }
     deploy:
       resources:
         reservations:
