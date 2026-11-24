@@ -7,6 +7,38 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — TTAS reference level filled in by a rule table, never by the LLM; the nurse decides
+- Status: proposed (PO direction 2026-11-24; the team confirms in the PR review)
+- Context: outside-team participant U04 (physician, #101) suggested filling in the triage level from the chief
+  complaint by the TTAS criteria (急診五級檢傷分類基準), since in practice choosing the complaint mostly sets the
+  level. The project rule so far: the nurse decides 檢傷級數 and the AI never does. TTAS is not one level per
+  complaint: the adult non-trauma table has about 127 standard complaints and 1,400 criteria, and the level depends
+  on modifiers such as SpO2, blood pressure, heart rate, temperature, consciousness and pain (for example 呼吸短促
+  is level 1 at SpO2 < 90 %, 2 at < 92 %, 3 at 92–94 %, 4 without distress).
+- Decision: the LLM keeps drafting the chief complaint and vitals only; it never outputs a level (v5 schema
+  unchanged). A program looks up a TTAS rule table: chief complaint → standard complaint (synonym table), then
+  the vitals already in the report → the matching criterion and level. The screen shows it as 「TTAS 參考級數（程式
+  依主訴與生命徵象對照）」 with the matched criterion; the nurse still selects and confirms 檢傷級數. If the complaint
+  cannot be matched, or a criterion needs information the report lacks (consciousness, pain, PEFR), it says so
+  instead of guessing. The audit log keeps the reference level and the nurse's level.
+- Consequences: the rule becomes "the AI never decides 檢傷級數; the system may show a TTAS reference level from a
+  rule table, and the nurse decides". `CLAUDE.md`, `PROMPT_CARD.md`, the printout footer, the scenario answer keys
+  and the "no triage level from the AI" tests are updated with the implementation, and the LLM tests stay as they
+  are. The first version covers the complaints in S01, S03 and S04 and the vitals-based criteria; the rest of the
+  table follows. The TTAS PDFs stay out of the repository until their licence is checked; the repository holds only
+  the structured rows used. CP3 can report how often the nurse's level matches the reference level.
+- Decided by: 張棨翔 (PO), pending team confirmation
+
+## 2026-11-24 — Exports stay copy text, print and JSON; no HIS integration
+- Status: accepted
+- Context: three of four outside-team participants (U01, U03, U04; #101) said getting the report into the HIS
+  matters more than printing. The scope excludes writing to a real HIS, and the project uses simulated data only.
+- Decision: keep the three exports (copy text, the ED-style printout from #99, JSON download). No HIS-specific
+  export for now.
+- Consequences: re-typing into the HIS remains, and the evaluation and final report name it as the main gap for
+  real use.
+- Decided by: 張棨翔 (PO)
+
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted
 - Context: an outside-team participant (U02, #101) asked for the conversation's speaker roles. Today every line
