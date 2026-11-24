@@ -7,6 +7,26 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — Whisper on the GPU first, CPU fallback (#88)
+- Status: accepted
+- Context: the 2026-11-22 Whisper decision asked STT to try the GPU first (#88), because medium on the CPU makes a
+  30 s turn wait about 22 s. In the outside-team runs (U01–U04) participants hesitated while waiting for the draft.
+- Decision: `WHISPER_DEVICE=auto` (default) loads Whisper on CUDA in float16 and checks it by transcribing 1 s of
+  silence, since missing cuBLAS/cuDNN only fails at inference; on any failure, or without a GPU, it uses the CPU in
+  int8 as before. `cuda` and `cpu` can be forced. The CUDA libraries are installed only when the image is built
+  through `docker-compose.gpu.yml` (`STT_GPU=1`), so Mac and Windows images are unchanged. `/transcribe` reports the
+  device and compute type used.
+- Measured on the workstation RTX 3090 with `eval/stt_benchmark.py` (same 18 sentences, plain and masked, as A1;
+  CER with numerals scored as values): small 0.15 / 0.15, median 0.18–0.19 s, RTF 0.03; medium 0.09 / 0.07, median
+  0.29–0.32 s, RTF 0.05 (plain / mask). On the CPU (A1) the same clips took 1.7 s (small) and 4.7 s (medium).
+  Evidence: `docs/cp2/evidence/stt-2026-11-24-gpu/`.
+- Consequences: on the GPU, medium costs about 0.1 s more per clip than small and is more accurate, so the
+  workstation `.env` can use medium for every run, not only official ones. The default for laptops stays small.
+  On the shared workstation another user's Ollama can fill the GPU memory; Whisper then falls back to the CPU at
+  start-up. Operations note: if a long-running Ollama container logs `Failed to initialize NVML`, it has lost the
+  GPU and runs on the CPU (the draft took 51 s instead of 1.2 s); restarting the container restores it.
+- Decided by: 張棨翔 (PO), 2026-11-22; measured 2026-11-24
+
 ## 2026-11-24 — AI usage guidelines v0.3 approved
 - Status: accepted
 - Context: v0.3 (#98) rewrote three rules so they can be checked from a PR, from the Week 12 lab evidence: PRs of

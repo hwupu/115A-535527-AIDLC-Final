@@ -36,6 +36,7 @@ services:
     volumes: ["cp2-stt-cache:/srv/data"]
     environment:
       WHISPER_MODEL: ${WHISPER_MODEL:-small}
+      WHISPER_DEVICE: ${WHISPER_DEVICE:-auto}
   llm:
     build: services/llm
     ports: ["127.0.0.1:${LLM_PORT:-8002}:8000"]
