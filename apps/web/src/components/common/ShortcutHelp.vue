@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// The 「快捷鍵」 call to action and the list of keyboard shortcuts for the current screen (#28).
-// Meant to sit at the bottom right of the screen; the list opens above the button. Also toggled with 「?」.
-// The parent places it (fixed, or floating above a sticky bar).
+// The 「鍵盤快捷鍵」 button in the role header (next to 切換角色) and the list of keyboard shortcuts for the
+// current screen (#28). The list opens below the button. Also toggled with 「?」.
 import { Keyboard, X } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 
@@ -10,14 +9,13 @@ const open = defineModel<boolean>("open", { default: false });
 </script>
 
 <template>
-  <!-- No position here: the parent gives it one (fixed or absolute), which also anchors the list above the button. -->
-  <div class="print:hidden">
+  <div class="relative print:hidden">
     <div
       v-if="open"
       id="shortcut-help"
       role="dialog"
       aria-label="鍵盤快捷鍵"
-      class="absolute right-0 bottom-full mb-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-border bg-card p-3 shadow-lg"
+      class="absolute top-full right-0 z-30 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-border bg-card p-3 shadow-lg"
       @keydown.esc.stop="open = false"
     >
       <div class="mb-2 flex items-center justify-between">
@@ -32,16 +30,11 @@ const open = defineModel<boolean>("open", { default: false });
       </dl>
       <p class="mt-2 text-sm text-muted-foreground">打字時快捷鍵不會作用。{{ note }}</p>
     </div>
-    <Button
-      variant="secondary"
-      class="rounded-full border border-border shadow-md"
-      :aria-expanded="open"
-      aria-controls="shortcut-help"
-      @click="open = !open"
-    >
+    <Button variant="outline" aria-label="鍵盤快捷鍵" :aria-expanded="open" aria-controls="shortcut-help" @click="open = !open">
       <Keyboard aria-hidden="true" />
-      鍵盤快捷鍵
-      <kbd class="rounded border border-border bg-card px-1.5 font-mono text-sm">?</kbd>
+      <!-- Text only on wide screens, so the header still fits a portrait tablet. -->
+      <span class="hidden lg:inline">鍵盤快捷鍵</span>
+      <kbd class="rounded border border-border bg-muted px-1.5 font-mono text-sm">?</kbd>
     </Button>
   </div>
 </template>

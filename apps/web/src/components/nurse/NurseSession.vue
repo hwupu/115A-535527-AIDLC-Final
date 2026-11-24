@@ -3,7 +3,7 @@
 // Narrow or portrait: the two columns become tabs. Every part below is replaceable behind its own contract.
 // 返回清單 and the 就診號 sit in the role header (NurseView.vue).
 import { storeToRefs } from "pinia";
-import { nextTick, onUnmounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
 import ChecklistPanel from "./ChecklistPanel.vue";
 import ConfirmBar from "./ConfirmBar.vue";
 import ConnectionBanner from "./ConnectionBanner.vue";
@@ -59,6 +59,9 @@ async function jump(path: string) {
 // Keyboard (#28): one hand on the keyboard while the other holds the patient or the cuff.
 // There is deliberately no key that sets the 檢傷級數: the nurse picks it on screen, so a stray key cannot set it.
 const helpOpen = ref(false);
+// The button goes into the role header; mounted on its own (component tests) there is no header and no button.
+const hasHeader = ref(false);
+onMounted(() => (hasHeader.value = document.getElementById("role-header-actions") !== null));
 const shortcutItems = [
   { keys: "Space", action: "開始／停止錄音" },
   { keys: "↑ ↓", action: "在欄位之間移動" },
@@ -155,8 +158,7 @@ function select(path: string) {
           <Button type="submit" :disabled="!note.trim()">加入</Button>
         </form>
       </div>
-      <!-- pb-16: room for the floating 鍵盤快捷鍵 button, so the last field can scroll out from under it. -->
-      <div class="content-start gap-3 pb-16" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
+      <div class="content-start gap-3" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
         <SafetyBanner :fields="fields" @edit="store.editField" />
         <FlagList :flags="flags" />
         <ChecklistPanel :fields="fields" @jump="jump" />
@@ -170,18 +172,21 @@ function select(path: string) {
       <Button variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
     </div>
 
-    <!-- The shortcut call to action floats at the bottom right, just above the confirm bar. -->
-    <div v-if="!confirmed" class="sticky bottom-0 z-10">
-      <ShortcutHelp v-model:open="helpOpen" class="absolute right-4 bottom-full mb-3" :items="shortcutItems" note="檢傷級數沒有快捷鍵，請在畫面上選。" />
-      <ConfirmBar
-        :level="triageLevel"
-        :drafts="drafts"
-        :blockers="blockers"
-        :busy="busy"
-        @update:level="store.setTriageLevel"
-        @confirm="store.confirmSession"
-        @jump="jump"
-      />
-    </div>
+    <ConfirmBar
+      v-if="!confirmed"
+      class="sticky bottom-0"
+      :level="triageLevel"
+      :drafts="drafts"
+      :blockers="blockers"
+      :busy="busy"
+      @update:level="store.setTriageLevel"
+      @confirm="store.confirmSession"
+      @jump="jump"
+    />
+
+    <!-- 鍵盤快捷鍵 sits in the role header next to 切換角色 (NurseView.vue renders the header). -->
+    <Teleport v-if="hasHeader && !confirmed" to="#role-header-actions">
+      <ShortcutHelp v-model:open="helpOpen" :items="shortcutItems" note="檢傷級數沒有快捷鍵，請在畫面上選。" />
+    </Teleport>
   </div>
 </template>

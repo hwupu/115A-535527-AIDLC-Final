@@ -38,7 +38,9 @@ useShortcuts(() => ({
 </script>
 
 <template>
-  <RoleHeader role="doctor" />
+  <RoleHeader role="doctor">
+    <template #actions><ShortcutHelp v-model:open="helpOpen" :items="shortcutItems" /></template>
+  </RoleHeader>
   <main class="mx-auto max-w-5xl px-4 py-4">
     <h2 class="flex flex-wrap items-baseline gap-x-3 text-xl font-bold">
       病患清單
@@ -64,5 +66,4 @@ useShortcuts(() => ({
       </li>
     </ul>
   </main>
-  <ShortcutHelp v-model:open="helpOpen" class="fixed right-6 bottom-6 z-10" :items="shortcutItems" />
 </template>

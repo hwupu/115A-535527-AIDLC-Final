@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Default slot: screen context next to the role (back button, 就診號), so staff screens need no second bar.
+// #actions slot: buttons next to 切換角色 (for example 鍵盤快捷鍵).
 import { computed } from "vue";
 import { roleById, type RoleId } from "@/roles";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,10 @@ const role = computed(() => roleById(props.role));
     </h1>
     <div class="flex min-w-0 flex-1 flex-wrap items-center gap-3">
       <slot />
+    </div>
+    <!-- Screen actions next to 切換角色: the #actions slot, or teleported in (NurseSession puts 鍵盤快捷鍵 here). -->
+    <div id="role-header-actions" class="flex shrink-0 items-center gap-2 print:hidden">
+      <slot name="actions" />
     </div>
     <Button variant="outline" as-child>
       <RouterLink to="/">切換角色</RouterLink>

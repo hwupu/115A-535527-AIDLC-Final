@@ -67,6 +67,8 @@ describe("nurse screen keyboard (#28)", () => {
   async function screen() {
     const store = useNurseSessionStore();
     await store.startNew();
+    // The role header (NurseView) provides where 鍵盤快捷鍵 is teleported to.
+    if (!document.getElementById("role-header-actions")) document.body.insertAdjacentHTML("beforeend", '<div id="role-header-actions"></div>');
     const wrapper = mount(NurseSession, { attachTo: document.body });
     return { store, wrapper };
   }
@@ -122,8 +124,9 @@ describe("nurse screen keyboard (#28)", () => {
     const { wrapper } = await screen();
     await press("?");
     expect(document.body.textContent).toContain("跳到下一個未確認的 AI 草稿");
+    expect(document.querySelector("#role-header-actions [role='dialog']")).not.toBeNull();
     await press("Escape");
-    expect(wrapper.find('[role="dialog"]').exists()).toBe(false);
+    expect(document.querySelector("[role='dialog']")).toBeNull();
     wrapper.unmount();
   });
 });
