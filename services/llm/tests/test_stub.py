@@ -1,6 +1,7 @@
 import json
 
 import httpx
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -194,3 +195,69 @@ def test_v5_drops_a_temperature_taken_at_home(monkeypatch):
     body = {"transcript": "我在家量到體溫39度。護理師：耳溫三十八點五。", "prompt_version": "v5"}
     res = client.post("/extract", json=body)
     assert res.json()["fields"] == {}
+
+
+@pytest.mark.parametrize(
+    "path,expected",
+    [
+        ("measurement.vitals.bp_sys", 138),
+        ("measurement.vitals.bp_dia", 76),
+        ("measurement.vitals.hr", 102),
+        ("measurement.vitals.spo2", 96),
+        ("measurement.vitals.temp_c", 38.5),
+    ],
+)
+def test_v5_multi_vital_quote_matches_label(monkeypatch, path, expected):
+    span = "血壓138,76,脈搏102,血氧96,耳溫38.5"
+    raw = {"fields": {path: {"value": 999, "source_span": span}}}
+    monkeypatch.setattr("app.main.generate", lambda *args: json.dumps(raw))
+    result = client.post("/extract", json={"transcript": span, "prompt_version": "v5"}).json()
+    assert result["fields"][path]["value"] == expected
+
+
+@pytest.mark.parametrize(
+    "path,span",
+    [
+        ("measurement.vitals.bp_sys", "血壓138,76"),
+        ("measurement.vitals.bp_dia", "血壓138,76"),
+        ("measurement.vitals.hr", "脈搏102"),
+        ("measurement.vitals.spo2", "血氧96"),
+        ("measurement.vitals.temp_c", "體溫39度"),
+    ],
+)
+def test_v5_all_home_vitals_dropped_but_current_reading_kept(monkeypatch, path, span):
+    transcript = "我在家自己量" + span + "。護理師：耳溫38.5。"
+    raw = {
+        "fields": {
+            path: {"value": 999, "source_span": span},
+            "measurement.vitals.temp_c": {"value": 38.5, "source_span": "耳溫38.5"},
+        }
+    }
+    if path == "measurement.vitals.temp_c":
+        raw["fields"][path] = {"value": 39, "source_span": span}
+    monkeypatch.setattr("app.main.generate", lambda *args: json.dumps(raw))
+    result = client.post("/extract", json={"transcript": transcript, "prompt_version": "v5"}).json()
+    assert path not in result["fields"]
+    if path != "measurement.vitals.temp_c":
+        assert result["fields"]["measurement.vitals.temp_c"]["value"] == 38.5
+
+
+@pytest.mark.parametrize(
+    "span,expected",
+    [
+        ("民國八十年二月三十一日", None),
+        ("民國八十年二月二十九日", None),
+        ("民國八十一年二月二十九日", "1992-02-29"),
+    ],
+)
+def test_v5_calendar_date_validation(span, expected):
+    from app.main import date_in
+
+    assert date_in(span) == expected
+
+
+@pytest.mark.parametrize("span", ["138,76,102", "脈搏102，脈搏88", "血壓138"])
+def test_v5_ambiguous_or_wrong_label_is_not_a_pulse(span):
+    from app.main import vital_number
+
+    assert vital_number("measurement.vitals.hr", span) is None

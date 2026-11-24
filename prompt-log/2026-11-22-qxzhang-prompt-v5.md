@@ -2,7 +2,7 @@
 - Date: 2026-11-22
 - Author: 張棨翔
 - Tool / model: Claude Code / Opus 5.5
-- PR: (to fill)
+- PR: #95
 
 ## Prompt
 In my recorded test, vitals, date of birth, accompaniment and the travel answer stayed empty. Whatever the recording
@@ -27,6 +27,13 @@ Checked: llm ruff clean, 13 tests passed; final run gemma4:e4b v5 10/12 on T01�
 number or date; gemma3:1b v5 8/43, no wrong typed value.
 
 ## Outcome
-- Kept: (to fill)
-- Changed: (to fill)
-- Rejected (and why): (to fill)
+- Kept: original v5 prompt, schema and source-span checks as described above; see the dated review follow-up for additional code guards.
+- Changed: review corrections dated 2026-11-24 are recorded below; no human-only verification is implied.
+- Rejected (and why): trusting the model calculation without a source-derived guard.
+
+
+## 2026-11-24 review follow-up (Codex for 劉順松)
+- User explicitly requested completion and merger of pending PRs.
+- Codex implemented labelled numeric extraction (ambiguous quotes stay empty), home-reading filtering for all vitals and real calendar validation; added fake-model regressions for the review's reproducible failures.
+- This entry completes a record of observable artifacts; it does not invent the original author's personal review or a new Gemma experiment. Original recorded model outputs remain unchanged and predate these guard corrections.
+- Free-text scoring still measures presence plus accepted grounding, not semantic accuracy. Rerun the real-model suite before attributing the historical 36/43 to this revision.

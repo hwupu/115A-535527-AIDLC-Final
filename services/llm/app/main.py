@@ -6,6 +6,7 @@ import re
 import threading
 import time
 from contextlib import asynccontextmanager
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
@@ -222,7 +223,41 @@ def date_in(span):
         return None
     year, month, day = int(m[1]), int(m[2]), int(m[3])
     year += 1911 if year < 200 else 0  # 民國 years
-    return f"{year:04d}-{month:02d}-{day:02d}" if 1 <= month <= 12 and 1 <= day <= 31 else None
+    try:
+        return date(year, month, day).isoformat()
+    except ValueError:
+        return None
+
+
+NUMBER = r"(\d+(?:\.\d+)?)"
+VITAL_LABELS = {
+    "measurement.vitals.bp_sys": r"(?:收縮壓|血壓)",
+    "measurement.vitals.bp_dia": r"舒張壓",
+    "measurement.vitals.hr": r"(?:脈搏|心跳|心率)",
+    "measurement.vitals.spo2": r"(?:血氧|SpO2)",
+    "measurement.vitals.temp_c": r"(?:體溫|耳溫|額溫)",
+}
+
+
+def vital_number(path, span):
+    """Match a labelled value; ambiguous multi-number quotes must not use the first number."""
+    text = zh_digits(span)
+    labelled = re.findall(VITAL_LABELS[path] + r"[^\d。！？!?\n]{0,8}" + NUMBER, text, re.I)
+    if not labelled and path == "measurement.vitals.bp_dia":
+        pairs = re.findall(
+            r"血壓[^\d。！？!?\n]{0,8}" + NUMBER + r"\s*[,，/／、]\s*" + NUMBER, text
+        )
+        labelled = [dia for _, dia in pairs]
+    if labelled:
+        values = {float(n) for n in labelled}
+        return values.pop() if len(values) == 1 else None
+    # A short number-only quote is supported; a quote labelled as another vital is not.
+    if any(re.search(label, text, re.I) for label in VITAL_LABELS.values()):
+        return None
+    found = numbers_in(span)
+    if len(found) == 1:
+        return found[0]
+    return None
 
 
 def tidy_values(raw, transcript):
@@ -238,13 +273,10 @@ def tidy_values(raw, transcript):
             continue
         span = f["source_span"]
         if KINDS.get(path) == "number":
-            found = numbers_in(span)
-            # One quote may hold both pressures, e.g. 「血壓一百二十二，八十」.
-            pick = 1 if path == "measurement.vitals.bp_dia" and len(found) >= 2 else 0
-            number = found[pick] if found else None
+            number = vital_number(path, span)
             f["value"] = int(number) if number is not None and number.is_integer() else number
-            # A temperature the patient took at home is not the nurse's measurement (case T07).
-            if path == "measurement.vitals.temp_c" and said_at_home(span, transcript):
+            # Home measurements of any vital are not current nurse measurements.
+            if said_at_home(span, transcript):
                 f["value"] = None
         elif path == "patient.dob":
             f["value"] = date_in(span)
