@@ -1,6 +1,6 @@
 # Group1 CP2 - reproducible local candidate
 
-Owner: 劉順松 / 414551016. Created 2026-11-04; merged to `main` in #73 on 2026-11-19. Status: technical prototype; external-user evidence still pending. E3 not submitted.
+Owner: 劉順松 / 414551016. Created 2026-11-04; merged to `main` in #73 on 2026-11-19. Updated 2026-11-24. U01/U02 questionnaires are reported; facilitator metadata remains pending. E3 not submitted.
 
 CP2 dates (published rubric): peer-review demo in the Week 12 lab on **Mon 2026-11-23**; E3 deadline **Sun 2026-11-29**.
 
@@ -42,11 +42,11 @@ No authentication: roles are demo interfaces, not access control. Bind localhost
 - API session lifecycle, visit numbers, source-linked drafts, per-field review, nurse-only decision path in UI, confirmed read-only report, ETag polling, audit and delete.
 - Local extraction through Ollama (`LLM_MODEL`: `gemma3:1b` by default, `gemma4:e4b` for official runs) with prompts v1–v5; v5 is the default and drafts every report field the transcript states (v3/v4 fill six fields). Until 2026-11-21 this was a Transformers CPU Qwen2.5-0.5B adapter; its results stay in `docs/cp2/evidence/` and are not Gemma results.
 - Whisper CPU int8 and OpenCC s2twp. Whole recordings processed on stop, not live streaming. Text entry is a real fallback, never secretly substituted for inference.
-- Evaluation-mode runs/events/JSON/CSV; 12 synthetic development prompt cases and comparison functions.
+- Evaluation-mode runs/events/JSON/CSV; 14 synthetic development prompt cases and comparison functions.
 
 ## Verification
 
-Run `./scripts/check-cp2.sh` (macOS/Linux) or `./scripts/check-cp2.ps1` (Windows). Browser test instructions and results are in docs/cp2/START_HERE_劉順松.md and evidence/. Real prompt suite: `uv run --directory services/llm python -X utf8 ../../eval/run_prompt_suite.py --version v3`. Do not run model downloads in CI unit tests: those tests mock inference transport explicitly; actual-model runs are separate evidence.
+Run `./scripts/check-cp2.sh` (macOS/Linux) or `./scripts/check-cp2.ps1` (Windows). Browser test instructions and results are in docs/cp2/START_HERE_劉順松.md and evidence/. Real prompt suite: `uv run --directory services/llm python -X utf8 ../../eval/run_prompt_suite.py --version v5`. Do not run model downloads in CI unit tests: those tests mock inference transport explicitly; actual-model runs are separate evidence.
 
 API schema is at http://localhost:8000/docs. GET /health proves server liveness only, not loaded model readiness. GET /sessions/{id}/audit gives before/after field history. DELETE /sessions/{id} deletes active encounter/audit/evaluation records; it does not promise forensic erasure of SQLite pages, backups or exported files.
 
@@ -55,3 +55,13 @@ API schema is at http://localhost:8000/docs. GET /health proves server liveness 
 The small model can misclassify statements, fail on correction, and produce invalid JSON. Quote containment does not prove entailment. Source checks, allowlists and manual review reduce risk but do not establish clinical safety. No validated clinical flags/risk scoring. Unsupported fields remain manual. No HIS integration, no medical advice, no triage prediction.
 
 Read docs/cp2/REQUIREMENTS.md before submission. External testing, real PR contributions, approvals and collaboration-session artifacts remain mandatory human work. Build the E3 zip with `python3 scripts/package-cp2.py` → `submission/Group01_CP2.zip` (committed files plus `repository_link.txt`). Building it is not a claim of full checkpoint completion.
+
+
+## 2026-11-24 evidence boundary
+
+README.md has the single quick start. Script-launched Python services use process environment variables, not root .env (Compose and Vite do read .env according to their configuration). Start Ollama and pull LLM_MODEL before extraction. #95 guards now match numeric labels, validate calendar dates and filter home measurements of all vitals. Historical 2026-11-22 model outputs predate those corrections; they are not a new model run. Human sessions, policy ratification and a non-author fresh-machine check remain pending.
+
+
+## Report generation prerequisites
+
+scripts/render-cp2-markdown.py requires reportlab and pypdf plus the Windows Microsoft JhengHei fonts used in this verified export. It does not change the Markdown. On another OS, provide compatible CJK fonts before regenerating; the application itself does not depend on this document-rendering environment. Generated PDF and ZIP files are kept out of Git. Use the supplied report PDF for this review candidate and rerender after any report edit.

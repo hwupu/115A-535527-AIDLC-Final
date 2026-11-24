@@ -79,3 +79,6 @@ docs/cp2/*.pdf
 # Publish only the reviewed text-evidence snapshot under docs.
 !docs/cp2/evidence/
 !docs/cp2/evidence/**
+
+# Generated reports and facilitator PDFs remain local artifacts.
+/output/
