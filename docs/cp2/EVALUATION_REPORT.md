@@ -43,7 +43,7 @@ Windows Hanhan generated one fictional sentence: 從昨天開始發燒，咳嗽�
 
 ## External testing
 
-Two outside-team sessions have been held so far (U01, U02 in USER_TEST_PROTOCOL.md), and more will follow. Only their questionnaire answers are recorded yet: both participants rated all three items 5 of 5, and their suggestions and the resulting changes are in DESIGN_RATIONALE.md. Roles, timing, edits and AI draft accuracy are still to be filled in from the facilitator's forms, so there is no measured task-time or error result yet and no time-saving claim. The paper-vs-tool time comparison and the larger evaluation remain CP3 work.
+Four outside-team sessions have been held so far (U01–U04 in USER_TEST_PROTOCOL.md; U03 a nurse, U04 a physician), and more will follow. Only their questionnaire answers are recorded yet: three participants rated all three items 5 of 5 and one rated them 4/5/5, and their suggestions and the resulting changes are in DESIGN_RATIONALE.md. The four participants did two runs of scenario S03 in pairs, one operating the nurse screen and one playing the patient (U01/U02 on 2026-11-23, U03/U04 on 2026-11-24; facilitator 張棨翔). From the demo database: start to confirm took 5 min 02 s and 3 min 28 s; the AI draft took 117 s and 51 s; against the S03 answer key the drafts had 14 and 18 correct fields, 2 and 0 wrong, 3 and 2 missing, none filled although not said (comparison not yet checked by a nurse). One safety finding: in the first run STT heard 血壓 as 「斜壓兩」 and systolic BP became 2; the nurse first confirmed it and corrected it 11 s later. Two runs without a paper baseline do not support a time-saving claim. The paper-vs-tool time comparison and the larger evaluation remain CP3 work.
 
 ## Limits and next actions
 
