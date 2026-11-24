@@ -39,6 +39,16 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   real use.
 - Decided by: 張棨翔 (PO)
 
+## 2026-11-24 — No RAG for extraction (B5, #15)
+- Status: accepted
+- Context: spike B5 asked whether extraction needs retrieval-augmented generation. The model only copies and
+  normalises what the transcript says; every field must quote the transcript, and anything else is rejected.
+- Decision: no RAG. The prompt (v5), the JSON Schema and the code guards stay the only inputs and checks. The TTAS
+  reference level (#115) is a rule-table lookup in code, not retrieval for the model.
+- Consequences: no vector store or document index to build or evaluate. Revisit only if a later feature needs the
+  model to use outside knowledge, which the current safety rules do not allow.
+- Decided by: 張棨翔 (PO)
+
 ## 2026-11-24 — AI usage guidelines v0.3 approved
 - Status: accepted
 - Context: v0.3 (#98) rewrote three rules so they can be checked from a PR, from the Week 12 lab evidence: PRs of
