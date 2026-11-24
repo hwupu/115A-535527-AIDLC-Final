@@ -4,6 +4,7 @@
 // 返回清單 and the 就診號 sit in the role header (NurseView.vue).
 import { storeToRefs } from "pinia";
 import { nextTick, onUnmounted, ref } from "vue";
+import ChecklistPanel from "./ChecklistPanel.vue";
 import ConfirmBar from "./ConfirmBar.vue";
 import ConnectionBanner from "./ConnectionBanner.vue";
 import ConsentGate from "./ConsentGate.vue";
@@ -45,7 +46,7 @@ async function sendNote() {
   if (await store.addNurseText(note.value)) note.value = "";
 }
 
-// Jump from the confirm bar's list to the field that still needs a decision.
+// Jump from the confirm bar's list or the checklist to a field.
 async function jump(path: string) {
   tab.value = "report";
   store.selectField(path);
@@ -99,6 +100,7 @@ function select(path: string) {
       <div class="content-start gap-3" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
         <SafetyBanner :fields="fields" @edit="store.editField" />
         <FlagList :flags="flags" />
+        <ChecklistPanel :fields="fields" @jump="jump" />
         <ReportForm :fields="fields" :selected-path="selectedPath" @select="select" @edit="store.editField" @confirm="store.confirmField" />
       </div>
     </div>
