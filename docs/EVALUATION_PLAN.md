@@ -3,7 +3,7 @@
 > Provisional. Targets are proposals to finalize after the Week 13 pilot, with a
 > nurse's input. Source: `docs/references/HANDOFF_scrum_setup.md` §5. Simulated
 > scenarios only (`docs/SCENARIOS.md`); no real patient data. The earlier
-> discharge-summary plan is in `docs/archive/discharge-summary/`.
+> discharge-summary plan was removed; it is in git history (`docs/archive/discharge-summary/`, before 2026-11-24).
 
 ## Problem grounding
 

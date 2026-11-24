@@ -44,7 +44,7 @@ try {
         $processes += $p
     }
     $processes.Id | ConvertTo-Json | Set-Content evidence/server-pids.json
-    Write-Host 'Group1 CP2: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops this session.'
+    Write-Host 'Triage assistant: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops this session.'
     pnpm --filter web dev --host 127.0.0.1
 } finally {
     $processes | Where-Object { -not $_.HasExited } | Stop-Process

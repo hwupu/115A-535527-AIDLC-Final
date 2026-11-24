@@ -1,6 +1,6 @@
 # Metric definitions
 
-All 12 prompt cases are synthetic development data, not nurse-reviewed clinical references. Each lists its expected fields in eval/cases.json. Do not report development performance as held-out accuracy.
+All 14 prompt cases (T01–T14) are synthetic development data, not nurse-reviewed clinical references. Each lists its expected fields in eval/cases.json. Do not report development performance as held-out accuracy.
 
 - Exact match: compare normalized values for the union of reference and nonempty predicted keys. Missing/extra/wrong values fail. NFKC and whitespace normalization only; punctuation and clinically meaningful wording are not removed. Lists are sorted; booleans do not equal numbers. Report numerator and denominator. No comparable fields gives null, not 100%.
 - Case pass: all compared fields match and there are no missing/extra values. Empty expected/empty output counts as an abstention pass, separately identified. API/JSON failure counts as case fail, never excluded from case denominator.

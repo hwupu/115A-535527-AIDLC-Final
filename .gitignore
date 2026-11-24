@@ -73,12 +73,11 @@ submission/
 playwright-report/
 test-results/
 
-# Generated PDF remains local; editable Markdown and text evidence are versioned.
+# Generated report PDF and contributor-graph screenshot stay local; the zip picks them up.
 docs/cp2/*.pdf
+docs/cp2/*.png
 
 # Publish only the reviewed text-evidence snapshot under docs.
 !docs/cp2/evidence/
 !docs/cp2/evidence/**
 
-# Generated reports and facilitator PDFs remain local artifacts.
-/output/
