@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# macOS/Linux counterpart of check-cp2.ps1. Logs go to evidence/; summary in evidence/checks.json.
+# macOS/Linux counterpart of check.ps1. Logs go to evidence/; summary in evidence/checks.json.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p evidence

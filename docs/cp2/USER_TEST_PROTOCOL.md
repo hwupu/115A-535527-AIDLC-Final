@@ -60,10 +60,10 @@ If the participant is a physician, add one question after they read the confirme
 Fields marked 待補 were not reported yet; they are filled from the facilitator's form (`USER_TEST_FORM.md` page 2),
 never estimated. Follow-up: #101.
 
-### U01 (測試者 A)
+### U01 (護理師 A)
 
 - Status: CONDUCTED; questionnaire answers recorded, other fields 待補
-- Anonymous code / role / outside-team confirmation: U01 / 待補 / 待補
+- Anonymous code / role / outside-team confirmation: U01 / 護理師 (nurse) / not a group member
 - Date / facilitator / consent read and given: 待補 / 待補 / 待補
 - Software revision / prompt / model / scenario: 待補
 - Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
@@ -72,10 +72,10 @@ never estimated. Follow-up: #101.
 - Design change proposed / implemented / retest outcome: formal printout → #99 (ED-style printed triage record, implemented, retest 待補); hospital-system integration → not doing, because the scope excludes writing to a real HIS; multi-device load → #100 (load test, not started)
 - Evidence file and limitations: paper form (to be destroyed after transcription); one participant
 
-### U02 (測試者 B)
+### U02 (護理師 B)
 
 - Status: CONDUCTED; questionnaire answers recorded, other fields 待補
-- Anonymous code / role / outside-team confirmation: U02 / 待補 / 待補
+- Anonymous code / role / outside-team confirmation: U02 / 護理師 (nurse) / not a group member
 - Date / facilitator / consent read and given: 待補 / 待補 / 待補
 - Software revision / prompt / model / scenario: 待補
 - Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
