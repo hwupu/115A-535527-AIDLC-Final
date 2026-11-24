@@ -99,12 +99,10 @@ Full text: `EVALUATION_REPORT.md`. Summary:
 
 ## 5. AI usage guidelines
 
-`AI_USAGE_GUIDELINES.md` v0.3. v0.1 was the Week 3 plan; v0.2 (Weeks 8–11) described how we actually worked, e.g.
+`AI_USAGE_GUIDELINES.md` v0.3, approved by the team on 2026-11-24 (`DECISIONS.md`). v0.1 was the Week 3 plan; v0.2 (Weeks 8–11) described how we actually worked, e.g.
 AI agents may approve or merge only on a named human's explicit instruction (#73, #74). v0.3 (Week 12 lab) rewrites
 three rules so a reviewer can check them from a PR: PRs of about 400 changed lines at most, an approval counts only
 with a written comment, and every PR fills in the template's "AI assistance" section (#96, #98).
-
-<!-- TODO(team): record in DECISIONS.md that all four ratified v0.3 (or what was changed). -->
 
 ## 6. Prompt test suite
 
@@ -135,15 +133,16 @@ Counted from GitHub on 2026-11-24 (merged PRs into `main`; approvals with a writ
 |---|---|---|---|---|
 | 吳普軒 | Frontend, CI, README | 12 (e.g. #54–#56, #70–#72, #74, #75) | #67, #68, #73, #85 | Week 8 |
 | 張棨翔 | LLM, API, STT (PO) | 10 (e.g. #84, #85, #90, #91, #95, #99) | #54–#56, #75, #80–#82 | Week 11 |
-| 劉順松 | Audit, evaluation metrics | 2 (#73, #80) | #74, #94–#96, #98 | Week 9 (not recorded), Week 12 (current) |
+| 劉順松 | Audit, evaluation metrics | 3 (#73, #80, #103) | #74, #94–#96, #98 | Week 9 (not recorded), Week 12 (current) |
 | 林均澔 | Scenarios, test data, docs | 2 (#81, #82) | #74, #75, #90, #91, #94 | Week 10 (not recorded) |
 
-Reading the contributor graph: commits made with Claude Code carry a `Co-Authored-By` line, so GitHub also lists
-Claude as a contributor (53 of 60 non-merge commits on `main` as of 2026-11-24). Every commit's author is one of the
-four of us. 劉順松's main implementation (#73, 3,589 lines) arrived as a merge commit (it integrated the frontend
+Contributor graph (`CONTRIBUTOR_GRAPH.png`, GitHub, commits to `main` excluding merge commits, taken 2026-11-24):
+hwupu 36 commits (+15,676 / −3,124), XiangLibra 19 (+3,817 / −611), 414551016 5 (+949 / −263), junlinwk 3
+(+673 / −67). Commits made with Claude Code carry a `Co-Authored-By` line, so GitHub also lists Claude (54 commits);
+every commit's author is one of the four of us. 劉順松's main implementation (#73, 3,589 lines) arrived as a merge commit (it integrated the frontend
 branches), and GitHub's graph does not count merge commits, so his graph line is smaller than his work; see #73.
 
-<!-- TODO(team): re-count after merge day; add the contributor-graph screenshot as docs/cp2/contributor-graph.png. -->
+<!-- TODO(team): re-count the table after merge day; retake the screenshot if the numbers change. -->
 
 ## 9. Walking skeleton
 
