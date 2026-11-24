@@ -1,8 +1,8 @@
-# AI Usage Guidelines (Draft v0.3, 2026-11-23, pending team ratification)
+# AI Usage Guidelines (v0.3, approved by the team 2026-11-24)
 
 v0.1 was the Week 3 plan. v0.2 updated it to how we actually worked in Phase 2 (Weeks 8–11). v0.3 rewrites three rules
 so that a teammate can check them from a PR, using the evidence from the Week 12 lab; see "Changes from v0.2" at the
-end. Items marked **(proposed)** are new rules the team still has to accept in PR review.
+end. Items marked **(v0.3)** are the rules added in this version.
 
 Current code steward: see the rotation schedule in `README.md` (rotates weekly, Monday to Sunday)
 
@@ -20,18 +20,18 @@ showed why: it shipped before the Product Owner had decided.
 
 General rules:
 - AI output is a draft. A human teammate reads, understands, and can explain every line before it is committed.
-  **(proposed, v0.3)** To make that checkable, a PR changes at most about 400 lines (additions + deletions), not
+  **(v0.3)** To make that checkable, a PR changes at most about 400 lines (additions + deletions), not
   counting lock files and generated data-only evidence outputs; eval code and tests do count. A bigger PR says in its
   description why it can't be split, and is reviewed in a call where the author walks through it without using the
   AI. Each commit has one purpose and passes the tests on its own. Staying under 400 lines does not by itself show
   that the author understands the change.
 - No secrets, credentials, or identifiable patient data in any AI tool. Local models get only synthetic scenarios and consented teammate recordings.
-- **(proposed, v0.3)** Every PR is approved by a human other than the author, and an approval counts only if it has
+- **(v0.3)** Every PR is approved by a human other than the author, and an approval counts only if it has
   a written comment. The comment names at least one thing the reviewer ran or checked, and asks at least one
   question or raises one concern. If the review lists follow-up work, the issues for it are opened and linked before
   the merge. The code steward re-requests review on any empty approval.
-- **(proposed)** PR checklist boxes are ticked only after the event happens. AI tools must not tick review, approval or user-testing boxes.
-- **(proposed)** An AI agent may run `gh pr review` / `gh pr merge` only on an explicit instruction from the human approver in the same session, under that human's account. The human is accountable for the approval and merge. This amends the 2026-10-08 Scrum Master entry. It first happened with #73 (Claude Code, for 吳普軒) and #74 (Codex, for 劉順松) on 2026-11-19.
+- **(v0.3)** PR checklist boxes are ticked only after the event happens. AI tools must not tick review, approval or user-testing boxes.
+- **(v0.3)** An AI agent may run `gh pr review` / `gh pr merge` only on an explicit instruction from the human approver in the same session, under that human's account. The human is accountable for the approval and merge. This amends the 2026-10-08 Scrum Master entry. It first happened with #73 (Claude Code, for 吳普軒) and #74 (Codex, for 劉順松) on 2026-11-19.
 - AI agents never record attendance, user-test findings, approvals or a teammate's authorship that did not happen.
 
 ## 2. How we will document AI interactions
@@ -47,7 +47,7 @@ Trivial uses (typo fixes, explaining a single error message) need no entry.
 - **Prompt engineering log** (`prompt-log/`, one entry per interaction): date, author, tool and model, the prompt, a summary of the output, what we kept/changed/rejected, and the PR link. This records *how we worked with the AI*.
 - **`DECISIONS.md`**: records *what the team decided and why* (e.g. adopting a library, changing scope, ruling on a disagreement). It is not a transcript; it can link to a prompt-log entry as evidence.
 
-**PR template.** **(proposed, v0.3)** Every PR fills in the "AI assistance" section of the PR template
+**PR template.** **(v0.3)** Every PR fills in the "AI assistance" section of the PR template
 (`.github/PULL_REQUEST_TEMPLATE.md`, from the Week 12 lab, #96): the tool and model, what it generated, and what the author
 changed afterwards. If no AI was used, it says "none". Every commit that is mostly AI-written has an
 `Assisted-by: <tool>` or `Co-Authored-By:` trailer. A reviewer doesn't approve a PR whose AI section is empty, or

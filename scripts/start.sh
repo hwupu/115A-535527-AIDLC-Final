@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# macOS/Linux counterpart of start-cp2.ps1: real api + stt + llm + web, synthetic data only.
-# Usage: ./scripts/start-cp2.sh [--setup]
+# macOS/Linux counterpart of start.ps1: real api + stt + llm + web, synthetic data only.
+# Usage: ./scripts/start.sh [--setup]
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -12,12 +12,17 @@ if [[ "${1:-}" == "--setup" ]]; then
   for service in api stt llm; do uv sync --locked --directory "services/$service"; done
 fi
 
-for port in 5173 8000 8001 8002; do
-  if lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
-    echo "Port $port is already in use. Stop the previous project server first." >&2
-    exit 1
-  fi
-done
+# Binding detects occupied localhost ports even if their owner is another user.
+# No SO_REUSEADDR: on macOS it lets this bind succeed while another process listens on 0.0.0.0.
+uv run --directory services/llm python - <<'PY'
+import socket
+for port in (5173, 8000, 8001, 8002):
+    with socket.socket() as sock:
+        try:
+            sock.bind(("127.0.0.1", port))
+        except OSError:
+            raise SystemExit(f"Port {port} is already in use; stop the previous server first.")
+PY
 
 uv run --directory services/api alembic upgrade head
 mkdir -p evidence
@@ -36,7 +41,7 @@ for pair in api:8000 stt:8001 llm:8002; do
   pids+=($!)
 done
 
-echo "Group1 CP2: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops everything."
+echo "Triage assistant: http://localhost:5173 (real API; synthetic data only). Ctrl+C stops everything."
 pnpm --filter web dev --host 127.0.0.1 &
 pids+=($!)
 wait

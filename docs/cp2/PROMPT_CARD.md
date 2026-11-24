@@ -2,7 +2,7 @@
 
 - Where the system prompt is: `services/llm/prompts/v5.txt` (default since 2026-11-22; `LLM_PROMPT_VERSION` selects another), loaded by `services/llm/app/main.py`. `CLAUDE.md` is the coding agent's policy and links here; it is not sent to the product model.
 
-- Owner: 劉順松 / Group1. Status: local CP2 proposal pending team review.
+- Owner: 張棨翔 (LLM lead and PO; v4–v5). v1–v3 and the first adapter: 劉順松. Status: v5 accepted as the default (`DECISIONS.md`, 2026-11-22).
 - Task: draft every report field the synthetic triage transcript states (v5; v3 and v4 fill six fields), each with the exact transcript quote it comes from; nurse reviews them before saving.
 - Actual model (since 2026-11-21): served by local Ollama (`/api/chat`, temperature 0, `format: json` for v1–v4 and a JSON Schema for v5, max 1500 tokens, thinking turned off for thinking models), no hosted API/key. `gemma3:1b` by default; `gemma4:e4b` for official runs on the workstation. Results: `docs/cp2/evidence/ollama-2026-11-21/`.
 - Earlier model (2026-11-04 to 2026-11-21): Qwen/Qwen2.5-0.5B-Instruct on Transformers CPU float32; `evidence/prompt-v2.jsonl` and `prompt-v3.jsonl` are its results. Never attribute those to Gemma.
@@ -14,4 +14,4 @@
 - Known failures: correction case, semantic field misclassification, inconsistent wording; small models have limited reliability. gemma3:1b returns no fields for most cases (4/12, all of them the cases whose answer is empty). v3's examples repeat T01, T04 and T10, which inflates v3 scores. Source grounding can still support the wrong field. No automatic clinical flags are claimed.
 - Privacy: audio in memory; simulated transcripts in local database; active session deletion removes linked active records. SQLite/free pages, exported JSON and backups are not securely erased automatically.
 - Human control: nurse can clear/change any draft, manually enter omitted fields and select the level. Doctor reads only the confirmed report. No authentication; localhost-only prototype.
-- Reproduction: see README_CP2.md and eval/run_prompt_suite.py. First-run model download time is separate from warm inference. Empty case T11 skips the model and is labelled accordingly.
+- Reproduction: see `README.md` (檢查與測試) and `eval/run_prompt_suite.py`. First-run model download time is separate from warm inference. Empty case T11 skips the model and is labelled accordingly.
