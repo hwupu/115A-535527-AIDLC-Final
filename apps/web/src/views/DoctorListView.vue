@@ -44,7 +44,7 @@ useShortcuts(() => ({
   <main class="mx-auto max-w-5xl px-4 py-4">
     <h2 class="flex flex-wrap items-baseline gap-x-3 text-xl font-bold">
       病患清單
-      <span class="text-base font-normal text-muted-foreground">點選病患查看護理師確認後的檢傷報告（鍵盤：↑ ↓ 選病患，Enter 打開）。清單每幾秒自動更新。</span>
+      <span class="text-base font-normal text-muted-foreground">點選病患查看護理師確認後的檢傷報告。清單每幾秒自動更新。</span>
     </h2>
     <p v-if="listError" class="mt-2 text-lg font-semibold text-destructive" role="alert">{{ listError }}</p>
     <p v-else-if="!sessions.length" class="mt-4 text-lg text-muted-foreground">目前沒有病患。</p>
