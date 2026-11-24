@@ -3,38 +3,62 @@ import { computed, ref } from "vue";
 import { api } from "@/api";
 import type { RealtimeConnection } from "@/api";
 import { useRecorder } from "@/composables/useRecorder";
+import { questions, stepId, transcriptLine, type Step } from "@/intake/questions";
 
-export interface PatientEntry {
-  id: number;
-  kind: "text" | "voice";
-  text: string; // typed text, or a label for a voice recording
-  at: string; // ISO time
+// One answer per step (question or follow-up). `text` is only the patient's own words: what they typed, tapped,
+// or what their recording was transcribed to. Never an AI draft, flag or triage level.
+export interface PatientAnswer {
+  kind: "text" | "voice" | "choice" | "skipped";
+  text: string;
+  state: "sending" | "sent" | "failed" | "transcribing" | "no_speech";
 }
 
 // 就診號 is assigned by the system (api) when the intake is finished, never typed by the patient.
 // It is a simulated number (format SIM-######), not a real hospital number.
 export const VISIT_NO_PATTERN = /^SIM-\d{6}$/;
 
+// A recording with no speech gets no transcript back; stop waiting after this long.
+export const VOICE_TIMEOUT_MS = 45_000;
+
 const message = (e: unknown, fallback: string) => (e instanceof Error ? e.message : fallback);
 
-// The patient only adds input. The connection is used to send audio and the recording state; anything the server
-// sends back (transcript, drafts) is ignored here, and the api must not send drafts or flags to this role anyway.
+// The question as written into the transcript. A follow-up carries its main question, so 「是哪些症狀？」 has context.
+const transcriptQuestion = (s: Step) => (s.followUp ? `${s.question.text}${s.followUp.text}` : s.question.text);
+
+// The patient answers fixed questions one at a time (#86). Each answer is sent as typed text together with its
+// question (「問：… 答：…」) so the AI can map a short answer like 「沒有」 to the right field. For a voice answer the
+// question is sent as text when recording starts, then the recording's transcript follows it.
+// Sends do not block the next question; finishing waits until everything has been written.
 export const usePatientInputStore = defineStore("patientInput", () => {
-  const phase = ref<"intake" | "done">("intake");
-  const entries = ref<PatientEntry[]>([]);
+  const phase = ref<"intro" | "questions" | "done">("intro");
+  const stepIndex = ref(0);
+  const answers = ref<Record<string, PatientAnswer>>({});
   const listening = ref(false);
   const visitNo = ref("");
-  const busy = ref(false);
+  const finishing = ref(false);
   const error = ref("");
   const offline = ref(false);
   const recorder = useRecorder();
   let sessionId: string | null = null;
   let conn: RealtimeConnection | null = null;
-  let listeningSince = 0;
+  let inflight = new Set<Promise<boolean>>();
+  let unsent: string[] = []; // lines that failed to send, retried in order on finish
+  let sentLines = new Set<string>(); // our own text inputs, so their echo is not taken for a voice transcript
+  let voiceQueue: string[] = []; // step ids waiting for a transcript, oldest recording first
+  const timers = new Set<ReturnType<typeof setTimeout>>();
 
-  const canFinish = computed(() => entries.value.length > 0 && !listening.value && !busy.value);
+  // Yes/no questions show their follow-up only after the patient tapped 「有」.
+  const steps = computed<Step[]>(() =>
+    questions.flatMap((q) => (q.followUp && answers.value[q.id]?.kind === "choice" && answers.value[q.id]?.text === "有" ? [{ question: q }, { question: q, followUp: q.followUp }] : [{ question: q }])),
+  );
+  const step = computed(() => steps.value[Math.min(stepIndex.value, steps.value.length - 1)]);
+  const answer = computed(() => answers.value[stepId(step.value)]);
+  const questionNo = computed(() => questions.indexOf(step.value.question) + 1);
+  const isLast = computed(() => stepIndex.value >= steps.value.length - 1);
+  const answeredCount = computed(() => Object.values(answers.value).filter((a) => a.kind !== "skipped" && a.state !== "no_speech").length);
+  const canFinish = computed(() => answeredCount.value > 0 && !listening.value && !finishing.value);
 
-  // The session is created lazily on the first input, so opening the screen writes nothing.
+  // The session is created lazily on the first answer, so opening the screen writes nothing.
   async function ensureSession() {
     if (!sessionId) sessionId = (await api.createSession("patient")).session_id;
     return sessionId;
@@ -42,50 +66,77 @@ export const usePatientInputStore = defineStore("patientInput", () => {
 
   function ensureConnection(id: string) {
     conn ??= api.connect(id, "patient", {
-      onMessage: (message) => {
+      onMessage: (m) => {
         offline.value = false;
-        if (message.type === "transcript.segment") busy.value = false;
-        if (message.type === "error") { busy.value = false; error.value = message.message; }
+        if (m.type === "transcript.segment" && m.speaker === "patient" && !sentLines.has(m.text)) {
+          const id = voiceQueue.shift();
+          if (id && answers.value[id]?.state === "transcribing") answers.value[id] = { kind: "voice", text: m.text, state: "sent" };
+        }
+        if (m.type === "error") {
+          error.value = m.message;
+          const id = voiceQueue.shift();
+          if (id && answers.value[id]?.state === "transcribing") answers.value[id] = { kind: "voice", text: "", state: "failed" };
+        }
       },
       onClose: () => {
         offline.value = true;
-        busy.value = false;
         conn = null;
       },
     });
     return conn;
   }
 
-  function push(kind: PatientEntry["kind"], text: string) {
-    entries.value.push({ id: Date.now() + entries.value.length, kind, text, at: new Date().toISOString() });
+  function send(line: string): Promise<boolean> {
+    sentLines.add(line);
+    const p = (async () => {
+      try {
+        await api.addTextInput(await ensureSession(), line, "patient");
+        return true;
+      } catch (e) {
+        unsent.push(line);
+        error.value = message(e, "回答還沒送出，按「完成」時會再試一次");
+        return false;
+      }
+    })();
+    inflight.add(p);
+    void p.finally(() => inflight.delete(p));
+    return p;
   }
 
-  // Returns true when the text was accepted, so the caller can clear the text box. On failure the text stays in the box.
-  async function addText(text: string): Promise<boolean> {
-    const t = text.trim();
-    if (!t) return false;
-    busy.value = true;
-    error.value = "";
-    try {
-      await api.addTextInput(await ensureSession(), t, "patient");
-      push("text", t);
-      return true;
-    } catch (e) {
-      error.value = message(e, "送出失敗，內容還在，請再試一次");
-      return false;
-    } finally {
-      busy.value = false;
-    }
+  function setAnswer(id: string, a: PatientAnswer) {
+    answers.value = { ...answers.value, [id]: a };
   }
+
+  async function answerWith(kind: "text" | "choice", raw: string): Promise<boolean> {
+    const text = raw.trim();
+    if (!text || listening.value) return false;
+    const s = step.value;
+    const id = stepId(s);
+    error.value = "";
+    setAnswer(id, { kind, text, state: "sending" });
+    const ok = await send(transcriptLine(transcriptQuestion(s), text));
+    if (answers.value[id]?.text === text) setAnswer(id, { kind, text, state: ok ? "sent" : "failed" });
+    return true;
+  }
+
+  const answerText = (text: string) => answerWith("text", text);
+  const answerChoice = (choice: "有" | "沒有") => answerWith("choice", choice);
 
   async function toggleListening() {
+    const id = stepId(step.value);
     if (listening.value) {
       recorder.stop();
       conn?.send({ type: "recording.stop" });
       listening.value = false;
-      busy.value = true;
-      const seconds = Math.max(1, Math.round((Date.now() - listeningSince) / 1000));
-      push("voice", `語音輸入（${seconds} 秒）`);
+      setAnswer(id, { kind: "voice", text: "", state: "transcribing" });
+      voiceQueue.push(id);
+      const t = setTimeout(() => {
+        timers.delete(t);
+        if (answers.value[id]?.state !== "transcribing") return;
+        voiceQueue = voiceQueue.filter((x) => x !== id);
+        setAnswer(id, { kind: "voice", text: "", state: "no_speech" });
+      }, VOICE_TIMEOUT_MS);
+      timers.add(t);
       return;
     }
     error.value = "";
@@ -95,31 +146,76 @@ export const usePatientInputStore = defineStore("patientInput", () => {
       if (recorder.state.value !== "recording") {
         error.value =
           recorder.state.value === "denied"
-            ? "無法使用麥克風：請允許瀏覽器使用麥克風，或改用文字輸入。"
-            : recorder.error.value || "無法使用麥克風，請改用文字輸入。";
+            ? "無法使用麥克風：請允許瀏覽器使用麥克風，或改用打字回答。"
+            : recorder.error.value || "無法使用麥克風，請改用打字回答。";
         return;
       }
+      // The question goes in first, so the transcript reads question → spoken answer.
+      void send(transcriptLine(transcriptQuestion(step.value)));
       c.send({ type: "recording.start" });
-      listeningSince = Date.now();
       listening.value = true;
     } catch (e) {
-      error.value = message(e, "無法開始錄音，請改用文字輸入");
+      error.value = message(e, "無法開始錄音，請改用打字回答");
     }
   }
 
+  function start() {
+    phase.value = "questions";
+    stepIndex.value = 0;
+  }
+
+  function next() {
+    if (listening.value) return;
+    const id = stepId(step.value);
+    if (!answers.value[id]) setAnswer(id, { kind: "skipped", text: "", state: "sent" });
+    if (!isLast.value) stepIndex.value++;
+  }
+
+  function skip() {
+    if (listening.value) return;
+    setAnswer(stepId(step.value), { kind: "skipped", text: "", state: "sent" });
+    if (!isLast.value) stepIndex.value++;
+  }
+
+  function back() {
+    if (!listening.value && stepIndex.value > 0) stepIndex.value--;
+  }
+
+  // Clears the answer on screen so the patient can answer again. What was already sent stays in the transcript;
+  // the new answer is added after it, so the nurse sees both.
+  function reanswer() {
+    if (listening.value) return;
+    const { [stepId(step.value)]: _old, ...rest } = answers.value;
+    answers.value = rest;
+  }
+
+  const waitFor = (cond: () => boolean) =>
+    new Promise<void>((resolve) => {
+      const tick = () => (cond() ? resolve() : setTimeout(tick, 100));
+      tick();
+    });
+
   async function finish() {
-    if (!canFinish.value || !sessionId) return;
-    busy.value = true;
+    if (!canFinish.value) return;
+    finishing.value = true;
     error.value = "";
     try {
-      visitNo.value = (await api.finishIntake(sessionId)).visit_no;
+      const id = await ensureSession();
+      // A transcript that arrives after finishing would be rejected by the api, so wait for recordings first.
+      await waitFor(() => !Object.values(answers.value).some((a) => a.state === "transcribing"));
+      await Promise.all(inflight);
+      while (unsent.length) {
+        await api.addTextInput(id, unsent[0], "patient");
+        unsent.shift();
+      }
+      visitNo.value = (await api.finishIntake(id)).visit_no;
       conn?.close();
       conn = null;
       phase.value = "done";
     } catch (e) {
-      error.value = message(e, "無法完成，內容還在，請再試一次");
+      error.value = message(e, "無法完成，您的回答還在，請再試一次");
     } finally {
-      busy.value = false;
+      finishing.value = false;
     }
   }
 
@@ -127,14 +223,26 @@ export const usePatientInputStore = defineStore("patientInput", () => {
     recorder.stop();
     conn?.close();
     conn = null;
-    phase.value = "intake";
-    entries.value = [];
+    for (const t of timers) clearTimeout(t);
+    timers.clear();
+    phase.value = "intro";
+    stepIndex.value = 0;
+    answers.value = {};
     listening.value = false;
     visitNo.value = "";
     error.value = "";
     offline.value = false;
+    finishing.value = false;
     sessionId = null;
+    inflight = new Set();
+    unsent = [];
+    sentLines = new Set();
+    voiceQueue = [];
   }
 
-  return { phase, entries, listening, visitNo, busy, error, offline, level: recorder.level, canFinish, addText, toggleListening, finish, reset };
+  return {
+    phase, step, steps, stepIndex, questionNo, isLast, answer, answers, listening, visitNo,
+    finishing, error, offline, level: recorder.level, canFinish,
+    start, next, skip, back, reanswer, answerText, answerChoice, toggleListening, finish, reset,
+  };
 });

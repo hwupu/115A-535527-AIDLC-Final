@@ -116,6 +116,7 @@ describe("mock api rules the real api must also follow", () => {
     const seen: string[] = [];
     const conn = api.connect(session_id, "patient", { onMessage: (m) => seen.push(m.type) });
     conn.send({ type: "recording.start" });
+    conn.send({ type: "recording.stop" }); // like the real api, the transcript comes after the recording stops
     await new Promise((r) => setTimeout(r, 3500));
     conn.close();
     expect(seen).toContain("transcript.segment");
