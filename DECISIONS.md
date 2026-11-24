@@ -28,6 +28,11 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   table follows. The TTAS PDFs stay out of the repository until their licence is checked; the repository holds only
   the structured rows used. CP3 can report how often the nurse's level matches the reference level.
 - Decided by: 張棨翔 (PO), pending team confirmation
+- Conditional support from 劉順松, explicitly confirmed 2026-11-24: simulation/demo only; source and version traceable; inputs and rules checked by a clinically qualified reviewer; no automatic final-level selection. This is not clinical validation or permission for patient care.
+- Implementation acceptance gates for #115: identify the exact official table/revision and rule IDs with provenance/licensing; do not mix outdated and revised rows. Official reference index: https://dep.mohw.gov.tw/doma/lp-5037-106-1-20.html (includes the 108.6.11 adult non-trauma amendment). No clinical thresholds in this proposal are certified by this review.
+- Use nurse-verified inputs for a reference calculation, or explicitly withhold a reference when required inputs are missing/unverified; do not silently turn an AI draft error into a level. Missing modifiers, conflicting/multiple matches and out-of-scope complaints must be visible, not treated as normal/default low acuity.
+- Keep the reference result separate from the nurse's final selection, with no auto-confirmation. Record the table version, input provenance, matched rule and final human choice in audit; invalidate stale references after input edits. Test absent data, boundary values, conflicting matches and stale inputs using nurse-checked cases before enabling the feature.
+- Other members must review these conditions; the proposal stays proposed until team confirmation. Clinical sign-off and #115 implementation are separate from this document review.
 
 ## 2026-11-24 — Exports stay copy text, print and JSON; no HIS integration
 - Status: accepted
