@@ -2,7 +2,7 @@
 - Date: 2026-11-22
 - Author: 張棨翔
 - Tool / model: Claude Code / Opus 5.5
-- PR: (to fill)
+- PR: #94
 
 ## Prompt
 Prepare the outside-team user tests for next week with as little question-and-answer burden on the participant as
@@ -18,9 +18,11 @@ own words, but the patient content must be fictional.
 - `docs/cp2/SCENARIO_CARDS.md`: S01, S03, S04 from `docs/SCENARIOS.md` as role-player cards, measured-values cards
   and answer keys.
 
-No sessions have been run; the protocol stays marked NOT CONDUCTED.
+At the initial preparation on 2026-11-22, no sessions had been run. The separate 2026-11-23 results entry records the author-reported U01/U02 questionnaires; missing facilitator metadata remains pending.
 
 ## Outcome
-- Kept: (to fill)
-- Changed: (to fill)
-- Rejected (and why): (to fill)
+- Kept: the protocol, questionnaire and scenario cards, or the author-reported answers, as listed in the output summary; pending session metadata stays explicit.
+- Changed: 2026-11-24 Codex review clarified valid API participant codes and the evidence boundary; no participant data was invented.
+- Rejected (and why): estimating missing timing, consent, roles or outside-team status; treating ratings as measured time savings.
+
+Review follow-up by Codex for 劉順松, explicitly authorized to complete integration on 2026-11-24. This completes observable artifact notes, not the original author's personal verification.

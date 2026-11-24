@@ -23,6 +23,8 @@ correct; pyannote later). Say two people have tested and more will follow.
 Nothing was filled in that the user did not report.
 
 ## Outcome
-- Kept: (to fill)
-- Changed: (to fill)
-- Rejected (and why): (to fill)
+- Kept: the protocol, questionnaire and scenario cards, or the author-reported answers, as listed in the output summary; pending session metadata stays explicit.
+- Changed: 2026-11-24 Codex review clarified valid API participant codes and the evidence boundary; no participant data was invented.
+- Rejected (and why): estimating missing timing, consent, roles or outside-team status; treating ratings as measured time savings.
+
+Review follow-up by Codex for 劉順松, explicitly authorized to complete integration on 2026-11-24. This completes observable artifact notes, not the original author's personal verification.

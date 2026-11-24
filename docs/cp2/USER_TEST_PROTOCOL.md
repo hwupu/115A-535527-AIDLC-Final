@@ -12,7 +12,7 @@ The participant does one task with the tool and answers five short questions. Ev
 ## Before the session (facilitator)
 
 - Pick a fictional scenario (S01, S03 or S04 in `SCENARIO_CARDS.md`) and give a teammate its role-player card to play the patient. The patient answers only from the card and says 「不知道」 or 「沒有」 to anything not on it. The facilitator keeps the measured-values card (read out when the nurse measures) and the answer key (never shown to the nurse).
-- Open the admin screen (evaluation mode) and create a run with an anonymous code (U01, U02, …); the participant uses the nurse screen on the facilitator's laptop via `localhost`, so no HTTPS is needed.
+- Open the admin screen (evaluation mode) and create a run with an API-compatible anonymous participant code (N-01, N-02, …; the API requires N- followed by two digits). U01/U02 below are document session labels, not valid API participant codes; record their actual N-xx mapping from the facilitator, never infer a past mapping; the participant uses the nurse screen on the facilitator's laptop via `localhost`, so no HTTPS is needed.
 - Note the software revision, prompt version and model.
 
 ## Consent (read aloud, about 30 seconds)
@@ -87,3 +87,8 @@ never estimated. Follow-up: #101.
 ## Measures
 
 Report per participant: time to confirm, edit count, and AI drafts against the scenario card (correct, wrong, missing, filled although not said), plus the three ratings and the open answers. A wrong vital sign, 量測禁忌 or TOCC value is a safety finding even if the nurse caught it. No statistical significance claims with this small sample. Do not mix machine inference latency with human task time. If model failure forces manual entry, include that time.
+
+
+## 2026-11-24 review boundary
+
+U01/U02 are author-reported questionnaire records. This review did not observe the sessions or independently verify outside-team status, consent, date or scenario. Those fields remain pending in #101. Until the facilitator supplies them, merging these documents does not certify the two qualifying outside-team prototype sessions are fully evidenced. Do not infer task-time improvement from the subjective ratings, or replace missing observations with estimates.
