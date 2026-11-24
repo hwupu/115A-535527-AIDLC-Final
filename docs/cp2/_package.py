@@ -5,7 +5,7 @@ Usage: python3 docs/cp2/_package.py
 Layout: Group01_CP2/README.md (this folder's README: where to start, deliverables table), the report (.md and
 .pdf), repository_link.txt, and the deliverable files under repository/ with their repository paths.
 Files are taken from the committed HEAD, so the zip matches GitHub. Two local files are added if present (both
-git-ignored): docs/cp2/Group01_CP2_Report.pdf and docs/cp2/contributor-graph.png. The script warns about unfinished
+git-ignored): docs/cp2/Group01_CP2_Report.pdf and docs/cp2/CONTRIBUTOR_GRAPH.png. The script warns about unfinished
 parts but still builds, so the team can check a draft.
 """
 import subprocess
@@ -31,7 +31,7 @@ DELIVERABLES = [
     "eval/run_prompt_suite.py",
     "eval/metrics.py",
 ]
-LOCAL_EXTRAS = ["docs/cp2/Group01_CP2_Report.pdf", "docs/cp2/contributor-graph.png"]
+LOCAL_EXTRAS = ["docs/cp2/Group01_CP2_Report.pdf", "docs/cp2/CONTRIBUTOR_GRAPH.png"]
 
 
 def git(*args: str) -> bytes:

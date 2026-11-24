@@ -7,6 +7,15 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — AI usage guidelines v0.3 approved
+- Status: accepted
+- Context: v0.3 (#98) rewrote three rules so they can be checked from a PR, from the Week 12 lab evidence: PRs of
+  about 400 changed lines at most, an approval counts only with a written comment, and every PR fills in the
+  template's "AI assistance" section (#96). It was merged as a draft pending team ratification.
+- Decision: the team approves v0.3 as written. The "(proposed)" markers become "(v0.3)".
+- Consequences: reviewers check these three rules on every PR from now on; the PR template already asks for them.
+- Decided by: the team (recorded by 吳普軒)
+
 ## 2026-11-24 — One README, and course files kept in `docs/cp2/` (#97, #103)
 - Status: proposed by 吳普軒 (README area lead) in #103; pending review
 - Context: Group 03 found two conflicting quick starts in the Week 12 lab (`README.md` and `README_CP2.md`, #97). The

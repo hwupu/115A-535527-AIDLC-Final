@@ -73,7 +73,7 @@ submission/
 playwright-report/
 test-results/
 
-# Generated report PDF and contributor-graph screenshot stay local; the zip picks them up.
+# Generated report PDF and contributor graph screenshot stay local; the zip picks them up.
 docs/cp2/*.pdf
 docs/cp2/*.png
 
