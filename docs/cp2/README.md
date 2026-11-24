@@ -31,7 +31,7 @@ Paths are from the repository root. In the zip, the repository files are under `
 | 5 | AI usage guidelines, updated from Week 3 | `AI_USAGE_GUIDELINES.md` (v0.3, with the changes from v0.1 and v0.2) | ⚠️ Written. Needed: all four ratify v0.3, recorded in `DECISIONS.md` |
 | 6 | Prompt test suite: 10+ cases, one fail → fix → re-run cycle | `eval/cases.json` (14 cases), `eval/run_prompt_suite.py`; raw outputs in `docs/cp2/evidence/` | ✅ Done |
 | 7 | `DECISIONS.md`, up to date | `DECISIONS.md` | ⚠️ Needed: Week 9 (劉順松) and Week 10 (林均澔) steward entries; walking-skeleton line; merge-day outcome |
-| 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/contributor-graph.png` | ⚠️ Link works. Needed: screenshot after merge day. Note: Claude shows as a contributor (co-author lines) and #73 doesn't count (see report §8) |
+| 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/contributor-graph.png` | ✅ Screenshot taken 2026-11-24 (before merge day). Retake after merge day if the team wants the final numbers. Claude shows as a contributor (co-author lines) and #73 doesn't count (see report §8) |
 | 9 | Walking skeleton pull request | Worksheet `docs/cp2/WALKING_SKELETON.md`; merged PR linked in the report | ❌ Session not held (planned 11/26). Needed: session, merged PR reviewed by the steward, filled worksheet |
 | 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ❌ Plan drafted in `DECISIONS.md`. Needed: session after the skeleton, outcome, filled worksheet |
 
