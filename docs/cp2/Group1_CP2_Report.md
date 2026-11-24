@@ -1,112 +1,85 @@
-# Group1 - Checkpoint 2
+# Group1 - Checkpoint 2 Review Report
 
-## AI Voice Triage Handoff Assistant
+AI Voice Triage Handoff Assistant | CSIC30216 | Updated 2026-11-24
 
-### LOCAL REVIEW CANDIDATE - HUMAN EVIDENCE PENDING
+吳普軒 314553047; 張棨翔 414551004; 劉順松 414551016; 林均澔 112550026
 
-Group1 
-<br>Prepared: 2026-11-04 | Course: CSIC30216 | 
-<br>吳普軒 | 314553047 
-<br>張棨翔 | 414551004 
-<br>劉順松 | 414551016
-<br>林均澔 | 112550026
-
-
-The user confirmed instructor approval of the topic. This package contains a locally runnable technical candidate, reproducible machine tests, prompt revision evidence and a plan for required human evaluation. It has not been submitted to E3 or approved/merged by the team.
-
-### Problem and intended outcome
-
-Triage nurses describe writing notes and re-entering them later; physicians receive incomplete handoffs and re-ask questions. The tool transcribes a simulated conversation, proposes source-linked fields, asks the nurse to review, and lets the physician read the confirmed record in a separate browser.
-
-### Evidence boundary
-
-The two CP1 interviews establish discovery context. They are not prototype usability sessions. No external-user CP2 session was conducted during this run. The reported extra 2-3 minutes per patient is an interview estimate, not a measured baseline. No time-saving or clinical-safety claim is made.
+**REVIEW CANDIDATE - required human evidence remains pending. Not submitted to E3.**
 
 Repository: https://github.com/hwupu/115A-535527-AIDLC-Final
 
-Official CP2: https://csic30216-fall26.denniswang.net/project/cp2/
+Official requirements: https://csic30216-fall26.denniswang.net/project/cp2/
 
-## 1. What the candidate implements
+Deadline: Sunday 2026-11-29, end of day. The Week 12 peer review was scheduled for November 23. This report updates the November 4 technical candidate; it does not imply the later shared activities have happened.
 
-| Component | Implemented behavior |
-| --- | --- |
-| Vue interface | Upstream patient, nurse, doctor and admin workflow integrated locally from the existing PR stack; upstream authorship is preserved. |
-| Session API | Real shared session lifecycle, SIM visit numbers, source fields, per-field edits and confirmation, ETag list polling and read-only confirmed reports. |
-| Persistence / audit | SQLAlchemy SQLite records and initial Alembic migration. Before/after field values and confirmation events persist; active-session deletion removes linked active records. |
-| Speech | Real MediaRecorder whole clips, CPU int8 Whisper small and OpenCC s2twp. Audio is decoded in memory; no default audio persistence. |
-| AI | Local Qwen/Qwen2.5-0.5B-Instruct CPU adapter. v3 selects literal quotes for six fields; deterministic grounding and API validation follow. |
-| Evaluation / export | Anonymous run codes, task timing/events, JSON/CSV and confirmed-report JSON/text export. |
+## 1. Product, workflow and implementation
 
-The nurse owns the triage decision. AI never writes that field. The physician report endpoint returns 409 until confirmation. No clinical alerts, diagnosis, treatment or HIS integration are claimed. Fields outside the small v3 extraction scope remain manually editable.
+The prototype addresses duplicate triage documentation and incomplete nurse-to-physician handoff, grounded in two CP1 interviews. The reported extra 2-3 minutes was an interview estimate, not a measured baseline. CP1 interviews are not CP2 prototype usability sessions.
 
-Local access is not authentication. Roles are demo routes and anyone with API access can impersonate them. Bind to localhost and use fictional data only. The original Gemma-4 runtime is not deployed or benchmarked; Qwen is a local validation proposal requiring team ratification.
+| Component | Current behavior |
+|---|---|
+| Shared web workflow | Patient, nurse, physician and evaluation interfaces; real session API; nurse checks and confirms fields before the doctor reads the report |
+| Persistence | SQLAlchemy/SQLite with Alembic; before/after nurse edits, confirmation and evaluation events; active-session deletion |
+| Speech | Whole MediaRecorder clips processed after stop; Whisper small default, medium for recorded workstation comparisons; OpenCC conversion and timestamps |
+| Extraction | Local Ollama; gemma3:1b default, gemma4:e4b in recorded workstation experiments; prompt v5 for all allowed fields; older v1-v4 retained |
+| Validation | Known-field schema and source containment; nurse ownership; numeric label/date/home-reading guards added during #95 review |
+| Export | Confirmed report text/JSON and ED-style printout (#99); evaluation JSON/CSV |
 
-## 2. Verification and scope of evidence
+The nurse alone assigns triage level. AI does not diagnose, recommend treatment or write to a real HIS. Roles are demonstration interfaces, not authentication. Use localhost and fictional data only. Source containment does not prove semantic correctness; every draft requires review. The Qwen2.5 CPU adapter was the earlier November 4-21 implementation, not the current Ollama model.
 
-| Check | Observed evidence |
-| --- | --- |
-| Frontend | 34 tests, plus lint, typecheck and production build; logs in evidence/. |
-| Backend / model guards | API workflow, persistence, audit, confirmation, invalid input, ETag, evaluation lifecycle and deletion. Model transport is mocked in unit tests; real inference is separate. |
-| Browser | Two independent nurse/doctor contexts, two tablet dimensions, actual-model typed-input path and synthetic-microphone MediaRecorder/Whisper path. See browser-tests.json. |
-| Prompt | 12 synthetic development cases; v2 4/12, v3 8/12 whole cases passing. |
-| Speech | One local Hanhan synthetic TTS clip. tiny/base misrecognize travel history; small recovers the intended content with punctuation differences. |
-| External users | NOT CONDUCTED. No measured human task-time or handoff-question outcome. |
-| Docker | Configuration checked separately; daemon/build not verified in this run. Windows direct launch is the tested path. |
+## 2. Evaluation evidence and its limits
 
-Final command checks recorded: 11; nonzero exits: 0. Consult logs for exact counts and warnings; passing these checks does not replace human evaluation.
+| Evidence | What it supports and does not support |
+|---|---|
+| November 4 Qwen development suite | v2 4/12 and v3 8/12 whole-case passes; shape failure led to copied quotes plus adapter; historical, not Gemma results |
+| November 22 Ollama experiments | gemma4:e4b v3 10/12, v4 9/12, v5 10/12 on T01-T12; raw outputs in docs/cp2/evidence; T13/T14 expand full-field development coverage |
+| v5 field scoring | 36/43 in the recorded run uses exact typed values but loose free-text presence/grounding; this is not semantic or clinical accuracy |
+| November 24 guard regression | Labelled numeric matching, invalid-calendar-date rejection and home-vital filtering. Integrated API/eval 26 tests and LLM 29 passed before closeout document work |
+| Speech comparison | One-speaker plain/masked comparison recorded by the team: medium reduced CER on those fixtures; ordering/practice and small sample limit inference |
+| Current closeout validation | 134 tests passed (web 76, API 23, STT 3, LLM 29, metrics 3), plus lint/typecheck/build. Exact exit status, source scope and warnings are recorded in evidence/2026-11-24-closeout/verification.json; do not substitute historical checks for current ones |
 
-The browser actions are automation of simulated roles, not real two-person user research. TTS is not a consenting real speaker. The small development suite is neither held out nor nurse-reviewed.
+The 2026-11-22 real-model outputs predate the new numeric/date guards. No new Gemma run or current accuracy claim is made by this closeout. The small default model often omits fields; tests are development cases, not held-out clinical validation. Unit tests use explicit fake model transport. Browser contexts and synthetic audio are not human user research. Human time saving, error catch rate and safety remain unestablished.
 
-## 3. Prompt revision and honest results
+The revised evaluation plan proposes a low-burden CP2 tool task plus feedback and a separate non-author fresh-copy check, based on Group03 setup feedback (#97). Formal counterbalanced paper-versus-tool timing remains CP3 work; proposals need human confirmation.
 
-Observed failure: v2 asked for nested objects containing value and source_span. On T01, the model returned flat values; validation rejected them and none of the three reference fields matched.
+## 3. U01 and U02: reported feedback, incomplete metadata
 
-Change: v3 explicitly asks the model to copy raw phrases. A deterministic adapter checks exact quote containment and normalizes selected field types. T01 then matched cough, yesterday and negative travel history (3/3). Both versions and raw outputs are preserved; no failures were deleted.
+#94 and #101 report two questionnaire records, labelled U01 and U02. Both gave 5/5/5 for perceived speed, draft visibility and willingness to use. These ratings are subjective, with only two respondents; they do not establish measured improvement or broad acceptance.
 
-| Case | Type | v3 outcome |
-| --- | --- | --- |
-| T01 | typical | PASS |
-| T02 | typical | FAIL - reference mismatch / misclassification |
-| T03 | edge | FAIL - reference mismatch / misclassification |
-| T04 | typical | PASS |
-| T05 | safety | PASS |
-| T06 | correction | FAIL - invalid output |
-| T07 | safety | PASS |
-| T08 | injection | PASS |
-| T09 | boundary | PASS |
-| T10 | typical | PASS |
-| T11 | empty | PASS |
-| T12 | edge | FAIL - reference mismatch / misclassification |
+| Reported feedback | Response and current status |
+|---|---|
+| U01: more formal PDF / hospital-system integration | #99 printout implemented; retest unknown. Direct HIS writes remain excluded |
+| U01: several devices at once | #100 load testing proposed; no new load result claimed |
+| U02: distinguish speaker roles | #102 content-based labels with nurse correction proposed; voice diarization deferred |
+| U02: summary accuracy | #45 formal evaluation and #89 vocabulary work; source checks alone do not establish accuracy |
 
-8/12 whole-case passes include empty/safety abstentions; this is not 90% field accuracy. T02/T12 classify travel as chief complaint, T03 differs from the strict expected wording, and T06 fails correction parsing. Source containment is necessary but not proof that a quote supports its assigned field. Human review remains essential.
+Participant backgrounds, outside-team confirmation, actual dates, consent, task/scenario, version, observed behavior and assistance have not been supplied. The preparation author did not witness these sessions. Until the facilitator confirms them, the two qualifying outside-team prototype sessions are not fully evidenced.
 
-## 4. External-user evaluation plan
+USER_TEST_FOLLOWUP.md separates the existing quotes from every missing field. Use actual forms/logs; write not recorded where necessary. If the contacts were feedback-only conversations, report them honestly and arrange replacement prototype sessions if feasible. The API accepts N-xx participant codes; U01/U02 are document labels and their historical mapping is unknown. No missing date, consent or observation is invented.
 
-Required before CP2: conduct at least two prototype testing sessions with real users outside the team. Record anonymous role, actual date, consent, software version, task, observations and design changes. The blank protocol is in docs/cp2/USER_TEST_PROTOCOL.md.
+## 4. Collaboration, review and decisions
 
-Use fictional matched cases: baseline paper note plus simulated record entry versus this tool, with the same complete-handoff stopping point. Counterbalance method order across participants. Include manual fallback and failures in time measurements rather than excluding them.
+| Member | Merged code examples | Written approval examples |
+|---|---|---|
+| 吳普軒 | #56, #70, #71, #74 | #73, #85 |
+| 張棨翔 | #84, #85, #91, #95 | #80, #81, #82 |
+| 劉順松 | #73, #80 | #74, #94, #95, #96, #98 |
+| 林均澔 | #81, #82 | #75, #90, #91, #94 |
 
-| Measure | How it will be reported |
-| --- | --- |
-| Time saving | Raw baseline and tool seconds per participant; median/range; (baseline-tool)/baseline. NOT MEASURED yet. |
-| Handoff quality | Missing/wrong fields and repeated clarification questions; actual examples and their consequences. NOT MEASURED yet. |
-| Interaction design | Observed confusion, assistance needed, changed design and retest. No invented quotes. |
-| HPI scoring | Nurse-reviewed key-element rubric per scenario. NOT FINALIZED. |
+Formal review snapshots and links are in COLLABORATION.md and evidence/2026-11-24-closeout/review-snapshot.json. These replace stale November 19 counts. The instructor assesses substantive contribution and actual steward service; empty approvals do not count, and a written review alone does not prove role timing or personal understanding.
 
-Complete these results before replacing the current missing-evidence statement. CP1 interviews and screenshots cannot substitute for these sessions. The original 30% time reduction and 90% field targets remain proposed goals.
+Week 11 handover is recorded. 劉順松 is current Week 12 steward; observed agent-assisted review/correction/approval/merge actions are dated in DECISIONS.md. Week 9 and Week 10 historical execution evidence remains unprovided. AI assistance is disclosed, not represented as independent student authorship or other members' actions.
 
-## 5. Team review and submission checklist
+#96 updates the PR template; #98 adds checkable AI rules. Proposed clauses remain pending human ratification. #94/#95/#96/#98 are merged, but those agent-assisted merges are not the required four-member merge-day session.
 
-| Item | Next human action |
-| --- | --- |
-| Model / design | Ratify or replace CPU Qwen adapter and restricted-field scope. Review actual failures and safety limits. |
-| Individual contributions | Each of four students needs two substantive merged code PRs by CP2. This local uncommitted work is not proof for all members. |
-| Steward reviews | Each student needs two approvals with substantive comments and at least one recorded steward term. AI does not approve PRs. |
-| Walking skeleton | Four actual participants, code touched by each, merged PR link. This run did not conduct the mandatory joint session. |
-| Merge day | Actual Week 11 meeting, dependency/conflict plan, stable main and DECISIONS entry. Do not prefill attendance/results. |
-| External testing | At least two actual sessions and findings integrated into design rationale/evaluation. |
-| E3 | One Group1_CP2 ZIP with repository-link text. |
+Walking skeleton (#77) is planned for Thursday 2026-11-26, time unconfirmed. 劉順松 plans to operate locally and accompany the online session; teammates support facilitation and integration. This is not completed attendance. All four must trace the path, build the next slice, review together and record reflections. #80 was already merged preparation, not that event. Merge day (#78) follows, including a fresh-copy run by a non-steward. Teacher worksheets remain blank until the actual sessions.
 
-Run scripts/start-cp2.ps1 -Setup to launch; scripts/check-cp2.ps1 for checks. Read README_CP2.md and the Traditional-Chinese START_HERE guide. The review ZIP excludes .env, .git, model weights, local database, virtual environments and installed tools. Review source, machine evidence and hashes before upload.
+## 5. Reproduction, handoff and remaining submission work
 
-### Status: TECHNICAL CANDIDATE COMPLETE FOR REVIEW; FULL CP2 HUMAN EVIDENCE STILL OUTSTANDING.
+README.md contains the single quick start. Install Git, Node 24/pnpm, Python 3.12/uv and local Ollama; pull the selected model. Use start-cp2.sh --setup on macOS/Linux or start-cp2.ps1 -Setup on Windows. Script-launched Python services use process environment variables; Compose and Vite read .env according to their configuration. Keep every local model run's actual model, prompt and revision.
+
+CLOSEOUT_STATUS.json keeps unresolved human-evidence gates explicit. The packaging script includes the repository link, source, report Markdown/PDF, checksums and review status. Default output is a review candidate; --require-complete refuses a final-mode package while required evidence is pending. A successful archive/hash check is not proof of user studies or collaboration.
+
+Before E3: facilitator completes real U01/U02 evidence; four members conduct walking skeleton then merge day; confirm policy/evaluation proposals and personal steward evidence; a non-author validates README on a fresh copy; review the final report and exact ZIP; confirm group naming and uploader; submit to E3 before November 29 ends. No E3 upload has been performed here.
+
+AI disclosure: Codex assisted implementation, tests, reviews and document preparation at 劉順松's request. Humans retain acceptance and authorship responsibility, must understand retained work, and supply actual research/activity evidence. This report does not certify clinical deployment readiness.

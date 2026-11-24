@@ -7,6 +7,21 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 - Week 12 steward actions and future merge plan
+- Status: observed repository actions plus a proposed future plan; not joint-session minutes.
+- Human owner: 劉順松 (current Week 12 steward). On explicit instruction, Codex reviewed, corrected and approved/merged #96 -> #98 -> #95 -> #94, with written review records. #95 fixes cover labelled values, home vitals and invalid dates; #94 fixes clarify participant codes and unverified metadata. Integrated API/eval 26 tests and LLM 29 passed on that revision; latest premerge CI passed.
+- Authorship boundary: these were AI-assisted actions under the user's account, not a claim of independent personal line-by-line review or four-member collaboration. Week 9 actions have not been supplied; no retrospective service is invented. Week 10 remains for the actual participant to confirm.
+- Proposed next decision: use one reproducible quick start and a non-author fresh-copy check to address #97. Evaluate CP2 with one tool task and honest feedback, retaining formal timing comparison for CP3. Team acceptance remains pending.
+- Alternative rejected in preparation: claiming current Qwen/v3 or no merged code for 劉順松/林均澔 from stale November 4/19 documents; inventing missing user metadata.
+
+### Future merge-day plan (prepared before the session; not executed)
+- Target: after the 2026-11-26 walking skeleton, before E3. Exact start and attendees unconfirmed.
+- At planning baseline 48a41b8, no open PRs remained after the four merges. The closeout branch and the session's new skeleton PR must be enumerated with the live open-PR list at the call.
+- Order: complete the genuine skeleton slice and review first; then reviewed independent documentation/startup work; any shared contract change before consumers. Run tests and the primary task after each merge, stop on failure. Do not add new features during merge day.
+- Expected overlap: DECISIONS.md, README and CP2 report. Preserve separate dated decisions; do not overwrite teammate notes. Rotate drivers and require explanation of any AI conflict suggestion.
+- Done: clean main; every open PR merged or closed with reason; a non-steward clones fresh and completes nurse confirmation -> doctor report from README only; actual outcome and reflection recorded in docs/merge_day.md.
+- Outcome, driver rotation, fresh-copy tester, result and evidence: PENDING ACTUAL SESSION. Agent-only merges on 2026-11-24 do not satisfy this activity.
+
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted
 - Context: an outside-team participant (U02, #101) asked for the conversation's speaker roles. Today every line
