@@ -160,3 +160,28 @@ describe("patient intake, one question at a time", () => {
     expect(Object.values(store.answers).every((a) => !("status" in a) && !("triage_level" in a))).toBe(true);
   });
 });
+
+
+it("review regression: rapid answers share one pending session creation", async () => {
+  const original = api.createSession.bind(api);
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  const spy = vi.spyOn(api, "createSession").mockImplementation(async (role) => {
+    await gate;
+    return original(role);
+  });
+  const first = store.answerText("咳嗽");
+  store.next();
+  const second = store.answerText("昨天");
+  const calls = spy.mock.calls.length;
+  release();
+  await Promise.all([first, second]);
+  spy.mockRestore();
+  expect(calls).toBe(1);
+  await store.finish();
+  const segments = await transcriptOf(store.visitNo);
+  expect(segments.map((s) => s.text)).toEqual([
+    `問：${questions[0].text} 答：咳嗽`,
+    `問：${questions[1].text} 答：昨天`,
+  ]);
+});

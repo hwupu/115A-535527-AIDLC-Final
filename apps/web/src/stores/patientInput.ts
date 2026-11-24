@@ -40,6 +40,7 @@ export const usePatientInputStore = defineStore("patientInput", () => {
   const offline = ref(false);
   const recorder = useRecorder();
   let sessionId: string | null = null;
+  let sessionCreation: Promise<string> | null = null;
   let conn: RealtimeConnection | null = null;
   let inflight = new Set<Promise<boolean>>();
   let unsent: string[] = []; // lines that failed to send, retried in order on finish
@@ -60,8 +61,13 @@ export const usePatientInputStore = defineStore("patientInput", () => {
 
   // The session is created lazily on the first answer, so opening the screen writes nothing.
   async function ensureSession() {
-    if (!sessionId) sessionId = (await api.createSession("patient")).session_id;
-    return sessionId;
+    if (sessionId) return sessionId;
+    // Fast navigation can send the next answer while creation is still pending.
+    // Share that request so every answer stays in one encounter.
+    sessionCreation ??= api.createSession("patient")
+      .then((created) => (sessionId = created.session_id))
+      .finally(() => { sessionCreation = null; });
+    return sessionCreation;
   }
 
   function ensureConnection(id: string) {
@@ -234,6 +240,7 @@ export const usePatientInputStore = defineStore("patientInput", () => {
     offline.value = false;
     finishing.value = false;
     sessionId = null;
+    sessionCreation = null;
     inflight = new Set();
     unsent = [];
     sentLines = new Set();
