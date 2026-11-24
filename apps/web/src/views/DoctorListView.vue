@@ -6,6 +6,8 @@ import RoleHeader from "@/components/common/RoleHeader.vue";
 import { Badge } from "@/components/ui/badge";
 import { usePolling } from "@/composables/usePolling";
 import { clock, statusLabel } from "@/lib/status";
+import { ref } from "vue";
+import ShortcutHelp from "@/components/common/ShortcutHelp.vue";
 import { useShortcuts } from "@/composables/useShortcuts";
 import { useDoctorStore } from "@/stores/doctor";
 
@@ -21,7 +23,18 @@ function move(step: number) {
   const i = links.indexOf(document.activeElement as HTMLElement);
   links[i < 0 ? (step > 0 ? 0 : links.length - 1) : Math.min(links.length - 1, Math.max(0, i + step))].focus();
 }
-useShortcuts(() => ({ ArrowDown: () => move(1), ArrowUp: () => move(-1) }));
+const helpOpen = ref(false);
+const shortcutItems = [
+  { keys: "↑ ↓", action: "選病患" },
+  { keys: "Enter", action: "打開選到的病患" },
+  { keys: "?", action: "顯示／隱藏這個說明" },
+];
+useShortcuts(() => ({
+  ArrowDown: () => move(1),
+  ArrowUp: () => move(-1),
+  "?": () => (helpOpen.value = !helpOpen.value),
+  Escape: () => (helpOpen.value = false),
+}));
 </script>
 
 <template>
@@ -51,4 +64,5 @@ useShortcuts(() => ({ ArrowDown: () => move(1), ArrowUp: () => move(-1) }));
       </li>
     </ul>
   </main>
+  <ShortcutHelp v-model:open="helpOpen" class="fixed right-6 bottom-6 z-10" :items="shortcutItems" />
 </template>

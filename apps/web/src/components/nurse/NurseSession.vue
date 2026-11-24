@@ -121,7 +121,6 @@ function select(path: string) {
   <!-- 4rem = role header, so the confirm bar starts at the bottom of the screen. -->
   <div class="flex min-h-[calc(100dvh-4rem)] flex-col">
     <div class="grid gap-2 px-4 pt-3 print:hidden">
-      <div class="flex justify-end"><ShortcutHelp v-model:open="helpOpen" :items="shortcutItems" note="檢傷級數沒有快捷鍵，請在畫面上選。" /></div>
       <ConnectionBanner :connection="connection" />
       <p v-if="error" class="rounded-lg border border-destructive bg-card px-3 py-2 text-lg font-semibold text-destructive" role="alert">{{ error }}</p>
       <ConsentGate v-if="consent === 'unknown' && !confirmed" :consent="consent" @set="store.setConsent" />
@@ -156,7 +155,8 @@ function select(path: string) {
           <Button type="submit" :disabled="!note.trim()">加入</Button>
         </form>
       </div>
-      <div class="content-start gap-3" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
+      <!-- pb-16: room for the floating 鍵盤快捷鍵 button, so the last field can scroll out from under it. -->
+      <div class="content-start gap-3 pb-16" :class="tab === 'report' ? 'grid' : 'hidden lg:grid'">
         <SafetyBanner :fields="fields" @edit="store.editField" />
         <FlagList :flags="flags" />
         <ChecklistPanel :fields="fields" @jump="jump" />
@@ -170,16 +170,18 @@ function select(path: string) {
       <Button variant="outline" class="w-fit print:hidden" @click="leave">下一位</Button>
     </div>
 
-    <ConfirmBar
-      v-if="!confirmed"
-      class="sticky bottom-0"
-      :level="triageLevel"
-      :drafts="drafts"
-      :blockers="blockers"
-      :busy="busy"
-      @update:level="store.setTriageLevel"
-      @confirm="store.confirmSession"
-      @jump="jump"
-    />
+    <!-- The shortcut call to action floats at the bottom right, just above the confirm bar. -->
+    <div v-if="!confirmed" class="sticky bottom-0 z-10">
+      <ShortcutHelp v-model:open="helpOpen" class="absolute right-4 bottom-full mb-3" :items="shortcutItems" note="檢傷級數沒有快捷鍵，請在畫面上選。" />
+      <ConfirmBar
+        :level="triageLevel"
+        :drafts="drafts"
+        :blockers="blockers"
+        :busy="busy"
+        @update:level="store.setTriageLevel"
+        @confirm="store.confirmSession"
+        @jump="jump"
+      />
+    </div>
   </div>
 </template>
