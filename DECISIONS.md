@@ -8,7 +8,7 @@ missed.
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
 ## 2026-11-24 — TTAS reference level filled in by a rule table, never by the LLM; the nurse decides
-- Status: proposed (PO direction 2026-11-24; the team confirms in the PR review)
+- Status: accepted (PO direction 2026-11-24; approved in the #116 review by 吳普軒 and 劉順松, 2026-11-25)
 - Context: outside-team participant U04 (physician, #101) suggested filling in the triage level from the chief
   complaint by the TTAS criteria (急診五級檢傷分類基準), since in practice choosing the complaint mostly sets the
   level. The project rule so far: the nurse decides 檢傷級數 and the AI never does. TTAS is not one level per
@@ -27,7 +27,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   are. The first version covers the complaints in S01, S03 and S04 and the vitals-based criteria; the rest of the
   table follows. The TTAS PDFs stay out of the repository until their licence is checked; the repository holds only
   the structured rows used. CP3 can report how often the nurse's level matches the reference level.
-- Decided by: 張棨翔 (PO), pending team confirmation
+- Decided by: 張棨翔 (PO); confirmed by 吳普軒 and 劉順松
 - Conditional support from 劉順松, explicitly confirmed 2026-11-24: simulation/demo only; source and version traceable; inputs and rules checked by a clinically qualified reviewer; no automatic final-level selection. This is not clinical validation or permission for patient care.
 - Implementation acceptance gates for #115: identify the exact official table/revision and rule IDs with provenance/licensing; do not mix outdated and revised rows. Official reference index: https://dep.mohw.gov.tw/doma/lp-5037-106-1-20.html (includes the 108.6.11 adult non-trauma amendment). No clinical thresholds in this proposal are certified by this review.
 - Use nurse-verified inputs for a reference calculation, or explicitly withhold a reference when required inputs are missing/unverified; do not silently turn an AI draft error into a level. Missing modifiers, conflicting/multiple matches and out-of-scope complaints must be visible, not treated as normal/default low acuity.
@@ -53,6 +53,23 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Consequences: no vector store or document index to build or evaluate. Revisit only if a later feature needs the
   model to use outside knowledge, which the current safety rules do not allow.
 - Decided by: 張棨翔 (PO)
+
+## 2026-11-24 — Patient questions: answers saved with their question in the frontend; questions read aloud (#86, #109)
+- Status: accepted (proposed by 吳普軒, frontend area lead, in #109; confirmed by PO 張棨翔 on 2026-11-25 after testing
+  it on the workstation demo)
+- Context: #86 asked to save each answer together with its question so a short answer like 「沒有」 maps to the right
+  field, either through a new `question` field on the input API or by the frontend. The same issue put reading
+  questions aloud out of scope (PO, 2026-11-22). We wanted a working demo before changing the API.
+- Decision: the frontend writes each answer as `問：<question> 答：<answer>` through the existing input API; for a
+  spoken answer it sends `問：<question>` when recording starts and the transcript follows. No API change. The fixed
+  questions (v1, 林均澔's draft) are also read aloud from pre-made mp3 files (macOS voice Meijia,
+  `scripts/make-question-audio.sh`, Git LFS); only the fixed question text is read, never AI output.
+- Rejected: adding `question` to the API now (needs backend work before the demo; can still be added later); speech
+  generated in the browser at run time (not chosen: pre-made files sound the same on every device).
+- Consequences: reverses the 2026-11-22 "no voice for now" scope; the pre-made voice stays in use. The prompt is
+  unchanged but the transcript format is new, so it still needs a real-model check and an `eval/cases.json` case.
+  Apple's voice licence should cover only personal, non-commercial use; change the voice before any other use.
+- Decided by: 吳普軒 (proposal), 張棨翔 (PO, confirmed 2026-11-25)
 
 ## 2026-11-24 — Whisper on the GPU first, CPU fallback (#88)
 - Status: accepted
