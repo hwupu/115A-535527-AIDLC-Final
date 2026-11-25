@@ -3,13 +3,14 @@
 // Narrow or portrait: the two columns become tabs. Every part below is replaceable behind its own contract.
 // 返回清單 and the 就診號 sit in the role header (NurseView.vue).
 import { storeToRefs } from "pinia";
-import { nextTick, onUnmounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
 import ChecklistPanel from "./ChecklistPanel.vue";
 import ConfirmBar from "./ConfirmBar.vue";
 import ConnectionBanner from "./ConnectionBanner.vue";
 import ConsentGate from "./ConsentGate.vue";
 import ExportPanel from "./ExportPanel.vue";
 import PrintRecord from "./PrintRecord.vue";
+import ShortcutHelp from "@/components/common/ShortcutHelp.vue";
 import RecorderPanel from "@/components/recorder/RecorderPanel.vue";
 import FlagList from "@/components/report/FlagList.vue";
 import ReportForm from "@/components/report/ReportForm.vue";
@@ -18,6 +19,8 @@ import TranscriptPanel from "@/components/transcript/TranscriptPanel.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRecorder } from "@/composables/useRecorder";
+import { useShortcuts } from "@/composables/useShortcuts";
+import { fieldDefs } from "@/report/schema";
 import { useNurseSessionStore } from "@/stores/nurseSession";
 
 const store = useNurseSessionStore();
@@ -53,6 +56,64 @@ async function jump(path: string) {
   await nextTick();
   document.getElementById(`field-${path}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
 }
+// Keyboard (#28): one hand on the keyboard while the other holds the patient or the cuff.
+// There is deliberately no key that sets the 檢傷級數: the nurse picks it on screen, so a stray key cannot set it.
+const helpOpen = ref(false);
+// The button goes into the role header; mounted on its own (component tests) there is no header and no button.
+const hasHeader = ref(false);
+onMounted(() => (hasHeader.value = document.getElementById("role-header-actions") !== null));
+const shortcutItems = [
+  { keys: "Space", action: "開始／停止錄音" },
+  { keys: "↑ ↓", action: "在欄位之間移動" },
+  { keys: "Enter", action: "確認選到的 AI 草稿" },
+  { keys: "E", action: "修改選到的欄位（Esc 取消）" },
+  { keys: "N", action: "跳到下一個未確認的 AI 草稿" },
+  { keys: "Esc", action: "取消選取" },
+  { keys: "?", action: "顯示／隱藏這個說明" },
+];
+async function moveTo(path: string) {
+  // Leave the last tapped button, so Enter means 「確認 the selected field」 and not 「press that button again」.
+  (document.activeElement as HTMLElement | null)?.blur?.();
+  tab.value = "report";
+  store.selectField(path);
+  await nextTick();
+  document.getElementById(`field-${path}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function moveBy(step: number) {
+  const i = fieldDefs.findIndex((d) => d.path === selectedPath.value);
+  const next = i < 0 ? (step > 0 ? 0 : fieldDefs.length - 1) : Math.min(fieldDefs.length - 1, Math.max(0, i + step));
+  void moveTo(fieldDefs[next].path);
+}
+function nextDraft() {
+  const i = fieldDefs.findIndex((d) => d.path === selectedPath.value);
+  const order = [...fieldDefs.slice(i + 1), ...fieldDefs.slice(0, i + 1)];
+  const d = order.find((x) => fields.value[x.path]?.status === "AI 草稿");
+  if (d) void moveTo(d.path);
+}
+function toggleRecording() {
+  // While the permission prompt is open, Space cancels like the 「取消」 button.
+  if (recorder.state.value === "recording" || recorder.state.value === "requesting") stopRecording();
+  else if (consent.value === "yes") void startRecording();
+}
+useShortcuts(() => ({
+  "?": () => (helpOpen.value = !helpOpen.value),
+  Escape: () => (helpOpen.value ? (helpOpen.value = false) : store.selectField(null)),
+  ...(confirmed.value
+    ? {}
+    : {
+        " ": toggleRecording,
+        ArrowDown: () => moveBy(1),
+        ArrowUp: () => moveBy(-1),
+        n: nextDraft,
+        ...(selectedPath.value
+          ? {
+              Enter: () => selectedPath.value && fields.value[selectedPath.value]?.status === "AI 草稿" && store.confirmField(selectedPath.value),
+              e: () => document.querySelector<HTMLElement>(`[id="field-${selectedPath.value}"] [data-action="edit"]`)?.click(),
+            }
+          : {}),
+      }),
+}));
+
 function select(path: string) {
   store.selectField(selectedPath.value === path ? null : path);
   if (window.innerWidth < 1024 && selectedPath.value) tab.value = "transcript";
@@ -122,5 +183,10 @@ function select(path: string) {
       @confirm="store.confirmSession"
       @jump="jump"
     />
+
+    <!-- 鍵盤快捷鍵 sits in the role header next to 切換角色 (NurseView.vue renders the header). -->
+    <Teleport v-if="hasHeader && !confirmed" to="#role-header-actions">
+      <ShortcutHelp v-model:open="helpOpen" :items="shortcutItems" note="檢傷級數沒有快捷鍵，請在畫面上選。" />
+    </Teleport>
   </div>
 </template>
