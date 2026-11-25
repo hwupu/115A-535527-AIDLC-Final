@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "source": "#86 林均澔 整理稿 v1（待護理師確認），依 docs/references/醫院檢傷問診病人查核表.md",
+  "questions": [
+    { "id": "q01", "text": "這次是哪裡不舒服，才來急診的呢？", "fields": ["chief_complaint", "hpi.location", "hpi.quality"] },
+    { "id": "q02", "text": "這個不舒服是從什麼時候開始的？後來有變好還是變嚴重嗎？", "fields": ["hpi.onset", "hpi.course"] },
+    { "id": "q03", "text": "現在有發燒、咳嗽，或其他感冒的症狀嗎？", "fields": ["tocc.fever_cough_cold"],
+      "followUp": { "id": "q03f", "text": "是哪些症狀？" } },
+    { "id": "q04", "text": "最近兩個月內，有出國，或到國內其他地方旅遊嗎？", "fields": ["tocc.travel"],
+      "followUp": { "id": "q04f", "text": "去了哪裡？什麼時候回來的？" } },
+    { "id": "q05", "text": "請問您的工作是什麼？（學生、退休也可以）", "speak": "請問您的工作是什麼？學生、退休也可以。", "fields": ["tocc.occupation"] },
+    { "id": "q06", "text": "最近身邊的人（家人、同事、同學）有人發燒、咳嗽，或是好幾個人一起生病嗎？", "speak": "最近身邊的人，像是家人、同事、同學，有人發燒、咳嗽，或是好幾個人一起生病嗎？", "fields": ["tocc.contact", "tocc.cluster"],
+      "followUp": { "id": "q06f", "text": "是誰？大概是什麼情形？" } },
+    { "id": "q07", "text": "有沒有哪一隻手不能量血壓或打針？例如洗腎的管路、開過刀或受傷的手。", "fields": ["measurement.restrictions"],
+      "followUp": { "id": "q07f", "text": "是哪一隻手？為什麼？" } },
+    { "id": "q08", "text": "請問您的出生年月日？（例如：民國 70 年 5 月 14 日）", "speak": "請問您的出生年月日？例如，民國七十年五月十四日。", "fields": ["patient.dob"] },
+    { "id": "q09", "text": "今天有家人或朋友陪您來嗎？", "fields": ["patient.accompanied_by"],
+      "followUp": { "id": "q09f", "text": "是誰陪您來的？" } },
+    { "id": "q10", "text": "您現在可以自己走路嗎？還是需要輪椅？", "fields": ["patient.mobility"] }
+  ]
+}

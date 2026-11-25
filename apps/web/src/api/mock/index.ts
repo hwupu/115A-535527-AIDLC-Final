@@ -99,21 +99,22 @@ function runStep(s: MockSession, message: ServerMessage, nurseOnly: boolean) {
   broadcast(s, message, nurseOnly);
 }
 
-// Stands in for audio being transcribed. A patient recording yields only the patient's own lines (tagged as patient input),
-// never the nurse's lines and never drafts.
-function startScript(s: MockSession, role: Role) {
-  if (s.scriptStarted.has(role)) return;
-  s.scriptStarted.add(role);
-  for (const step of mockScript) {
-    const m = step.message;
-    if (role === "patient") {
-      if (m.type !== "transcript.segment" || m.speaker !== "patient") continue;
-      const own: ServerMessage = { ...m, segment_id: `p-${m.segment_id}`, source: "patient_input" };
-      setTimeout(() => runStep(s, own, false), step.delayMs);
-    } else {
-      setTimeout(() => runStep(s, m, !!step.nurseOnly), step.delayMs);
-    }
-  }
+// Stands in for audio being transcribed during a nurse recording: the scripted conversation, drafts and flags.
+function startScript(s: MockSession) {
+  if (s.scriptStarted.has("nurse")) return;
+  s.scriptStarted.add("nurse");
+  for (const step of mockScript) setTimeout(() => runStep(s, step.message, !!step.nurseOnly), step.delayMs);
+}
+
+// A patient recording yields one transcript segment when it stops, like the real api (one Whisper call per recording):
+// only the patient's own words, tagged as patient input, never the nurse's lines and never drafts.
+const patientLines = mockScript.flatMap((x) => (x.message.type === "transcript.segment" && x.message.speaker === "patient" ? [x.message.text] : []));
+let nextPatientLine = 0;
+export const MOCK_TRANSCRIBE_MS = 1000;
+function transcribePatient(s: MockSession) {
+  const text = patientLines[nextPatientLine++ % patientLines.length];
+  const n = s.segments.length + 1;
+  setTimeout(() => runStep(s, { type: "transcript.segment", segment_id: `p${n}`, speaker: "patient", text, start: n, end: n + 3, final: true, source: "patient_input" }, false), MOCK_TRANSCRIBE_MS);
 }
 
 seed();
@@ -296,9 +297,12 @@ export const mockClient: ApiClient = {
       send(message) {
         if (message.type === "recording.start") {
           broadcast(s, { type: "recording.state", recording: true, by: role });
-          startScript(s, role);
+          if (role === "nurse") startScript(s);
         }
-        if (message.type === "recording.stop") broadcast(s, { type: "recording.state", recording: false, by: role });
+        if (message.type === "recording.stop") {
+          broadcast(s, { type: "recording.state", recording: false, by: role });
+          if (role === "patient") transcribePatient(s);
+        }
       },
       sendAudio() {},
       close() {

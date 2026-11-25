@@ -7,6 +7,23 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — Patient questions: answers saved with their question in the frontend; questions read aloud (#86, #109)
+- Status: accepted (proposed by 吳普軒, frontend area lead, in #109; confirmed by PO 張棨翔 on 2026-11-25 after testing
+  it on the workstation demo)
+- Context: #86 asked to save each answer together with its question so a short answer like 「沒有」 maps to the right
+  field, either through a new `question` field on the input API or by the frontend. The same issue put reading
+  questions aloud out of scope (PO, 2026-11-22). We wanted a working demo before changing the API.
+- Decision: the frontend writes each answer as `問：<question> 答：<answer>` through the existing input API; for a
+  spoken answer it sends `問：<question>` when recording starts and the transcript follows. No API change. The fixed
+  questions (v1, 林均澔's draft) are also read aloud from pre-made mp3 files (macOS voice Meijia,
+  `scripts/make-question-audio.sh`, Git LFS); only the fixed question text is read, never AI output.
+- Rejected: adding `question` to the API now (needs backend work before the demo; can still be added later); speech
+  generated in the browser at run time (not chosen: pre-made files sound the same on every device).
+- Consequences: reverses the 2026-11-22 "no voice for now" scope; the pre-made voice stays in use. The prompt is
+  unchanged but the transcript format is new, so it still needs a real-model check and an `eval/cases.json` case.
+  Apple's voice licence should cover only personal, non-commercial use; change the voice before any other use.
+- Decided by: 吳普軒 (proposal), 張棨翔 (PO, confirmed 2026-11-25)
+
 ## 2026-11-24 — Whisper on the GPU first, CPU fallback (#88)
 - Status: accepted
 - Context: the 2026-11-22 Whisper decision asked STT to try the GPU first (#88), because medium on the CPU makes a
