@@ -124,10 +124,12 @@ reached 36/43 fields with no wrong typed value.
 
 Entries from the project start (2026-09-21) through Week 12, each with context, decision, consequences and who
 decided: topic, stack, steward rotation, model and runtime choices (Ollama, Whisper size, prompt v5), the patient
-screen, speaker labels, and the Week 11 and Week 12 steward records. The Week 12 entry holds the merge-day plan.
+screen, speaker labels, Whisper on the GPU, the TTAS reference level by rule table, keeping the current exports,
+no RAG, and the Week 10, 11 and 12 steward records (Week 10 had no pull requests, #119). The Week 12 entry holds the
+merge-day plan.
 
-<!-- TODO(team): Week 9 (劉順松) and Week 10 (林均澔) steward entries: what each actually did, or that the week was
-missed. Add the walking-skeleton line and the merge-day outcome. -->
+<!-- TODO(team): Week 9 (劉順松) steward entry, and optionally Week 8 (吳普軒): what each actually did, or that the
+week was missed. Add the walking-skeleton line and the merge-day outcome. -->
 
 ## 8. Contributions
 
