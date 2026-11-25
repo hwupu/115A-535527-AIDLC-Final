@@ -19,7 +19,7 @@ first outside-user feedback. We cannot yet report time saved, error-catch rate o
 | AI failure handling | `services/api/tests/test_ai_failure.py` (#80): timeout, HTTP 503, invalid or wrongly shaped JSON | The nurse gets an error, the transcript and edits survive, the report can be finished by hand |
 | Extraction (prompt suite) | 14 development cases in `eval/cases.json`; raw outputs in `evidence/` | See below |
 | Speech to text | 18 fictional sentences read by one team member, with and without a mask (`evidence/stt-2026-11-22/`) | See below |
-| Outside users | U01, U02: two nurses outside the team, questionnaires (`USER_TEST_PROTOCOL.md`) | Both rated speed, draft visibility and willingness to use 5/5; findings in `DESIGN_RATIONALE.md` |
+| Outside users | U01–U04: four people outside the team (U03 a nurse, U04 a physician, U01 and U02 neither) in two runs of scenario S03, questionnaires plus the demo database (`USER_TEST_PROTOCOL.md`) | See below; findings in `DESIGN_RATIONALE.md` |
 
 ### Extraction
 
@@ -57,15 +57,32 @@ faster-whisper on CPU, int8, the same settings as `services/stt`. Character erro
 One speaker; the masked round was recorded second, so its lower error is probably practice, not evidence that masks
 do not matter. Every model misheard rare terms (瘻管, 盤尼西林; follow-up #89).
 
+### Outside users
+
+Two runs of scenario S03, each by a pair (one at the nurse screen, one playing the patient), facilitated by the PO:
+U01/U02 on 2026-11-23, U03/U04 on 2026-11-24. Workstation demo, prompt v5, gemma4:e4b, Whisper small. Numbers from
+the demo database (session times and audit log); the answer-key comparison was made by the coding assistant and has
+not been checked by a nurse.
+
+| Run | Start to confirm | AI draft wait | Nurse edits | AI drafts vs S03 answer key |
+|---|---|---|---:|---|
+| 2026-11-23 (U01 operates nurse screen, U02 plays patient) | 5 min 02 s | 117 s | 1 | 17 drafted: 14 correct, 2 wrong, 1 doubtful; 3 missing; 0 filled although not said |
+| 2026-11-24 (U03 operates nurse screen, U04 plays patient) | 3 min 28 s | 51 s | 1 | 19 drafted: 18 correct, 0 wrong, 1 doubtful; 2 missing; 0 filled although not said |
+
+Ratings (speed, draft visibility, willingness to use): 5/5/5 from three participants, 4/5/5 from one. **Safety
+finding:** in the first run STT heard 血壓 as 「斜壓兩」 and the number check took 「兩」, so systolic BP became 2; the
+nurse confirmed it and corrected it to 158 eleven seconds later. The long draft waits came from the demo's Ollama
+running on the CPU after its container lost the GPU; on the GPU the same draft takes about 1 s.
+
 ## What is not tested yet
 
 - **Time saved and edit burden:** no paper-versus-tool comparison has been run. The 30% time and 90% field targets in
   `EVALUATION_PLAN.md` are still hypotheses; this is CP3 work.
 - **Accuracy on held-out cases:** all 14 prompt cases are development cases we tuned on, and their answer key has
   not been checked by a nurse (#45).
-- **Real speakers:** one team member's voice only. No noise, accent or Taiwanese-mix study beyond 18 sentences.
-- **Outside-user sessions:** U01 and U02 (two nurses) gave questionnaire answers. The date, scenario, timing and how much
-  of the draft they had to edit are not yet recorded (#101), so the 5/5 ratings are opinions, not measurements.
+- **Controlled STT benchmark:** one team member read 18 sentences. The outside-user runs are not a controlled multi-speaker/noise/accent accuracy benchmark.
+- **Outside-user sessions:** two runs with four participants and no paper baseline, so the timings show what happened,
+  not time saved. The answer-key comparison still needs a nurse's check.
 - **Load:** one STT request at a time; several devices at once is untested (#100).
 - **Safety:** the guards are tested on selected inputs only. Quote containment does not prove a quote supports the
   field it was put in; the nurse's review is the safeguard. No clinical use is supported.
