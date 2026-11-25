@@ -51,7 +51,7 @@ and set it up from our README on a fresh Mac. Their four findings became issues 
 ## 2. Design rationale and user testing
 
 Full text: `DESIGN_RATIONALE.md`. Key decisions and what shaped them (CP1 interviews, the Group 03 review in the Week 12
-lab, and two nurses):
+lab, and four outside-team participants):
 
 - **The nurse confirms every field and decides the triage level** (CP1 interviews; course safety boundary). AI text
   is labelled 「AI 草稿」 until confirmed; an unmentioned field stays empty rather than becoming "no".
@@ -63,19 +63,23 @@ lab, and two nurses):
 Outside-team sessions (protocol, form and scenario cards: `USER_TEST_PROTOCOL.md`, `USER_TEST_FORM.md`,
 `SCENARIO_CARDS.md`):
 
-Both participants are nurses outside the team. Ratings, 1 = strongly disagree, 5 = strongly agree: (1) the AI draft
+Four people outside the team (U03 a nurse, U04 a physician, U01 and U02 neither), in two runs of scenario S03:
+each pair had one at the nurse screen and one playing the patient, facilitated by the PO (U01/U02 on 2026-11-23,
+U03/U04 on 2026-11-24). Ratings, 1 = strongly disagree, 5 = strongly agree: (1) the AI draft
 made the triage record faster, (2) it was easy to tell AI drafts from confirmed fields, (3) I would use it at work.
 
 | Session | Participant | Ratings 1/2/3 | Hardest part / what to change (Q4) | Main worry if it went live (Q5) | What we changed |
 |---|---|---|---|---|---|
-| U01 | 護理師 A | 5 / 5 / 5 | 「更正式的 PDF 格式，又或者對接醫院系統。」 (a more formal PDF, or hospital-system integration) | 「有沒有考慮到多台裝置負載的問題」 (load from several devices) | Printable ED-style record (#99); HIS integration out of scope; load test planned (#100) |
-| U02 | 護理師 B | 5 / 5 / 5 | 「如果可以辨別對話的角色。」 (tell the speakers apart) | 「會比較在意資料摘要的精準度。」 (accuracy of the summary) | Speaker label per transcript line, correctable by the nurse (`DECISIONS.md` 2026-11-23, #102); held-out evaluation (#45) |
+| U01 | Other, nurse screen | 5 / 5 / 5 | 「更正式的 PDF 格式，又或者對接醫院系統。」 (a more formal PDF, or hospital-system integration) | 「有沒有考慮到多台裝置負載的問題」 (load from several devices) | Printable ED-style record (#99); HIS integration out of scope; load test planned (#100) |
+| U02 | Other, patient | 5 / 5 / 5 | 「如果可以辨別對話的角色。」 (tell the speakers apart) | 「會比較在意資料摘要的精準度。」 (accuracy of the summary) | Speaker label per transcript line, correctable by the nurse (`DECISIONS.md` 2026-11-23, #102); held-out evaluation (#45) |
+| U03 | 護理師, nurse screen | 4 / 5 / 5 | 「等待輸入時間（語音轉文字檔）、可同步帶入 HIS 系統」 (waiting for speech-to-text; sync to the HIS) | 「多一份工作，希望可以自動帶入 HIS 會更好」 (one more task; HIS import) | Whisper on the GPU (#88); HIS out of scope, exports stay copy, print and JSON (`DECISIONS.md` 2026-11-24) |
+| U04 | 醫師, patient | 5 / 5 / 5 | 「…希望可以減少一個一個確認的次數（可以一小個區塊來確認）…」 (confirm a section at a time) | 「怕導入後會因為多了步驟而減少護理師的使用意願」 (extra steps may put nurses off) | Section confirmation (#113); TTAS reference level by rule table proposed (#116) |
 
-With two participants the 5/5 ratings are encouraging opinions, not a measured result.
-
-<!-- TODO(team): the facilitator fills in, from the real forms: date, consent, scenario, whether they operated the prototype, observed problems. Write "not
-recorded" where nothing was recorded. If these were questionnaire-only conversations, say so and run two real
-sessions before Nov 29. -->
+Measured in the two runs (demo database): start to confirm 5 min 02 s and 3 min 28 s; AI drafts against the S03
+answer key 14/17 and 18/19 correct, none filled although not said. One safety finding: STT heard 血壓 as 「斜壓兩」
+and systolic BP became 2; the nurse confirmed it and corrected it eleven seconds later. The facilitator saw hesitation
+while waiting for the AI draft (partial drafts, #112) and at the misspelled 瘻管 (#89). Without a paper baseline these
+are observations, not time saved. Details: `USER_TEST_PROTOCOL.md`, `EVALUATION_REPORT.md`.
 
 ## 3. Evaluation (interim)
 
@@ -86,7 +90,7 @@ Full text: `EVALUATION_REPORT.md`. Summary:
 - **Speech:** Whisper small, character error 0.146 (plain) / 0.131 (masked) at 1.7 s per clip; medium is more
   accurate but about 3× slower on CPU.
 - **Not tested yet:** time saved, nurse-reviewed accuracy on held-out cases, more than one speaker, load, and
-  measured outcomes from outside users. All prompt cases are development cases.
+  time saved for outside users (two runs, no paper baseline). All prompt cases are development cases.
 
 ## 4. System prompt and prompt documentation card
 
