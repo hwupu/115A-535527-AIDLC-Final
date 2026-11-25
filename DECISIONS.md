@@ -7,6 +7,53 @@ missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-24 — TTAS reference level filled in by a rule table, never by the LLM; the nurse decides
+- Status: accepted (PO direction 2026-11-24; approved in the #116 review by 吳普軒 and 劉順松, 2026-11-25)
+- Context: outside-team participant U04 (physician, #101) suggested filling in the triage level from the chief
+  complaint by the TTAS criteria (急診五級檢傷分類基準), since in practice choosing the complaint mostly sets the
+  level. The project rule so far: the nurse decides 檢傷級數 and the AI never does. TTAS is not one level per
+  complaint: the adult non-trauma table has about 127 standard complaints and 1,400 criteria, and the level depends
+  on modifiers such as SpO2, blood pressure, heart rate, temperature, consciousness and pain (for example 呼吸短促
+  is level 1 at SpO2 < 90 %, 2 at < 92 %, 3 at 92–94 %, 4 without distress).
+- Decision: the LLM keeps drafting the chief complaint and vitals only; it never outputs a level (v5 schema
+  unchanged). A program looks up a TTAS rule table: chief complaint → standard complaint (synonym table), then
+  the vitals already in the report → the matching criterion and level. The screen shows it as 「TTAS 參考級數（程式
+  依主訴與生命徵象對照）」 with the matched criterion; the nurse still selects and confirms 檢傷級數. If the complaint
+  cannot be matched, or a criterion needs information the report lacks (consciousness, pain, PEFR), it says so
+  instead of guessing. The audit log keeps the reference level and the nurse's level.
+- Consequences: the rule becomes "the AI never decides 檢傷級數; the system may show a TTAS reference level from a
+  rule table, and the nurse decides". `CLAUDE.md`, `PROMPT_CARD.md`, the printout footer, the scenario answer keys
+  and the "no triage level from the AI" tests are updated with the implementation, and the LLM tests stay as they
+  are. The first version covers the complaints in S01, S03 and S04 and the vitals-based criteria; the rest of the
+  table follows. The TTAS PDFs stay out of the repository until their licence is checked; the repository holds only
+  the structured rows used. CP3 can report how often the nurse's level matches the reference level.
+- Decided by: 張棨翔 (PO); confirmed by 吳普軒 and 劉順松
+- Conditional support from 劉順松, explicitly confirmed 2026-11-24: simulation/demo only; source and version traceable; inputs and rules checked by a clinically qualified reviewer; no automatic final-level selection. This is not clinical validation or permission for patient care.
+- Implementation acceptance gates for #115: identify the exact official table/revision and rule IDs with provenance/licensing; do not mix outdated and revised rows. Official reference index: https://dep.mohw.gov.tw/doma/lp-5037-106-1-20.html (includes the 108.6.11 adult non-trauma amendment). No clinical thresholds in this proposal are certified by this review.
+- Use nurse-verified inputs for a reference calculation, or explicitly withhold a reference when required inputs are missing/unverified; do not silently turn an AI draft error into a level. Missing modifiers, conflicting/multiple matches and out-of-scope complaints must be visible, not treated as normal/default low acuity.
+- Keep the reference result separate from the nurse's final selection, with no auto-confirmation. Record the table version, input provenance, matched rule and final human choice in audit; invalidate stale references after input edits. Test absent data, boundary values, conflicting matches and stale inputs using nurse-checked cases before enabling the feature.
+- Other members must review these conditions; the proposal stays proposed until team confirmation. Clinical sign-off and #115 implementation are separate from this document review.
+
+## 2026-11-24 — Exports stay copy text, print and JSON; no HIS integration
+- Status: accepted
+- Context: three of four outside-team participants (U01, U03, U04; #101) said getting the report into the HIS
+  matters more than printing. The scope excludes writing to a real HIS, and the project uses simulated data only.
+- Decision: keep the three exports (copy text, the ED-style printout from #99, JSON download). No HIS-specific
+  export for now.
+- Consequences: re-typing into the HIS remains, and the evaluation and final report name it as the main gap for
+  real use.
+- Decided by: 張棨翔 (PO)
+
+## 2026-11-24 — No RAG for extraction (B5, #15)
+- Status: accepted
+- Context: spike B5 asked whether extraction needs retrieval-augmented generation. The model only copies and
+  normalises what the transcript says; every field must quote the transcript, and anything else is rejected.
+- Decision: no RAG. The prompt (v5), the JSON Schema and the code guards stay the only inputs and checks. The TTAS
+  reference level (#115) is a rule-table lookup in code, not retrieval for the model.
+- Consequences: no vector store or document index to build or evaluate. Revisit only if a later feature needs the
+  model to use outside knowledge, which the current safety rules do not allow.
+- Decided by: 張棨翔 (PO)
+
 ## 2026-11-24 — Patient questions: answers saved with their question in the frontend; questions read aloud (#86, #109)
 - Status: accepted (proposed by 吳普軒, frontend area lead, in #109; confirmed by PO 張棨翔 on 2026-11-25 after testing
   it on the workstation demo)
