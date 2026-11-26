@@ -143,7 +143,7 @@ Audited from all 40 repository PRs and formal review records on 2026-11-26, thro
 
 Evidence: evidence/closeout-2026-11-26/repository-review-audit.json. 劉順松's two code PRs are #73 and #80; #103 is documentation. Approvals executed with Codex assistance on explicit instructions remain disclosed as such.
 
-The GitHub contributor graph was captured on 2026-11-26 after #120/#124 merged: hwupu 51 commits (+17,705 / -4,034), XiangLibra 25 (+4,260 / -663), 414551016 8 (+1,014 / -269), junlinwk 4 (+684 / -70), LSS-580812 1 (+16 / -5), and claude 75 (+21,509 / -4,697). These are displayed GitHub identities, not six human team members. Co-author attribution and excluded merge commits make this different from PR counts; identities are not combined without verified mapping. Screenshot: CONTRIBUTOR_GRAPH.png. It is a dated snapshot and will not include this closeout PR.
+The GitHub contributor graph was recaptured on 2026-11-26 after the merge-day PRs (#126, #127, #129) merged: claude 81 commits (+21,605 / -4,738), hwupu 52 (+17,765 / -4,054), XiangLibra 30 (+4,296 / -684), 414551016 9 (+1,015 / -270), junlinwk 5 (+688 / -74) and LSS-580812 5 (+74 / -37). These are displayed GitHub identities, not six human team members. Co-author attribution and excluded merge commits make this different from PR counts; identities are not combined without verified mapping. Screenshot: CONTRIBUTOR_GRAPH.png. It is a dated snapshot and will not include this closeout PR.
 
 ## 9. Walking skeleton
 
@@ -159,19 +159,20 @@ No completed four-person technical session is evidenced in the records available
 
 ## 10. Merge day
 
-We did not hold one joint session; the merges happened as reviewed PRs into `main` (2026-11-21 to 11-26). The
-record takes each member's last main feature: #80 (劉順松), #82 (林均澔), #117 (張棨翔) and #123 (吳普軒), with
+The merges happened as reviewed PRs into `main` (2026-11-21 to 11-26); the four of us then met for merge day on
+2026-11-26 (participant-reported in #126 and #129; see `MERGE_DAY.md`). The record takes each member's last main feature: #80 (劉順松), #82 (林均澔), #117 (張棨翔) and #123 (吳普軒), with
 three drivers and CI green on every merge commit. One finding: #110 (#87) and #111 (#28) were approved but merged
 into stacked branches after their base had reached `main`, so they missed `main` until #123.
 
 - Merge plan and outcome: `DECISIONS.md`, "Week 12 steward actions and future merge plan"
-- Fresh-clone test (non-steward, README only): no completed record. This Codex-assisted review cannot impersonate a non-steward participant.
+- Fresh-clone test (non-steward, README only): participant-reported in #126. Each member, including the non-stewards, ran nurse confirmation -> physician read from the README on their own machine. Individual run details (times, clone revision) are not attached.
 - Worksheet: `docs/cp2/MERGE_DAY.md`
 
 ## Known gaps
 
-- Required four-person walking-skeleton technical session and joint merge-day session are not established by the asynchronous PR history. A documentary substitute has not been approved by the instructor (#106).
-- Non-steward fresh-clone installation and nurse-confirmation-to-physician-read task remain unverified (#106). On this laptop Ollama is not reachable at 127.0.0.1:11434 as checked Nov 26; no new real-model run is claimed.
+- The four-person merge-day meeting and the fresh-clone test are participant-reported (#126, #129); individual run details are not attached.
+- The walking-skeleton technical slice is still open. #120 is a documentary record, and the instructor has not approved it as a substitute (#106).
+- On this laptop Ollama is not reachable at 127.0.0.1:11434 as checked Nov 26; no new real-model run is claimed.
 - Week 9 steward execution is unverified; the historical record does not retrospectively satisfy an individual threshold. Team/instructor action is needed if alternative credit is sought.
 - User-test timing and provisional AI grading were reported by the facilitator; exact Nov 23 commit and historical N-xx mapping remain unrecorded. Nurse verification of grading, held-out evaluation and paper baseline are not completed.
 - TTAS reference implementation (#115), load testing (#100), medical vocabulary and draft-streaming follow-ups are tracked separately. No clinical deployment or safety certification is claimed.

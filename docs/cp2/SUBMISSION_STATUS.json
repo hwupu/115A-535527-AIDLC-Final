@@ -7,7 +7,7 @@
     "One README organization confirmed by Liu in this conversation",
     "Report placeholders replaced by explicit facts or disclosed gaps",
     "Submission index temporary Status column removed",
-    "Contributor graph captured after PR120/124 merge"
+    "Contributor graph recaptured after the merge-day PRs (#126, #127, #129)"
   ],
   "remaining_requirements": [
     {
@@ -17,13 +17,15 @@
     },
     {
       "id": "joint_merge_day",
-      "status": "not_verified",
-      "requires": "Actual required joint activity; asynchronous merges remain recorded separately"
+      "status": "participant_reported",
+      "requires": "Actual required joint activity; asynchronous merges remain recorded separately",
+      "evidence": "docs/cp2/MERGE_DAY.md; #126; #129"
     },
     {
       "id": "non_steward_fresh_clone",
-      "status": "not_verified",
-      "requires": "A real non-steward follows README on a new clone and completes nurse-to-physician task"
+      "status": "participant_reported",
+      "requires": "A real non-steward follows README on a new clone and completes nurse-to-physician task",
+      "evidence": "docs/cp2/MERGE_DAY.md Part 3; #126 (individual run details not attached)"
     },
     {
       "id": "team_review_and_upload",

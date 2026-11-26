@@ -7,11 +7,12 @@ This record supports #106. It does not close the issue or certify final readines
 - Week 9 now has a dated, evidence-based late entry. No formal Week 9 approval by 414551016 was found across all 40 PRs; implementation evidence is not a steward review.
 - 劉順松 explicitly confirmed the One README organization in the Nov 26 conversation.
 - The report contains facts and disclosed gaps instead of unresolved editorial placeholders; the submission index has no temporary Status column.
-- Contributor graph recaptured Nov 26. PDF and ZIP are local deliverables, kept outside Git.
+- Contributor graph recaptured Nov 26 after #126, #127 and #129 merged.
+- Merge day and the README-only fresh-clone test: participant-reported in #126/#129 (`MERGE_DAY.md`); run details not attached. PDF and ZIP are local deliverables, kept outside Git.
 
 ## Required human follow-through
-1. Team / instructor: arrange and actually perform the required joint technical walking-skeleton activity and merge-day activity, or obtain instructor acceptance of a specific alternative. A teammate's leave does not count as participation. Do not reuse #80 as a new slice. Keep actual entries in the worksheets.
-2. A real non-steward: clone to a new directory, follow only root README, install Git LFS and runtime dependencies, start Ollama with the chosen model, start the app, and complete fictional nurse confirmation -> physician read. Record tester, commit, setup problems, model, timestamps, observed outcome and evidence in MERGE_DAY.md. An agent-only run does not fill this role.
+1. Team / instructor: build the walking-skeleton technical slice together, or obtain instructor acceptance of a specific alternative. Do not reuse #80 as a new slice. Merge day is participant-reported (#126, #129). Keep actual entries in the worksheets.
+2. Fresh-clone test: participant-reported in #126 (MERGE_DAY.md Part 3). If the team wants it verifiable, add tester, commit, model and timestamps to MERGE_DAY.md.
 3. Teammate reviewer (requested: 吳普軒): review this closeout PR. Check the Week 9 boundary and explicit submission gaps. No self-approval.
 4. Team: read the PDF and ZIP, replace readiness fields only from actual evidence, regenerate from the reviewed commit, then hand to the #49 uploader. E3 is due Nov 29 per repository schedule; no upload is performed here.
 

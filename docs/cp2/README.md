@@ -40,7 +40,7 @@ The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge
 
 This is a review package with disclosed gaps, not a declaration that every CP2 requirement is complete.
 The machine-readable status is `SUBMISSION_STATUS.json`; evidence and next actions are in
-`CLOSEOUT_STATUS.md`. The required joint activities and non-steward fresh-clone task remain open in #106.
+`CLOSEOUT_STATUS.md`. Merge day and the fresh-clone test are participant-reported (#126, #129); the walking-skeleton technical slice remains open in #106.
 Do not infer completion from the absence of a temporary table column.
 
 ## Other files in this folder

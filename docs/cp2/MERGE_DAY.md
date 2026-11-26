@@ -2,10 +2,14 @@
 
 Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
-**Requirement status:** this is an asynchronous integration record. It does not establish completion of the required joint session or the non-steward fresh-clone task. Both remain open in #106; a member being on leave does not establish their participation.
+**Requirement status:** the original record below describes asynchronous integration. The newer dated update attributed to 張棨翔 in #126 reports a subsequent four-person merge-day meeting and README-only runs on each member's machine. Preserve that participant report separately from the earlier history. This review did not observe or reproduce those runs; tester-specific start/end times, clone revisions and run artifacts are not attached. The technical walking-skeleton slice remains a separate requirement in #106.
 
-**How we did it.** We did not hold merge day as one 60-minute call. The merges it asks for happened as reviewed pull
-requests into `main` between 2026-11-21 and 2026-11-26. This record takes each member's **last main feature PR
+**Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
+main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
+
+**How we did it.** The merges below happened as reviewed pull requests into `main` between 2026-11-21 and
+2026-11-26, before the meeting; the four of us then met for merge day, following the plan in `DECISIONS.md`, and ran
+the main task together (Part 3). This record takes each member's **last main feature PR
 merged into `main`** and fills in the worksheet from GitHub: the merge commit, who merged it (driver), who
 approved it (reviewer), conflicts, and CI on `main` after the merge. Anything we did not do is marked as not done.
 
@@ -32,7 +36,9 @@ approved it (reviewer), conflicts, and CI on `main` after the merge. Anything we
 **What "done" means:** every member's latest feature is on `main`, CI is green after each merge, and the nurse
 confirmation → physician report task runs from `README.md` on a fresh clone.
 
-**PRs we closed without merging, and why:** none. At this review, #120 (this record) and #124 (README cover image) are open. Check GitHub again after merging.
+**PRs we closed without merging, and why:** none. #124 (README cover image) and #120 (this record) were approved and
+merged by 劉順松 on 2026-11-26 (`0a7abf6`, `924d688`), CI green on both. After that, #125 (CP2 closeout, 劉順松) was
+opened and is still open.
 
 ---
 
@@ -55,10 +61,10 @@ Three of us drove a merge (張棨翔, 林均澔, 吳普軒); 劉順松 reviewed 
 
 | # | PR | Merge commit | Conflicts? (where) | How we resolved them | CI on `main` after merge | App runs on `main`? |
 |---|---|---|---|---|---|---|
-| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | not recorded |
-| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | not recorded |
-| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | not recorded |
-| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | not recorded |
+| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
 
 **Something we had to fix on `main`.** #110 and #111 were approved and merged, but into the stacked branches
 `feat/86-patient-guided-questions` and `feat/87-nurse-checklist`, seconds *after* #109 had already merged `feat/86`
@@ -72,11 +78,11 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 | | |
 |---|---|
-| Who did it | not done yet (must be a non-steward, i.e. not 劉順松) |
-| Did the README work without help? | not done yet |
-| What was missing from the README? | not done yet |
-| Did the main task work end to end? | not done yet |
-| Any API key or setup step that only one person knows? | not done yet |
+| Who did it | 吳普軒 reports all four on their own machines, including the non-stewards 張棨翔, 吳普軒 and 林均澔; individual confirmations not attached |
+| Did the README work without help? | reported yes by 吳普軒 in #126 |
+| What was missing from the README? | none reported by 吳普軒 |
+| Did the main task work end to end? | 吳普軒 reports nurse confirmation -> physician read; this review did not observe the run |
+| Any API key or setup step that only one person knows? | none: the models run locally (Ollama, Whisper), so no API key is needed |
 
 ---
 
@@ -84,8 +90,8 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 **Outcome (2026-11-26):** merged #80, #82, #117 and #123 (each member's last main feature); closed none. Conflicts in
 `DECISIONS.md`, resolved by keeping both sides' entries. #110 and #111 missed `main` through a stacked merge and were
-restored in #123. Fresh-clone test: not done yet. `main` is green (CI passed on every merge commit above). Left for
-after CP2: the fresh-clone test if it is not done before E3.
+restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: reported completed in #126, including the dated update attributed to 張棨翔; individual run details remain to be confirmed. `main` is green (CI passed on every
+merge commit above).
 
 **Team check:**
 
@@ -93,17 +99,17 @@ after CP2: the fresh-clone test if it is not done before E3.
    there (four merge commits on 11/24–11/25); and stacked PRs, which let approved work miss `main` twice (#69, #123).
 2. One habit we will change for Phase 3 (吳普軒): once a parent PR merges, retarget the PRs stacked on it to `main`,
    and check the feature is actually on `main`.
-3. Could each of us run the prototype and do the main task without help? not recorded yet.
+3. Could each of us run the prototype and do the main task without help? Reported yes by 吳普軒 in #126; no individual run artifacts attached.
 
 ---
 
 ## Quick checklist
 
-☐ The merge plan was in `DECISIONS.md` before the session started (a plan was drafted in the Week 12 entry; the
-  merges did not follow one session)
-☐ All four of us were there (no joint session)
-☐ Every open PR was merged or closed with a reason (verify after #120 and #124 merge)
-☑ Tests were run on `main` after each merge (CI); the app run was not recorded
-☐ Someone other than the steward ran the fresh-clone test
+☑ The merge plan was in `DECISIONS.md` before the session started (drafted in the Week 12 entry; the meeting followed
+  it, participant-reported by 張棨翔)
+☑ All four of us were there (we met together on merge day)
+☐ Every open PR was merged or closed with a reason at merge day (not verified: the meeting cutoff time is not recorded. 張棨翔 reports that the planned PRs were handled, but #125 opened on 2026-11-26 at 22:00:50 +08:00 and remains open; #126 merged at 22:39:33 +08:00. Do not infer an all-open-PR completion snapshot from those facts.)
+☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
+☑ Someone other than the steward ran the fresh-clone test (participant-reported in #126; not independently verified here)
 ☑ The outcome is written under the merge plan
 ☑ This worksheet is saved (as `docs/cp2/MERGE_DAY.md`)

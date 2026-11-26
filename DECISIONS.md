@@ -22,14 +22,14 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Consequences: this supplies the missing historical record, not evidence that the individual steward threshold was satisfied in Week 9. Any alternative credit arrangement needs the instructor/team's decision. Evidence: docs/cp2/evidence/closeout-2026-11-26/repository-review-audit.json; prompt-log/2026-11-04-414551016-cp2.md.
 - Recorded by: 劉順松, Codex-assisted, at his request to investigate and complete his part.
 
-## 2026-11-26 — Walking skeleton slice: the shared CP2 record in #120
-- Status: proposed (to be confirmed by the team and the Week 12 steward, 劉順松, in the #120 review)
+## 2026-11-26 — CP2 interim record #120; walking-skeleton technical slice remains required
+- Status: approved as an interim record by the Week 12 steward, 劉順松, in the #120 review (merged 2026-11-26,
+  `924d688`); confirmation by the rest of the team and instructor acceptance not recorded
 - Context: the prototype already runs end to end (Route 2), and the slices the worksheet offers are already merged:
   nothing on the path is faked, the second user (physician) works, and the AI failure state is #80.
-- Decision: the session's slice is the CP2 record in #120. Each member adds their own part on the one branch
-  `docs/cp2-status-refresh`, and the steward reviews the PR. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
+- Decision: #120 records documentary contributions only. 張棨翔 clarified in the #126 comment that #120 is not the walking-skeleton technical slice; a thin code slice must still be built together. The original documentary-substitution proposal is not recorded as accepted. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
 - Consequences: the PR is documents only. 劉順松's 2026-11-26 Codex-assisted review accepts merging it as an interim record only; it does not establish a joint technical slice or four-person attendance. Instructor acceptance of a documentary substitute is not recorded. Remaining requirements are tracked in #106.
-- Decided by: pending (proposed by 吳普軒)
+- Decided by: proposed by 吳普軒; approved in review by 劉順松 (Week 12 steward); team confirmation pending
 
 ## 2026-11-01 — Week 8 steward (吳普軒): two approvals, handover not recorded
 - Status: recorded late (2026-11-26); facts checked on GitHub, to be confirmed by 吳普軒
@@ -175,7 +175,10 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   #80 (劉順松), #82 (林均澔), #117 (張棨翔), #123 (吳普軒); closed none. Drivers: 張棨翔, 林均澔, 吳普軒. Conflicts in
   `DECISIONS.md` (#109, #116, #119), resolved by keeping both sides. #110 (#87) and #111 (#28) were approved but merged
   into stacked branches after #109 had merged `feat/86`, so they missed `main`; #123 restored them. CI passed on every
-  merge commit. Fresh-clone test: not done yet. Details: `docs/cp2/MERGE_DAY.md`.
+  merge commit. #124 and #120 (the CP2 record) were then merged by 劉順松 (`0a7abf6`, `924d688`), CI green; #125
+  is open. Fresh-clone test: not done yet. Details: `docs/cp2/MERGE_DAY.md`.
+- Update (2026-11-26, 張棨翔): the four of us then met together for merge day; each ran the main task (nurse confirms
+  → physician reads the report) from the README on our own machine, so the joint session and the fresh-clone test are done.
 
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted

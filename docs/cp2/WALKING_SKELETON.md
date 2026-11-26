@@ -2,8 +2,8 @@
 ## One session, all four of you together | about 75 minutes | one worksheet per team
 
 > **Group 01 note.** The prototype already runs end to end, so we take Route 2. The AI-failure slice was merged
-> before the session (#80) and cannot count again, so Parts 3 and 4 use the CP2 record in #120: each member adds
-> their own part on one branch, and the steward reviews the one PR. Lines left blank are for that member to fill.
+> before the session (#80) and cannot count again, the CP2 record in #120 is documentary work only. As clarified by 張棨翔 in the #126 comment, it is not the new technical slice required by Parts 3 and 4. Lines left blank are for that member to fill.
+> #120 was approved and merged by 劉順松 on 2026-11-26 (`924d688`); lines added after that go in follow-up PRs.
 > **Review limitation (2026-11-26, 劉順松, Codex-assisted):** this document-only PR is an interim record, not evidence that the required joint technical slice or four-person session happened. The proposed substitution needs instructor acceptance. Blank participant entries remain uncompleted; merging this record does not complete the walking-skeleton requirement. Tracking: #106.
 > Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
 
@@ -43,16 +43,16 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 | | Sentence |
 |---|---|
 | Person A (吳普軒) | Our tool helps triage nurses to type less during intake by listening to the conversation and pre-filling fields with quotes from it, while the nurse still decides 檢傷級數. |
-| Person B (張棨翔) | |
+| Person B (張棨翔) | Our tool helps emergency triage nurses to write the triage record once and give the doctor a complete handoff by turning the nurse–patient conversation into a draft report that the nurse checks and confirms. |
 | Person C (劉順松) | AI-assisted draft for my own revision, not the independent two-minute exercise or a team-agreed sentence: Our tool helps triage nurses prepare a traceable intake record by turning the conversation into transcript-supported draft fields for the nurse to check and confirm before the physician reads the report. |
-| Person D (林均澔) | |
+| Person D (林均澔) | Our tool helps triage nurses to finish intake records faster by turning the spoken conversation into a quoted draft that the nurse checks. |
 | **Agreed sentence** | |
 
-**Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No
+**Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No (not verified; the agreed sentence is still blank in this version)
 
 If they did not match, that is a useful finding. Write down the difference you had to settle:
 
-> 
+> A prior draft said "All agreed", but the complete four-person sentence record is not present; team confirmation remains required.
 
 ---
 
@@ -77,9 +77,7 @@ If they did not match, that is a useful finding. Write down the difference you h
 
 **Our goal for today** (one example, going in as ____, coming out as ____; or, Route 2: the slice we chose):
 
-> Route 2. Nothing on the path is faked any more, and the second user (physician) and the AI failure state (#80) are
-> already merged. So today's slice is the CP2 record in #120: each member adds their own part to the shared documents
-> on one branch, and the steward reviews it.
+> Route 2. The second user and the prior AI-failure work (#80) are already merged. #120 is an interim documentary record, not a new technical slice. The next thin code slice and its joint implementation still need to be selected and recorded. This follows 張棨翔's comment on #126; #80 cannot count again.
 
 **3. Split the building (with the hand-offs agreed).** Give each person, or each pair, **one building task**: usually one box, or one connection between boxes. Before anyone starts, agree **what each piece receives and returns** (for example "the model step receives the ticket text and returns `{category, summary}`"). This is what lets the pieces connect in Part 3.
 
@@ -87,8 +85,8 @@ If they did not match, that is a useful finding. Write down the difference you h
 |---|---|---|---|---|
 | 張棨翔 | CP2 status refresh after #114–#119 (`docs/cp2/README.md` item 7, report §7) | `main` after #119 | commit on the #120 branch | `docs/cp2-status-refresh` (#120) |
 | 吳普軒 | Week 8 steward entry, merge-day record (`MERGE_DAY.md`, outcome in `DECISIONS.md`), these worksheet lines | `main` after #123 | commits on the #120 branch | `docs/cp2-status-refresh` (#120) |
-| 劉順松 | Checked CP2 integration records and added the review limitation in #120; prepared evidence-backed Week 9 record, report and package verification in #125 (Codex-assisted) | main after #123, PR history, original Nov 4 prompt log and CP2 documents | #120 commit `963acfa` (merged); #125 commits `8188be2`, `04e961f` (awaiting teammate review); verified local review PDF/ZIP | `docs/cp2-status-refresh` (#120); `docs/414551016-issue106-closeout` (#125) |
-| 林均澔 | | | | `docs/cp2-status-refresh` (#120) |
+| 劉順松 | Week 12 steward review and merge of #120 and #124; requirement-status notes (`MERGE_DAY.md`, these worksheet lines, `DECISIONS.md`, prompt log); evidence-backed Week 9 record, report and package checks (Codex-assisted) | #120 and #124 heads after #123; PR history and the Nov 4 prompt log | `963acfa` on the #120 branch; merge commits `0a7abf6` (#124) and `924d688` (#120) on `main`; #125 commits `8188be2`, `04e961f`, `510faaf` | `docs/cp2-status-refresh` (#120); `docs/414551016-issue106-closeout` (#125) |
+| 林均澔 | Week 10 steward entry in `DECISIONS.md` (no pull requests that week) and the header line about the missing Week 10 record; these worksheet lines | `main` after #117 | merged as #119 (`7a31046`) on 2026-11-25, before #120; these lines in a follow-up PR on top of #126 | `docs/week10-steward` (#119), not the #120 branch |
 
 Individual update (劉順松, 2026-11-26): #120 has merged; my subsequent closeout work is in #125. These are documentary contributions, not evidence of the joint technical slice. The original proposed hand-off below is retained as context.
 
@@ -97,9 +95,21 @@ entries to `DECISIONS.md` without rewriting anyone else's.
 
 **Route 2 trace, one box each (explained by someone who did not write it):**
 
-> LLM extraction, explained by: 
+The LLM/API explanations below were initially AI-assisted drafts; 張棨翔 subsequently reported those explanations in the #126 comment. That report is preserved as the source; this review did not observe a live session.
+
+> LLM extraction (written by 張棨翔), explained by 劉順松: `services/llm` receives the transcript at `POST /extract`
+> and sends it to Ollama (`gemma3:1b` by default, `LLM_MODEL`) with prompt `v5`, marked as untrusted text and
+> constrained to a JSON schema. For v5, numbers and the date of birth are recomputed from the quoted text instead of
+> trusting the model; a value that cannot be computed is dropped. A guard then keeps only allowed fields whose quote
+> appears word for word in the transcript, and rejects anything like a 檢傷級數, diagnosis or medication advice. If
+> Ollama fails or the reply is broken, it returns 503 and the nurse types the fields by hand.
 >
-> API and report storage, explained by: 
+> API and report storage (written by 劉順松), explained by 張棨翔: `services/api` keeps each visit as one row in
+> SQLite (`data/triage.sqlite`, `DATABASE_URL`) and every action in a separate `audit_events` table. A visit goes
+> `intake` (patient) → `ready` → `in_progress` (nurse claims it) → `confirmed`. Text and audio from the WebSocket
+> go to the STT and LLM services; AI values are saved as `AI 草稿` and never overwrite a field the nurse edited or
+> confirmed. Confirmation is refused while any draft is unconfirmed; the nurse's 檢傷級數 is stored with it, the report
+> is then read-only, and the physician reads it at `GET /sessions/{sid}/report`.
 >
 > Frontend screens (written by 吳普軒), explained by: 
 >
@@ -137,12 +147,14 @@ entries to `DECISIONS.md` without rewriting anyone else's.
 | CP2 status refresh (`b50103d`) | 張棨翔 | | yes | rebased onto `main` after #123, no conflicts |
 | Week 8 steward entry (`f39a093`) | 吳普軒 | | yes | none |
 | Merge-day record (`338c2df`) and worksheet lines | 吳普軒 | | yes | none |
-| Integration-record corrections (`963acfa`); Week 9 evidence, report and package guards (`8188be2`, `04e961f`) | 劉順松, Codex-assisted | Non-author explanation not yet recorded | Documents: #120 merged; #125 awaiting review. Joint technical slice: not established | Separated asynchronous merges from joint activity; fixed CRLF/LF source-hash mismatch; verified 62 ZIP payload hashes |
-| | 林均澔 | | | |
+| Steward review notes (`963acfa`) | 劉順松 | | yes | none; merged #124 and #120 into `main`, CI green on both |
+| Week 10 steward entry (#119, `7a31046`) | 林均澔 | | yes, merged into `main` separately before #120 | none |
+| Week 9 evidence, report and package guards (`8188be2`, `04e961f`) | 劉順松, Codex-assisted | Non-author explanation not yet recorded | #125, in review | Fixed a CRLF/LF source-hash mismatch; verified 62 ZIP payload hashes |
 
 **Where did it first run end to end?** (a time, or "not yet")
 
-> The prototype was reported to run end to end in the Week 12 lab. #120 merged on 2026-11-26 as an interim documentary record; this does not establish that every member completed the worksheet or the joint activity. 劉順松's later documentary work is in #125, awaiting review.
+> The prototype already ran end to end before the session (demonstrated in the Week 12 lab). The #120 record: merged into `main`
+> on 2026-11-26 at 21:44 (+08:00) by 劉順松 (`924d688`), CI green. 林均澔's lines were still blank at merge.
 
 **What did we fake or stub?** (it is fine to fake things; write them down so you do not forget)
 
@@ -162,15 +174,14 @@ If your team is changing stewards, the incoming steward approves this one as the
 
 | | |
 |---|---|
-| Link to the merged PR | https://github.com/hwupu/115A-535527-AIDLC-Final/pull/120 (merged 2026-11-26, `924d688`; documentary record) |
+| Link to the merged PR | https://github.com/hwupu/115A-535527-AIDLC-Final/pull/120 (merged 2026-11-26, `924d688`) |
 | Steward who reviewed | 劉順松 (Week 12 steward), Codex-assisted repository review; not an on-screen joint-session review |
-| Steward's comment (copy it here) | 劉順松's recorded review, excerpt: 「核准作為 CP2 的階段性真實紀錄。重要限制：文件型 slice 尚無教師同意可取代技術 walking skeleton 的紀錄；非同步合併不等於四人共同 session」. Full review: https://github.com/hwupu/115A-535527-AIDLC-Final/pull/120#pullrequestreview-6075174718 . Codex-assisted repository review under my explicit instruction; not an on-screen group review. |
-| How the author answered | |
+| Steward's comment (copy it here) | 本次明確查核、審查與合併並核對五份文件變更、GitHub 審查與 main 整合歷史，並修正過早勾選的合併完成欄。核准作為 CP2 的階段性真實紀錄。重要限制：文件型 slice 尚無教師同意可取代技術 walking skeleton 的紀錄；非同步合併不等於四人共同 session，其他成員空白欄與 non-steward fresh-clone 仍待完成。以上既有缺口保留在文件並追蹤 #106，本次核准不宣稱活動或課程要求已全數完成；待本 head CI 全綠後合併。 |
+| How the author answered | No reply on the PR: it was approved and merged in the same minute. The limitations the comment lists are kept in this worksheet and tracked in #106. |
 
 **Add one line to `DECISIONS.md`** about the biggest choice you made today (for example, what you cut, what you faked, or a hand-off format you agreed):
 
-> Proposed: the Route 2 slice is the shared CP2 record in #120 (one branch, everyone's part), not new code, because
-> the path, the second user and the AI failure state were already merged.
+> #120 was approved as an interim documentary record only. 張棨翔 clarified in #126 that it is not the walking-skeleton technical slice; a new thin code slice and its actual joint activity remain to be recorded in #106.
 
 ---
 
@@ -178,27 +189,45 @@ If your team is changing stewards, the incoming steward approves this one as the
 
 Answer these together, honestly. Nobody is graded on how good the answers sound.
 
+**劉順松 - individual perspective, Codex-assisted draft for team confirmation. These answers describe repository work and proposed next steps; they are not minutes of an unverified joint session.**
+
 1. **What worked well in how we worked together today?**
 
-   > 
+   > 劉順松: From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
+
+   > 張棨翔: each of us added our own part on one shared branch with a clear rule (pull before you edit; add
+   > `DECISIONS.md` entries without rewriting anyone else's), so nothing conflicted. The backend boxes were explained
+   > by someone who did not write them (劉順松 explained the LLM service, 張棨翔 the API), so the backend is not
+   > known by only one person.
 
 2. **What was hard or awkward?** (for example: one person doing most of the typing, long silences, disagreeing about direction, tool problems)
 
-   > 
+   > 劉順松: Stacked branches made integration confusing: #110 and #111 had been merged into their parent branches, but their changes did not reach `main` until #123. We also needed to distinguish completed implementation from unfinished collaboration records.
+
+   > 張棨翔: it was hard to get all four of us together at one time, so much of the work happened separately and the
+   > on-screen explanations and review were thin. The #120 documents are a record, not the code slice the session
+   > asks for, so we still need to build one thin code slice together. The frontend boxes could only be explained by
+   > 吳普軒, and 林均澔's parts were still blank at merge.
 
 3. **Who had the least chance to contribute, and what would help next time?** (Route 2: was there a box only one person could explain? What will we do about it?)
 
    > 吳普軒: the frontend boxes were written mostly by 吳普軒 alone, so only 吳普軒 could explain them; next time a
    > teammate pairs with 吳普軒 on a frontend change.
 
+   > 劉順松: We have not established who had the least opportunity to contribute. Frontend knowledge was concentrated with 吳普軒. Next time, I propose explaining the nurse-confirmation-to-physician-report flow myself, with 吳普軒 checking my explanation, so another member can understand and maintain that path.
+
 4. **What is the one thing we will do differently in the next team session** (merge day)?
 
-   > 
+   > 林均澔: the author replies to the steward's comment before the PR is merged (#120's comment got no reply).
+
+   > 劉順松: Before each merge, we will check that the PR targets `main`; after merging, we will verify that the intended feature actually appears and works on `main`. This is my proposed next-session practice, pending team agreement.
 
 5. **Blockers we found** (technical or otherwise) and who will follow up:
 
    > #110 (#87) and #111 (#28) were approved but missed `main` through a stacked merge; fixed in #123 (吳普軒). The
    > fresh-clone test is still to do (a non-steward, before E3).
+
+   > 劉順松: Integration of #110/#111 was corrected in #123. My closeout changes are in #125, with review requested from 吳普軒. A real non-steward still needs to follow only the README and complete nurse confirmation -> physician report; the team must confirm the tester. The joint technical slice, participant explanations and joint-session records remain unverified. The team and #106 coordinator need to arrange completion or seek instructor approval for a specific alternative.
 
 ---
 
@@ -222,4 +251,3 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 ☐ We saved this worksheet as `docs/walking_skeleton.md` and added a line to `DECISIONS.md`
 
 If you could not tick all of these, that is okay. Write what happened in Part 5 and submit what you have.
-
