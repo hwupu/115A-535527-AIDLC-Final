@@ -1,5 +1,7 @@
 # 🩺🎙️ 115A-535527 AIDLC — AI 語音檢傷問診輔助系統
 
+![檢傷護理師畫面：逐字稿、問診提示（查核表）與 AI 草稿，檢傷級數由護理師決定（模擬資料）](docs/assets/cover.png)
+
 ## 🚀 快速開始（demo）
 
 需求：Git、Node.js 24 與 pnpm、Python 3.12 與 [uv](https://docs.astral.sh/uv/getting-started/installation/)，以及已啟動的 [Ollama](https://ollama.com/download)。第一次安裝和下載模型需要網路，之後在本機推論，不需要雲端 API 或金鑰。
