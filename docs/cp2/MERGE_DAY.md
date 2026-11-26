@@ -7,8 +7,9 @@ Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 **Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
 main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
 
-**How we did it.** We did not hold merge day as one 60-minute call. The merges it asks for happened as reviewed pull
-requests into `main` between 2026-11-21 and 2026-11-26. This record takes each member's **last main feature PR
+**How we did it.** The merges below happened as reviewed pull requests into `main` between 2026-11-21 and
+2026-11-26, before the meeting; the four of us then met for merge day, following the plan in `DECISIONS.md`, and ran
+the main task together (Part 3). This record takes each member's **last main feature PR
 merged into `main`** and fills in the worksheet from GitHub: the merge commit, who merged it (driver), who
 approved it (reviewer), conflicts, and CI on `main` after the merge. Anything we did not do is marked as not done.
 
@@ -104,10 +105,10 @@ merge commit above).
 
 ## Quick checklist
 
-☐ The merge plan was in `DECISIONS.md` before the session started (a plan was drafted in the Week 12 entry; the
-  merges did not follow one session)
+☑ The merge plan was in `DECISIONS.md` before the session started (drafted in the Week 12 entry; the meeting followed
+  it, participant-reported by 張棨翔)
 ☑ All four of us were there (we met together on merge day)
-☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
+☐ Every open PR was merged or closed with a reason at merge day (not verified: the meeting cutoff time is not recorded. 張棨翔 reports that the planned PRs were handled, but #125 opened on 2026-11-26 at 22:00:50 +08:00 and remains open; #126 merged at 22:39:33 +08:00. Do not infer an all-open-PR completion snapshot from those facts.)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
 ☑ Someone other than the steward ran the fresh-clone test (participant-reported in #126; not independently verified here)
 ☑ The outcome is written under the merge plan
