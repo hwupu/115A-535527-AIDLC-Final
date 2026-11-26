@@ -187,10 +187,18 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 1. **What worked well in how we worked together today?**
 
    > From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
+   >
+   > 張棨翔: each of us added our own part on one shared branch with a clear rule (pull before you edit; add
+   > `DECISIONS.md` entries without rewriting anyone else's), so nothing conflicted. The backend boxes were explained
+   > by someone who did not write them (劉順松 explained the LLM service, 張棨翔 the API), so the backend is not
+   > known by only one person.
 
 2. **What was hard or awkward?** (for example: one person doing most of the typing, long silences, disagreeing about direction, tool problems)
 
-   > 
+   > 張棨翔: it was hard to get all four of us together at one time, so much of the work happened separately and the
+   > on-screen explanations and review were thin. The #120 documents are a record, not the code slice the session
+   > asks for, so we still need to build one thin code slice together. The frontend boxes could only be explained by
+   > 吳普軒, and 林均澔's parts were still blank at merge.
 
 3. **Who had the least chance to contribute, and what would help next time?** (Route 2: was there a box only one person could explain? What will we do about it?)
 
