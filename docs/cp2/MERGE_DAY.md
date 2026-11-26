@@ -2,7 +2,7 @@
 
 Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
-**Requirement status:** this is an asynchronous integration record, not evidence of the required single joint merge session. In #126, author 吳普軒 reports that all four members ran the app and the README-only fresh-clone task on their own machines. The results below are attributed to that report, not independently reproduced by this review. Tester-specific dates, fresh-clone revisions and run artifacts are not attached; confirmation remains tracked in #106. A member being on leave does not by itself establish participation.
+**Requirement status:** the original record below describes asynchronous integration. The newer dated update attributed to 張棨翔 in #126 reports a subsequent four-person merge-day meeting and README-only runs on each member's machine. Preserve that participant report separately from the earlier history. This review did not observe or reproduce those runs; tester-specific start/end times, clone revisions and run artifacts are not attached. The technical walking-skeleton slice remains a separate requirement in #106.
 
 **Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
 main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
@@ -89,7 +89,7 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 **Outcome (2026-11-26):** merged #80, #82, #117 and #123 (each member's last main feature); closed none. Conflicts in
 `DECISIONS.md`, resolved by keeping both sides' entries. #110 and #111 missed `main` through a stacked merge and were
-restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: reported completed by 吳普軒 in #126; individual run details remain to be confirmed. `main` is green (CI passed on every
+restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: reported completed in #126, including the dated update attributed to 張棨翔; individual run details remain to be confirmed. `main` is green (CI passed on every
 merge commit above).
 
 **Team check:**
@@ -109,6 +109,6 @@ merge commit above).
 ☑ All four of us were there (we met together on merge day)
 ☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
-☑ Someone other than the steward ran the fresh-clone test (author-reported in #126; not independently verified here)
+☑ Someone other than the steward ran the fresh-clone test (participant-reported in #126; not independently verified here)
 ☑ The outcome is written under the merge plan
 ☑ This worksheet is saved (as `docs/cp2/MERGE_DAY.md`)
