@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-11-26 Asia/Taipei",
+  "issue": 106,
+  "ready_for_final_submission": false,
+  "completed_in_this_change": [
+    "Week 9 evidence-based historical record",
+    "One README organization confirmed by Liu in this conversation",
+    "Report placeholders replaced by explicit facts or disclosed gaps",
+    "Submission index temporary Status column removed",
+    "Contributor graph captured after PR120/124 merge"
+  ],
+  "remaining_requirements": [
+    {
+      "id": "joint_walking_skeleton",
+      "status": "not_verified",
+      "requires": "Actual team session, technical slice, non-author explanation and review; or instructor-approved alternative"
+    },
+    {
+      "id": "joint_merge_day",
+      "status": "not_verified",
+      "requires": "Actual required joint activity; asynchronous merges remain recorded separately"
+    },
+    {
+      "id": "non_steward_fresh_clone",
+      "status": "not_verified",
+      "requires": "A real non-steward follows README on a new clone and completes nurse-to-physician task"
+    },
+    {
+      "id": "team_review_and_upload",
+      "status": "pending",
+      "requires": "Another teammate reviews this PR; team checks final ZIP; authorized human uploads to E3"
+    }
+  ],
+  "historical_limit": "Week 9 formal steward reviews not found; do not claim credit from implementation alone",
+  "evidence": "docs/cp2/evidence/closeout-2026-11-26/repository-review-audit.json"
+}

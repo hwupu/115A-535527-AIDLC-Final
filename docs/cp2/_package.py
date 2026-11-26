@@ -8,6 +8,10 @@ Files are taken from the committed HEAD, so the zip matches GitHub. Two local fi
 git-ignored): docs/cp2/Group01_CP2_Report.pdf and docs/cp2/CONTRIBUTOR_GRAPH.png. The script warns about unfinished
 parts but still builds, so the team can check a draft.
 """
+import argparse
+import hashlib
+import json
+import re
 import subprocess
 import sys
 import zipfile
@@ -19,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # Repository paths (files or directories) that make up the deliverables.
 DELIVERABLES = [
+    "docs/assets",                  # README cover (materialized from LFS cache)
     "docs/cp2",                     # report, rationale, evaluation, prompt card, user tests, worksheets, evidence
     "DECISIONS.md",                 # decisions, steward record, merge plan and outcome
     "CLAUDE.md",                    # system prompt for the coding agent
@@ -39,19 +44,45 @@ def git(*args: str) -> bytes:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--strict", action="store_true", help="Refuse a final package while human requirements remain")
+    args = parser.parse_args()
     if git("status", "--porcelain").strip():
         print("warning: uncommitted changes are not included; the zip uses HEAD", file=sys.stderr)
     files = git("ls-tree", "-r", "--name-only", "-z", "HEAD", "--", *DELIVERABLES).decode().split("\0")
     files = [f for f in files if f]
     entries = {f: git("show", f"HEAD:{f}") for f in files}
+    status = json.loads(entries["docs/cp2/SUBMISSION_STATUS.json"])
+    if not status["ready_for_final_submission"]:
+        pending = ", ".join(x["id"] for x in status["remaining_requirements"] if x["status"] != "complete")
+        print(f"warning: REVIEW PACKAGE; unfinished requirements: {pending}", file=sys.stderr)
+        if args.strict:
+            raise SystemExit("Final readiness check failed; keep #106 open and complete the evidenced requirements.")
+    for name, content in list(entries.items()):
+        if content.startswith(b"version https://git-lfs.github.com/spec/v1\n"):
+            oid = re.search(rb"oid sha256:([a-f0-9]{64})", content).group(1).decode()
+            size = int(re.search(rb"size ([0-9]+)", content).group(1))
+            candidates = [ROOT / name, ROOT / "evidence" / "lfs" / oid]
+            materialized = next((p.read_bytes() for p in candidates if p.is_file() and p.stat().st_size == size and hashlib.sha256(p.read_bytes()).hexdigest() == oid), None)
+            if materialized is None:
+                raise SystemExit(f"Missing verified LFS media: {name}; fetch LFS content before packaging")
+            entries[name] = materialized
     for extra in LOCAL_EXTRAS:
         path = ROOT / extra
         if path.is_file():
             entries[extra] = path.read_bytes()
         else:
             print(f"warning: {extra} not found (optional local file)", file=sys.stderr)
+    meta = ROOT / "evidence/report-export.json"
+    if "docs/cp2/Group01_CP2_Report.pdf" in entries:
+        if not meta.is_file():
+            raise SystemExit("Report export metadata missing; regenerate PDF from the current report")
+        export = json.loads(meta.read_text(encoding="utf-8"))
+        for key, name in [("source_sha256", "docs/cp2/Group01_CP2_Report.md"), ("pdf_sha256", "docs/cp2/Group01_CP2_Report.pdf")]:
+            if hashlib.sha256(entries[name]).hexdigest() != export[key]:
+                raise SystemExit("Stale report PDF or source; regenerate PDF before packaging")
     files_in_zip = {f"repository/{name}": content for name, content in entries.items()}
-    files_in_zip["README.md"] = entries["docs/cp2/README.md"]
+    files_in_zip["README.md"] = entries["docs/cp2/README.md"].replace(b"(../../README.md)", b"(repository/README.md)")
     for report in ("docs/cp2/Group01_CP2_Report.md", "docs/cp2/Group01_CP2_Report.pdf"):
         if report in entries:
             files_in_zip[Path(report).name] = entries[report]
@@ -65,6 +96,13 @@ def main() -> None:
     if b"TODO(team)" in entries.get("docs/cp2/Group01_CP2_Report.md", b""):
         print("warning: the report still has TODO(team) items", file=sys.stderr)
 
+    manifest = {
+        "source_revision": git("rev-parse", "HEAD").decode().strip(),
+        "repository": REPO_URL,
+        "ready_for_final_submission": status["ready_for_final_submission"],
+        "files": {name: hashlib.sha256(content).hexdigest() for name, content in sorted(files_in_zip.items())},
+    }
+    files_in_zip["MANIFEST.json"] = json.dumps(manifest, ensure_ascii=False, indent=2).encode()
     out = ROOT / "submission"
     out.mkdir(exist_ok=True)
     archive = out / f"{NAME}.zip"

@@ -20,23 +20,28 @@ Paths are from the repository root. In the zip, the repository files are under `
 
 ## Deliverables
 
-<!-- TEMP: remove the Status column before submission. -->
-
-| # | Deliverable | Where | Status (temp, remove before submission) |
-|---|---|---|---|
-| 1 | Working prototype two people can use together | The repository; run steps in `README.md` (快速開始) | ✅ Demonstrated in the Week 12 lab, reviewed by Group 03 (Track A). Fresh-clone test still happens at merge day |
-| 2 | Design rationale, with at least two user tests outside the team | `docs/cp2/DESIGN_RATIONALE.md`; sessions in `docs/cp2/USER_TEST_PROTOCOL.md` (form: `USER_TEST_FORM.md`, scenarios: `SCENARIO_CARDS.md`) | ✅ Four outside-team participants in two runs (U01–U04; U03 a nurse, U04 a physician) with timing, AI accuracy and observations, plus the Group 03 review in the Week 12 lab. No paper baseline yet (CP3) |
-| 3 | Updated evaluation report | `docs/cp2/EVALUATION_REPORT.md` (metric definitions: `docs/cp2/METRICS.md`; plan: `docs/EVALUATION_PLAN.md`) | ✅ Done, including the U01–U04 run results |
-| 4 | System prompt and prompt documentation card | `CLAUDE.md` (coding agent); `services/llm/prompts/v5.txt` (the product's model); `docs/cp2/PROMPT_CARD.md` | ✅ Done |
-| 5 | AI usage guidelines, updated from Week 3 | `AI_USAGE_GUIDELINES.md` (v0.3, with the changes from v0.1 and v0.2) | ✅ v0.3 approved by the team 2026-11-24, recorded in `DECISIONS.md` |
-| 6 | Prompt test suite: 10+ cases, one fail → fix → re-run cycle | `eval/cases.json` (14 cases), `eval/run_prompt_suite.py`; raw outputs in `docs/cp2/evidence/` | ✅ Done |
-| 7 | `DECISIONS.md`, up to date | `DECISIONS.md` | ⚠️ Needed: Week 9 (劉順松) steward entry (Week 8 and Week 10 recorded); walking-skeleton line. Merge-day outcome recorded |
-| 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/CONTRIBUTOR_GRAPH.png` | ✅ Screenshot taken 2026-11-24 (before merge day). Retake after merge day if the team wants the final numbers. Claude shows as a contributor (co-author lines) and #73 doesn't count (see report §8) |
-| 9 | Walking skeleton pull request | Worksheet `docs/cp2/WALKING_SKELETON.md`; merged PR linked in the report | ❌ Session not held (planned 11/26). Needed: session, merged PR reviewed by the steward, filled worksheet |
-| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ⚠️ Recorded from GitHub: each member's last feature PR (#80, #82, #117, #123), no joint session. Needed: joint-session requirement remains unmet; fresh-clone test by a non-steward |
+| # | Deliverable | Where |
+| --- | --- | --- |
+| 1 | Working prototype two people can use together | The repository; run steps in `README.md` (快速開始) |
+| 2 | Design rationale, with at least two user tests outside the team | `docs/cp2/DESIGN_RATIONALE.md`; sessions in `docs/cp2/USER_TEST_PROTOCOL.md` (form: `USER_TEST_FORM.md`, scenarios: `SCENARIO_CARDS.md`) |
+| 3 | Updated evaluation report | `docs/cp2/EVALUATION_REPORT.md` (metric definitions: `docs/cp2/METRICS.md`; plan: `docs/EVALUATION_PLAN.md`) |
+| 4 | System prompt and prompt documentation card | `CLAUDE.md` (coding agent); `services/llm/prompts/v5.txt` (the product's model); `docs/cp2/PROMPT_CARD.md` |
+| 5 | AI usage guidelines, updated from Week 3 | `AI_USAGE_GUIDELINES.md` (v0.3, with the changes from v0.1 and v0.2) |
+| 6 | Prompt test suite: 10+ cases, one fail → fix → re-run cycle | `eval/cases.json` (14 cases), `eval/run_prompt_suite.py`; raw outputs in `docs/cp2/evidence/` |
+| 7 | `DECISIONS.md`, up to date | `DECISIONS.md` |
+| 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/CONTRIBUTOR_GRAPH.png` |
+| 9 | Walking skeleton pull request | Worksheet `docs/cp2/WALKING_SKELETON.md`; merged PR linked in the report |
+| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` |
 
 The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md`. We keep course files in
 `docs/cp2/`; the instructor's blank originals are in `docs/references/`.
+
+## Readiness and remaining requirements
+
+This is a review package with disclosed gaps, not a declaration that every CP2 requirement is complete.
+The machine-readable status is `SUBMISSION_STATUS.json`; evidence and next actions are in
+`CLOSEOUT_STATUS.md`. The required joint activities and non-steward fresh-clone task remain open in #106.
+Do not infer completion from the absence of a temporary table column.
 
 ## Other files in this folder
 
@@ -48,5 +53,5 @@ The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge
 1. Commit everything, then export the report to `docs/cp2/Group01_CP2_Report.pdf` and save the contributor graph
    screenshot as `docs/cp2/CONTRIBUTOR_GRAPH.png` (both stay out of git).
 2. Run `python3 docs/cp2/_package.py`. It writes `submission/Group01_CP2.zip`, taken from the last commit, and warns
-   about blank worksheets and `TODO(team)` items left in the report.
+   about unfinished requirements, blank worksheets and unresolved report placeholders. A warning about a real gap must not be suppressed; `--strict` refuses a final-ready package while any gap remains.
 3. Upload `Group01_CP2.zip` to E3 under "CP2" by Sunday, November 29, end of day.

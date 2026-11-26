@@ -7,6 +7,21 @@ says the week was missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-26 - CP2 file organization confirmed by 劉順松
+- Status: confirmed by 劉順松 in the current Codex conversation (2026-11-26).
+- Context: the 2026-11-24 One README proposal still needed another member's confirmation after #103.
+- Decision: root README.md is the single startup guide; course deliverables stay under docs/cp2/.
+- Consequences: repository code is reviewed on GitHub; the submission index points to the actual deliverables. This confirmation does not certify unfinished joint activities or clinical correctness.
+- Decided by: 劉順松; recorded with Codex assistance at his explicit request.
+
+## 2026-11-08 - Week 9 steward (劉順松): implementation recorded; steward actions unverified
+- Status: recorded late on 2026-11-26 from repository evidence, not backdated activity.
+- Context: Week 9 was Nov 2-8. The audit of all 40 repository PRs and their formal reviews found no review submitted by 414551016 during that interval (Taipei time).
+- What happened: authored implementation commit 4ce7382 on Nov 4 at 14:16:47 +08:00, and opened #73 at 14:18:07. #73 merged on Nov 19, outside Week 9. The Nov 4 prompt log explicitly says no code-steward approval was performed in that run.
+- Decision: claim the evidenced implementation contribution, but do not claim a completed Week 9 steward review, handover or approvals. No verified Week 9 steward execution record is available; undocumented activity is not ruled out. Later Week 12 reviews are recorded at their actual dates and do not repair Week 9 retrospectively.
+- Consequences: this supplies the missing historical record, not evidence that the individual steward threshold was satisfied in Week 9. Any alternative credit arrangement needs the instructor/team's decision. Evidence: docs/cp2/evidence/closeout-2026-11-26/repository-review-audit.json; prompt-log/2026-11-04-414551016-cp2.md.
+- Recorded by: 劉順松, Codex-assisted, at his request to investigate and complete his part.
+
 ## 2026-11-26 — Walking skeleton slice: the shared CP2 record in #120
 - Status: proposed (to be confirmed by the team and the Week 12 steward, 劉順松, in the #120 review)
 - Context: the prototype already runs end to end (Route 2), and the slices the worksheet offers are already merged:
@@ -129,8 +144,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Decided by: the team (recorded by 吳普軒)
 
 ## 2026-11-24 — One README, and course files kept in `docs/cp2/` (#97, #103)
-- Status: proposed by 吳普軒 (README area lead) in #103. #103 was merged 2026-11-24 with an approval from the
-  author's own account only (made by Claude Code on 吳普軒's instruction), so a teammate still has to confirm it
+- Status: confirmed by 劉順松 on 2026-11-26 after the proposal by 吳普軒 (README area lead) in #103. #103 merged on 2026-11-24; the prior author-account approval alone was not teammate confirmation. See the confirmation entry above.
 - Context: Group 03 found two conflicting quick starts in the Week 12 lab (`README.md` and `README_CP2.md`, #97). The
   repository root and `docs/` also held course working notes (`CP2_WORK_LOG.md`, personal handoff files, an old
   archive), mixed in with the documentation for the code.
@@ -142,7 +156,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   `docs/cp2/README.md` points graders to the actual location. Packing the whole source tree in the zip: the code is
   graded from GitHub.
 - Consequences: removed files stay in git history (`56a8b38`). The CP2 report and the zip read from `docs/cp2/`.
-- Decided by: 吳普軒 (README area lead); confirmation by another member pending
+- Decided by: 吳普軒 (README area lead); confirmed by 劉順松 on 2026-11-26 (entry above)
 
 ## 2026-11-24 - Week 12 steward actions and future merge plan
 - Status: observed repository actions plus a proposed future plan; not joint-session minutes.

@@ -1,0 +1,111 @@
+{
+  "checked_on": "2026-11-26 Asia/Taipei",
+  "base_revision": "924d688efa64c24cfde5c46826cf072fd05394d6",
+  "scope": "all repository PRs returned by first page (100 limit); 40 PRs, full set if below 100",
+  "week9_interval_utc": [
+    "2026-11-01T16:00:00Z",
+    "2026-11-08T16:00:00Z"
+  ],
+  "week9_user_reviews": [],
+  "pr73": {
+    "created_at": "2026-11-04T06:18:07Z",
+    "merged_at": "2026-11-19T07:21:57Z",
+    "head_sha": "4ce7382a71d0393e3a70d5358a701fdccd77d454",
+    "url": "https://github.com/hwupu/115A-535527-AIDLC-Final/pull/73"
+  },
+  "members": {
+    "hwupu": {
+      "merged_main_prs": [
+        54,
+        55,
+        56,
+        69,
+        70,
+        71,
+        72,
+        74,
+        75,
+        96,
+        98,
+        108,
+        109,
+        122,
+        123,
+        124
+      ],
+      "written_approval_prs": [
+        67,
+        68,
+        73,
+        85,
+        103,
+        117
+      ]
+    },
+    "XiangLibra": {
+      "merged_main_prs": [
+        67,
+        68,
+        84,
+        85,
+        90,
+        91,
+        93,
+        94,
+        95,
+        99,
+        114,
+        116,
+        117,
+        120
+      ],
+      "written_approval_prs": [
+        54,
+        55,
+        56,
+        75,
+        80,
+        81,
+        82,
+        109,
+        119,
+        124
+      ]
+    },
+    "414551016": {
+      "merged_main_prs": [
+        73,
+        80,
+        103
+      ],
+      "written_approval_prs": [
+        74,
+        94,
+        95,
+        96,
+        98,
+        110,
+        111,
+        114,
+        116,
+        120,
+        124
+      ]
+    },
+    "junlinwk": {
+      "merged_main_prs": [
+        81,
+        82,
+        119
+      ],
+      "written_approval_prs": [
+        74,
+        75,
+        90,
+        91,
+        94
+      ]
+    }
+  },
+  "limits": "Written approvals are repository evidence, not certification of substantive human review, attendance or course credit; PR counts include documentation. No undocumented Week 9 activity can be ruled out."
+}

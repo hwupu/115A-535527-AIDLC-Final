@@ -6,12 +6,11 @@
 
 Repository: https://github.com/hwupu/115A-535527-AIDLC-Final
 
-> DRAFT, 2026-11-24. Items marked **TODO(team)** must be filled in from real records before submission. Do not fill
-> them with estimates.
+> Review package, 2026-11-26. Known unfinished requirements are disclosed in the final section and SUBMISSION_STATUS.json. This report does not certify joint attendance or final submission readiness.
 
 ## What the tool does
 
-<!-- TODO(team): replace with the agreed sentence from Part 1 of docs/cp2/WALKING_SKELETON.md. -->
+The following is the current product description; four-person Part 1 agreement has not been recorded.
 At the emergency-department triage desk, the tool listens to the nurse and patient, transcribes the conversation and
 drafts a structured triage record (chief complaint, history, TOCC, vitals, measurement restrictions), with the
 transcript quote behind every drafted field. The nurse checks, corrects and confirms each field and alone decides
@@ -33,11 +32,10 @@ same visit:
 - **Nurse:** starts a visit, records (or types) the conversation, reviews the AI draft field by field against its
   quote, edits, chooses the triage level and confirms. Can print the record in an ED-style layout (#99) or export it.
 - **Physician:** sees only confirmed records, read-only, including the nurse's triage level.
-- **Patient:** answers on their own screen by voice or text and never sees the AI draft (a step-by-step
-  questionnaire is planned, #86).
+- **Patient:** answers on their own screen by voice or text and never sees the AI draft (step-by-step questions, #109; checklist and keyboard shortcuts restored to main by #123).
 - **Admin:** evaluation runs and JSON/CSV export.
 
-Pipeline: browser recording → Whisper small (CPU, int8; whole clip after stop) → OpenCC to Traditional Chinese →
+Pipeline: browser recording → Whisper small (GPU if startup succeeds, otherwise CPU int8; whole clip after stop) → OpenCC to Traditional Chinese →
 prompt v5 on Ollama (`gemma3:1b` by default, `gemma4:e4b` on the workstation) → quote and type checks → nurse review
 → confirmed record. Every nurse edit is stored with before/after values. If the model times out or returns broken
 output, the nurse is told and finishes the record by hand (#80).
@@ -68,12 +66,14 @@ each pair had one at the nurse screen and one playing the patient, facilitated b
 U03/U04 on 2026-11-24). Ratings, 1 = strongly disagree, 5 = strongly agree: (1) the AI draft
 made the triage record faster, (2) it was easy to tell AI drafts from confirmed fields, (3) I would use it at work.
 
-| Session | Participant | Ratings 1/2/3 | Hardest part / what to change (Q4) | Main worry if it went live (Q5) | What we changed |
-|---|---|---|---|---|---|
-| U01 | Other, nurse screen | 5 / 5 / 5 | 「更正式的 PDF 格式，又或者對接醫院系統。」 (a more formal PDF, or hospital-system integration) | 「有沒有考慮到多台裝置負載的問題」 (load from several devices) | Printable ED-style record (#99); HIS integration out of scope; load test planned (#100) |
-| U02 | Other, patient | 5 / 5 / 5 | 「如果可以辨別對話的角色。」 (tell the speakers apart) | 「會比較在意資料摘要的精準度。」 (accuracy of the summary) | Speaker label per transcript line, correctable by the nurse (`DECISIONS.md` 2026-11-23, #102); held-out evaluation (#45) |
-| U03 | 護理師, nurse screen | 4 / 5 / 5 | 「等待輸入時間（語音轉文字檔）、可同步帶入 HIS 系統」 (waiting for speech-to-text; sync to the HIS) | 「多一份工作，希望可以自動帶入 HIS 會更好」 (one more task; HIS import) | Whisper on the GPU (#88); HIS out of scope, exports stay copy, print and JSON (`DECISIONS.md` 2026-11-24) |
-| U04 | 醫師, patient | 5 / 5 / 5 | 「…希望可以減少一個一個確認的次數（可以一小個區塊來確認）…」 (confirm a section at a time) | 「怕導入後會因為多了步驟而減少護理師的使用意願」 (extra steps may put nurses off) | Section confirmation (#113); TTAS reference level by rule table proposed (#116) |
+| Participant / role | Ratings 1/2/3 | Feedback and follow-up |
+|---|---|---|
+| U01: other profession, nurse screen | 5 / 5 / 5 | Formal printout (#99); HIS excluded; multi-device load remains #100. |
+| U02: other profession, patient role | 5 / 5 / 5 | Correctable speaker labels (#102); summary accuracy needs held-out evaluation (#45). |
+| U03: nurse, nurse screen | 4 / 5 / 5 | STT waiting time led to GPU fallback (#117); HIS excluded. |
+| U04: physician, patient role | 5 / 5 / 5 | Fewer confirmation steps (#113); TTAS reference proposal accepted only with the safeguards in DECISIONS.md; implementation and clinical checks remain separate (#115). |
+
+Original anonymized answers are retained in USER_TEST_PROTOCOL.md and DESIGN_RATIONALE.md. Four participants took part in two paired runs, not four independent task runs.
 
 Measured in the two runs (demo database): start to confirm 5 min 02 s and 3 min 28 s; AI drafts against the S03
 answer key 14/17 and 18/19 correct, none filled although not said. One safety finding: STT heard 血壓 as 「斜壓兩」
@@ -125,42 +125,37 @@ reached 36/43 fields with no wrong typed value.
 Entries from the project start (2026-09-21) through Week 12, each with context, decision, consequences and who
 decided: topic, stack, steward rotation, model and runtime choices (Ollama, Whisper size, prompt v5), the patient
 screen, speaker labels, Whisper on the GPU, the TTAS reference level by rule table, keeping the current exports,
-no RAG, and the Week 8, 10, 11 and 12 steward records (Week 10 had no pull requests, #119). The Week 12 entry holds the
+no RAG, and the Week 8-12 steward records (Week 10 had no pull requests, #119). The Week 12 entry holds the
 merge-day plan and outcome.
 
-<!-- TODO(team): Week 9 (劉順松) steward entry: what he actually did, or that the week was missed. Add the
-walking-skeleton line. (Week 8 and the merge-day outcome are recorded.) -->
+Week 9 is now recorded late from evidence: implementation and #73 were created Nov 4, but no Week 9 formal review by 414551016 was found across all 40 PRs. No completed Week 9 steward term is claimed. The single README/course-folder organization was explicitly confirmed by 劉順松 on Nov 26.
 
 ## 8. Contributions
 
-Counted from GitHub on 2026-11-24 (merged PRs into `main`; approvals with a written comment).
+Audited from all 40 repository PRs and formal review records on 2026-11-26, through main 924d688. Counts below are PRs authored and merged with base main; documentation is included. Written approvals are repository evidence, not certification of substantive human review or course credit. Reverted and restored PRs (#122/#123) remain in historical counts.
 
-| Member | Area lead | Merged PRs | Approvals with comment | Code steward |
-|---|---|---|---|---|
-| 吳普軒 | Frontend, CI, README | 12 (e.g. #54–#56, #70–#72, #74, #75) | #67, #68, #73, #85 | Week 8 |
-| 張棨翔 | LLM, API, STT (PO) | 10 (e.g. #84, #85, #90, #91, #95, #99) | #54–#56, #75, #80–#82 | Week 11 |
-| 劉順松 | Audit, evaluation metrics | 3 (#73, #80, #103) | #74, #94–#96, #98 | Week 9 (not recorded), Week 12 (current) |
-| 林均澔 | Scenarios, test data, docs | 2 (#81, #82) | #74, #75, #90, #91, #94 | Week 10 (not recorded) |
+| Member | Merged main PR count | Written approval examples | Steward record |
+|---|---|---|---|
+| 吳普軒 | 16 | #67, #68, #85, #117 | Week 8 recorded late; handover not recorded |
+| 張棨翔 | 14 | #80, #81, #82, #109 | Week 11 recorded |
+| 劉順松 | 3 | #74, #94-#96, #98, #114, #120, #124 | Week 9 unverified execution; Week 12 recorded |
+| 林均澔 | 3 | #74, #75, #90, #91, #94 | Week 10 recorded late; no approvals that week |
 
-Contributor graph (`CONTRIBUTOR_GRAPH.png`, GitHub, commits to `main` excluding merge commits, taken 2026-11-24):
-hwupu 36 commits (+15,676 / −3,124), XiangLibra 19 (+3,817 / −611), 414551016 5 (+949 / −263), junlinwk 3
-(+673 / −67). Commits made with Claude Code carry a `Co-Authored-By` line, so GitHub also lists Claude (54 commits);
-every commit's author is one of the four of us. 劉順松's main implementation (#73, 3,589 lines) arrived as a merge commit (it integrated the frontend
-branches), and GitHub's graph does not count merge commits, so his graph line is smaller than his work; see #73.
+Evidence: evidence/closeout-2026-11-26/repository-review-audit.json. 劉順松's two code PRs are #73 and #80; #103 is documentation. Approvals executed with Codex assistance on explicit instructions remain disclosed as such.
 
-<!-- TODO(team): re-count the table after merge day; retake the screenshot if the numbers change. -->
+The GitHub contributor graph was captured on 2026-11-26 after #120/#124 merged: hwupu 51 commits (+17,705 / -4,034), XiangLibra 25 (+4,260 / -663), 414551016 8 (+1,014 / -269), junlinwk 4 (+684 / -70), LSS-580812 1 (+16 / -5), and claude 75 (+21,509 / -4,697). These are displayed GitHub identities, not six human team members. Co-author attribution and excluded merge commits make this different from PR counts; identities are not combined without verified mapping. Screenshot: CONTRIBUTOR_GRAPH.png. It is a dated snapshot and will not include this closeout PR.
 
 ## 9. Walking skeleton
 
 The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md`; we keep all course files
 under `docs/cp2/` (filled worksheets) and `docs/references/` (the instructor's blank originals).
 
-<!-- TODO(team): fill after the session (planned 2026-11-26). Date, attendees, the slice built, the merged PR link,
-the steward's comment and the reflection are in docs/cp2/WALKING_SKELETON.md. -->
+No completed four-person technical session is evidenced in the records available at this review. The worksheet retains the members' actual entries and uncompleted fields.
 
-- Date and attendees: TODO(team)
-- Merged PR: TODO(team)
-- Biggest decision (also in `DECISIONS.md`): TODO(team)
+- Technical slice / four-person activity: not completed or verified in this review.
+- #80 is prior AI-failure work and is not counted again as a new session slice.
+- #120 is a merged interim documentary record, not a substitute for the required technical session. Instructor acceptance of that substitution has not been recorded.
+- Follow-up: #106; use the instructor worksheet and record actual times, participant actions, non-author explanations, review, author reply and reflection.
 
 ## 10. Merge day
 
@@ -170,14 +165,18 @@ three drivers and CI green on every merge commit. One finding: #110 (#87) and #1
 into stacked branches after their base had reached `main`, so they missed `main` until #123.
 
 - Merge plan and outcome: `DECISIONS.md`, "Week 12 steward actions and future merge plan"
-- Fresh-clone test (non-steward, README only): TODO(team)
+- Fresh-clone test (non-steward, README only): no completed record. This Codex-assisted review cannot impersonate a non-steward participant.
 - Worksheet: `docs/cp2/MERGE_DAY.md`
 
 ## Known gaps
 
-<!-- TODO(team): list honestly whatever is still open at submission. -->
+- Required four-person walking-skeleton technical session and joint merge-day session are not established by the asynchronous PR history. A documentary substitute has not been approved by the instructor (#106).
+- Non-steward fresh-clone installation and nurse-confirmation-to-physician-read task remain unverified (#106). On this laptop Ollama is not reachable at 127.0.0.1:11434 as checked Nov 26; no new real-model run is claimed.
+- Week 9 steward execution is unverified; the historical record does not retrospectively satisfy an individual threshold. Team/instructor action is needed if alternative credit is sought.
+- User-test timing and provisional AI grading were reported by the facilitator; exact Nov 23 commit and historical N-xx mapping remain unrecorded. Nurse verification of grading, held-out evaluation and paper baseline are not completed.
+- TTAS reference implementation (#115), load testing (#100), medical vocabulary and draft-streaming follow-ups are tracked separately. No clinical deployment or safety certification is claimed.
+- This closeout PR needs another teammate's review. Whole-team ZIP review and E3 upload have not happened in this run. See CLOSEOUT_STATUS.md and SUBMISSION_STATUS.json.
 
 ## AI use in this checkpoint
 
-Claude Code and Codex helped write code, tests and documents; each AI-assisted PR has a `prompt-log/` entry and an
-"AI assistance" section. Humans reviewed and merged every PR and are responsible for what was kept.
+Claude Code and Codex helped write code, tests and documents; the current closeout logs the assistance in `prompt-log/` and its PR description. Historical gaps are disclosed in AI_USAGE_GUIDELINES.md; not every historical PR has complete disclosure. Formal reviews and merges may be executed by an AI agent on explicit human instruction. This is not evidence of independent human reading, joint attendance or consensus.
