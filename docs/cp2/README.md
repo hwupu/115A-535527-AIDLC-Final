@@ -30,10 +30,10 @@ Paths are from the repository root. In the zip, the repository files are under `
 | 4 | System prompt and prompt documentation card | `CLAUDE.md` (coding agent); `services/llm/prompts/v5.txt` (the product's model); `docs/cp2/PROMPT_CARD.md` | ✅ Done |
 | 5 | AI usage guidelines, updated from Week 3 | `AI_USAGE_GUIDELINES.md` (v0.3, with the changes from v0.1 and v0.2) | ✅ v0.3 approved by the team 2026-11-24, recorded in `DECISIONS.md` |
 | 6 | Prompt test suite: 10+ cases, one fail → fix → re-run cycle | `eval/cases.json` (14 cases), `eval/run_prompt_suite.py`; raw outputs in `docs/cp2/evidence/` | ✅ Done |
-| 7 | `DECISIONS.md`, up to date | `DECISIONS.md` | ⚠️ Needed: Week 9 (劉順松) and Week 10 (林均澔) steward entries; walking-skeleton line; merge-day outcome |
+| 7 | `DECISIONS.md`, up to date | `DECISIONS.md` | ⚠️ Needed: Week 9 (劉順松) steward entry (Week 8 and Week 10 recorded); walking-skeleton line. Merge-day outcome recorded |
 | 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/CONTRIBUTOR_GRAPH.png` | ✅ Screenshot taken 2026-11-24 (before merge day). Retake after merge day if the team wants the final numbers. Claude shows as a contributor (co-author lines) and #73 doesn't count (see report §8) |
 | 9 | Walking skeleton pull request | Worksheet `docs/cp2/WALKING_SKELETON.md`; merged PR linked in the report | ❌ Session not held (planned 11/26). Needed: session, merged PR reviewed by the steward, filled worksheet |
-| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ❌ Plan drafted in `DECISIONS.md`. Needed: session after the skeleton, outcome, filled worksheet |
+| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ⚠️ Recorded from GitHub: each member's last feature PR (#80, #82, #117, #123), no joint session. Needed: joint-session requirement remains unmet; fresh-clone test by a non-steward |
 
 The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md`. We keep course files in
 `docs/cp2/`; the instructor's blank originals are in `docs/references/`.

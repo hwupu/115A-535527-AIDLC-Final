@@ -124,10 +124,12 @@ reached 36/43 fields with no wrong typed value.
 
 Entries from the project start (2026-09-21) through Week 12, each with context, decision, consequences and who
 decided: topic, stack, steward rotation, model and runtime choices (Ollama, Whisper size, prompt v5), the patient
-screen, speaker labels, and the Week 11 and Week 12 steward records. The Week 12 entry holds the merge-day plan.
+screen, speaker labels, Whisper on the GPU, the TTAS reference level by rule table, keeping the current exports,
+no RAG, and the Week 8, 10, 11 and 12 steward records (Week 10 had no pull requests, #119). The Week 12 entry holds the
+merge-day plan and outcome.
 
-<!-- TODO(team): Week 9 (劉順松) and Week 10 (林均澔) steward entries: what each actually did, or that the week was
-missed. Add the walking-skeleton line and the merge-day outcome. -->
+<!-- TODO(team): Week 9 (劉順松) steward entry: what he actually did, or that the week was missed. Add the
+walking-skeleton line. (Week 8 and the merge-day outcome are recorded.) -->
 
 ## 8. Contributions
 
@@ -162,9 +164,11 @@ the steward's comment and the reflection are in docs/cp2/WALKING_SKELETON.md. --
 
 ## 10. Merge day
 
-<!-- TODO(team): fill after the session. -->
+We did not hold one joint session; the merges happened as reviewed PRs into `main` (2026-11-21 to 11-26). The
+record takes each member's last main feature: #80 (劉順松), #82 (林均澔), #117 (張棨翔) and #123 (吳普軒), with
+three drivers and CI green on every merge commit. One finding: #110 (#87) and #111 (#28) were approved but merged
+into stacked branches after their base had reached `main`, so they missed `main` until #123.
 
-- Date and attendees: TODO(team)
 - Merge plan and outcome: `DECISIONS.md`, "Week 12 steward actions and future merge plan"
 - Fresh-clone test (non-steward, README only): TODO(team)
 - Worksheet: `docs/cp2/MERGE_DAY.md`
