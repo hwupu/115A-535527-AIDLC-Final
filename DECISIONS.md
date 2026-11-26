@@ -1,9 +1,7 @@
 # Decisions Log
 
 **Current code steward: 劉順松 (Week 12, Nov 23 – 29), per the confirmed rotation.** Rotation schedule: `README.md`.
-Update this line via PR at every handover. The Week 9 (劉順松) handover was not recorded when it happened; Week 10
-(林均澔) was recorded late (entry below). Each person adds a short entry with what they actually did as steward, or
-says the week was missed.
+Update this line via PR at every handover. Week 9 (劉順松) now has a retrospective evidence record below; a completed handover or formal review during that week is not verified. Week 10 (林均澔) was also recorded late. Retrospective documentation must distinguish evidenced implementation from steward actions.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
@@ -14,13 +12,20 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Consequences: repository code is reviewed on GitHub; the submission index points to the actual deliverables. This confirmation does not certify unfinished joint activities or clinical correctness.
 - Decided by: 劉順松; recorded with Codex assistance at his explicit request.
 
-## 2026-11-08 - Week 9 steward (劉順松): implementation recorded; steward actions unverified
-- Status: recorded late on 2026-11-26 from repository evidence, not backdated activity.
-- Context: Week 9 was Nov 2-8. The audit of all 40 repository PRs and their formal reviews found no review submitted by 414551016 during that interval (Taipei time).
-- What happened: authored implementation commit 4ce7382 on Nov 4 at 14:16:47 +08:00, and opened #73 at 14:18:07. #73 merged on Nov 19, outside Week 9. The Nov 4 prompt log explicitly says no code-steward approval was performed in that run.
-- Decision: claim the evidenced implementation contribution, but do not claim a completed Week 9 steward review, handover or approvals. No verified Week 9 steward execution record is available; undocumented activity is not ruled out. Later Week 12 reviews are recorded at their actual dates and do not repair Week 9 retrospectively.
-- Consequences: this supplies the missing historical record, not evidence that the individual steward threshold was satisfied in Week 9. Any alternative credit arrangement needs the instructor/team's decision. Evidence: docs/cp2/evidence/closeout-2026-11-26/repository-review-audit.json; prompt-log/2026-11-04-414551016-cp2.md.
-- Recorded by: 劉順松, Codex-assisted, at his request to investigate and complete his part.
+## 2026-11-26 - Week 9 steward (劉順松): retrospective record for Nov 2-8
+- Status: historical record completed from available evidence on 2026-11-26; execution of the Week 9 steward duties remains unverified. This is a late entry, not an activity backdated to Week 9.
+- Context: 劉順松 was the scheduled Week 9 steward (2026-11-02 through 2026-11-08, Asia/Taipei), per the rotation in README.md. #106 asks for what actually happened, including any missed or undocumented duties.
+- What happened (verified implementation):
+  - On Nov 4 at 14:16:47 +08:00, commit `4ce7382a71d0393e3a70d5358a701fdccd77d454` implemented the persistent CP2 candidate and reproducible local evaluation. The same-day prompt log records work on persistence/shared handoff, local STT/LLM adapters, tests, evaluation and documentation, assisted by Codex.
+  - [PR #73](https://github.com/hwupu/115A-535527-AIDLC-Final/pull/73) was opened on Nov 4 at 14:18:07 +08:00. It merged on Nov 19 at 15:21:57 +08:00, outside Week 9. Opening one's implementation PR is not a steward approval of another member's work.
+- Steward review and handover evidence:
+  - The Nov 26 audit of 40 repository PRs through baseline `924d688` found no formal review submitted by `414551016` during Week 9 (UTC interval Nov 1 16:00 inclusive to Nov 8 16:00 exclusive).
+  - The original Nov 4 prompt log explicitly says "No code-steward approval performed." No dated Week 9 handover or contemporaneous steward execution record is supplied by the evidence used here.
+  - This does not prove that no undocumented activity occurred. We do not record an undocumented review, approval, handover or complete steward term as if verified.
+- Decision: record the actual implementation contribution separately; claim no verified Week 9 steward approvals or completed handover. Later Week 12 steward reviews and merges retain their actual dates and do not retrospectively complete Week 9.
+- Consequences: the missing historical entry is supplied, while individual course-credit eligibility remains for the instructor to assess. Any alternative arrangement requires the team/instructor's decision; #106 is not closed by this entry.
+- Evidence: [Nov 4 AI work log](prompt-log/2026-11-04-414551016-cp2.md); [repository review audit](docs/cp2/evidence/closeout-2026-11-26/repository-review-audit.json); commit and PR links above. These are existing records, not a new execution of the old week's work.
+- Recorded for: 劉順松 / 414551016 / Group1, with Codex assistance at his explicit request on 2026-11-26. No independent student authorship is implied.
 
 ## 2026-11-26 — CP2 interim record #120; walking-skeleton technical slice remains required
 - Status: approved as an interim record by the Week 12 steward, 劉順松, in the #120 review (merged 2026-11-26,
