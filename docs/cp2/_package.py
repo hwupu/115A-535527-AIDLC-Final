@@ -79,7 +79,8 @@ def main() -> None:
             raise SystemExit("Report export metadata missing; regenerate PDF from the current report")
         export = json.loads(meta.read_text(encoding="utf-8"))
         for key, name in [("source_sha256", "docs/cp2/Group01_CP2_Report.md"), ("pdf_sha256", "docs/cp2/Group01_CP2_Report.pdf")]:
-            if hashlib.sha256(entries[name]).hexdigest() != export[key]:
+            content = entries[name].replace(b"\r\n", b"\n") if name.endswith(".md") else entries[name]
+            if hashlib.sha256(content).hexdigest() != export[key]:
                 raise SystemExit("Stale report PDF or source; regenerate PDF before packaging")
     files_in_zip = {f"repository/{name}": content for name, content in entries.items()}
     files_in_zip["README.md"] = entries["docs/cp2/README.md"].replace(b"(../../README.md)", b"(repository/README.md)")
