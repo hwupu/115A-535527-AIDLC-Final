@@ -175,11 +175,11 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 1. **What worked well in how we worked together today?**
 
-   > 
+   > 劉順松:From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
 
 2. **What was hard or awkward?** (for example: one person doing most of the typing, long silences, disagreeing about direction, tool problems)
 
-   > 
+   > 劉順松:Stacked branches made integration confusing: #110 and #111 had been merged into their parent branches, but their changes did not reach main until #123. We also needed to distinguish completed implementation from unfinished collaboration records.
 
 3. **Who had the least chance to contribute, and what would help next time?** (Route 2: was there a box only one person could explain? What will we do about it?)
 
