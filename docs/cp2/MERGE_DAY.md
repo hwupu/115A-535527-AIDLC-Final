@@ -108,8 +108,7 @@ merge commit above).
 ☑ The merge plan was in `DECISIONS.md` before the session started (drafted in the Week 12 entry; the meeting followed
   it, participant-reported by 張棨翔)
 ☑ All four of us were there (we met together on merge day)
-☑ Every open PR was merged or closed with a reason at merge day (participant-reported by 張棨翔; #120, #124 and #126
-  merged; #125, opened 2026-11-26 22:00, is still open)
+☐ Every open PR was merged or closed with a reason at merge day (not verified: the meeting cutoff time is not recorded. 張棨翔 reports that the planned PRs were handled, but #125 opened on 2026-11-26 at 22:00:50 +08:00 and remains open; #126 merged at 22:39:33 +08:00. Do not infer an all-open-PR completion snapshot from those facts.)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
 ☑ Someone other than the steward ran the fresh-clone test (participant-reported in #126; not independently verified here)
 ☑ The outcome is written under the merge plan
