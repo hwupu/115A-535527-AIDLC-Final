@@ -46,13 +46,16 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 | Person B (張棨翔) | Our tool helps emergency triage nurses to write the triage record once and give the doctor a complete handoff by turning the nurse–patient conversation into a draft report that the nurse checks and confirms. |
 | Person C (劉順松) | AI-assisted draft for my own revision, not the independent two-minute exercise or a team-agreed sentence: Our tool helps triage nurses prepare a traceable intake record by turning the conversation into transcript-supported draft fields for the nurse to check and confirm before the physician reads the report. |
 | Person D (林均澔) | Our tool helps triage nurses to finish intake records faster by turning the spoken conversation into a quoted draft that the nurse checks. |
-| **Agreed sentence** | |
+| **Agreed sentence** | Our tool helps emergency triage nurses to finish the intake record once and hand the physician a complete report by turning the nurse–patient conversation into a draft with quotes from it that the nurse checks and confirms, while the nurse still decides 檢傷級數. |
 
-**Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No (not verified; the agreed sentence is still blank in this version)
+**Did all four sentences match?** ☐ Yes ☑ Mostly ☐ No (all four agreed on the sentence above)
 
 If they did not match, that is a useful finding. Write down the difference you had to settle:
 
-> A prior draft said "All agreed", but the complete four-person sentence record is not present; team confirmation remains required.
+> All four sentences name triage nurses and a conversation turned into a draft that the nurse checks. They differed in
+> the benefit (typing less, writing once, a complete handoff to the physician, speed) and in whether they said where
+> the draft comes from (quotes from the transcript). The agreed sentence keeps the handoff to the physician, the quotes
+> and the nurse deciding 檢傷級數. All four agreed on it.
 
 ---
 
@@ -61,10 +64,17 @@ If they did not match, that is a useful finding. Write down the difference you h
 **1. Draw the path (3 min).** On a whiteboard, paper or shared screen, draw the shortest path from **what the user gives the tool** to **what the tool gives back**. Three to five boxes is plenty.
 
 ```
-[Patient and nurse speak] -> [STT: transcript] -> [LLM: draft fields with quotes] -> [Nurse checks and confirms] -> [Physician reads the report]
+[Nurse screen (apps/web): record the patient and nurse]
+   --audio chunks (WebSocket)--> [services/api: session, orchestration]
+   --> [services/stt: Whisper -> zh-TW transcript]
+   --> [services/llm: Ollama (Gemma) -> draft fields with source_span]
+   --> [services/api: schema validation, boundary guard, audit -> SQLite]
+   --> [Nurse screen: check, edit, confirm (POST /sessions/{id}/confirm)]
+   --> [Physician screen (apps/web): read the confirmed report]
 ```
 
-(The API stores each step; the nurse decides 檢傷級數, the AI never does.)
+(From `docs/ARCHITECTURE.md` §2–3. Only `services/api` holds state; `stt` and `llm` are stateless. The AI output has no
+檢傷級數 field: the nurse enters it, and the boundary guard blocks any triage level or advice from the model.)
 
 **2. Check where you are.** *Can we do our main task from start to finish today, on one machine, without faking anything?*
 

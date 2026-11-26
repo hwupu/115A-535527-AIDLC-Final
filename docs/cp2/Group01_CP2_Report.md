@@ -10,7 +10,10 @@ Repository: https://github.com/hwupu/115A-535527-AIDLC-Final
 
 ## What the tool does
 
-The following is the current product description; four-person Part 1 agreement has not been recorded.
+> Our tool helps emergency triage nurses to finish the intake record once and hand the physician a complete report by
+> turning the nurse–patient conversation into a draft with quotes from it that the nurse checks and confirms, while
+> the nurse still decides 檢傷級數. (Agreed by all four, walking skeleton Part 1.)
+
 At the emergency-department triage desk, the tool listens to the nurse and patient, transcribes the conversation and
 drafts a structured triage record (chief complaint, history, TOCC, vitals, measurement restrictions), with the
 transcript quote behind every drafted field. The nurse checks, corrects and confirms each field and alone decides

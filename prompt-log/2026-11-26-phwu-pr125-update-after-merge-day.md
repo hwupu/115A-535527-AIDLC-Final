@@ -21,3 +21,11 @@ please update it too."
 ## Outcome
 - Kept: as drafts for 劉順松 (PR author) and a reviewer to check. The PDF and ZIP were not regenerated.
 - Not changed: 劉順松's individual reflection text (his own words, written before merge day).
+
+## Follow-up (same day)
+- Prompt: "fill in the agreed sentence, then mark everyone agreed"; "change [the Part 2 path] to our ARCHITECTURE.md";
+  "check on 're-export the PDF and run _package.py', if no issue, push, then approve/merge #125".
+- Output: an agreed Part 1 sentence built from the four drafts ("Mostly" ticked, all four agreed per 吳普軒); the
+  Part 2 path redrawn from `docs/ARCHITECTURE.md` §2–3; the report opens with the agreed sentence. PDF re-exported
+  (Markdown -> HTML -> headless Chromium) and the zip rebuilt with `_package.py`.
+- Kept: as written; sentence agreement stated by 吳普軒 on behalf of the team.
