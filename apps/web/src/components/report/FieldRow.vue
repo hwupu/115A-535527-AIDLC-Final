@@ -5,7 +5,7 @@
 //          edit(path, value) - nurse saved a value (null clears it back to 未提及)
 //          confirm(path) - nurse accepts the AI draft as it is
 import { Check, Pencil, Quote } from "@lucide/vue";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import FieldStatusBadge from "./FieldStatusBadge.vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +41,13 @@ function startEdit() {
           : String(props.field.value);
   invalid.value = false;
   editing.value = true;
+  // Focus the editor so the keyboard (E shortcut, #28) can type at once; Esc cancels.
+  void nextTick(() => editor.value?.querySelector<HTMLElement>("input, textarea, button")?.focus());
+}
+
+const editor = ref<HTMLElement | null>(null);
+function cancel() {
+  editing.value = false;
 }
 
 function save(raw: string) {
@@ -80,18 +87,18 @@ function save(raw: string) {
     <div class="flex flex-wrap items-center justify-end gap-2">
       <FieldStatusBadge :status="field.status" />
       <template v-if="!editing && !readonly">
-        <Button v-if="field.status === 'AI 草稿'" @click="emit('confirm', def.path)">
+        <Button v-if="field.status === 'AI 草稿'" data-action="confirm" @click="emit('confirm', def.path)">
           <Check aria-hidden="true" />
           確認
         </Button>
-        <Button variant="outline" @click="startEdit">
+        <Button variant="outline" data-action="edit" @click="startEdit">
           <Pencil aria-hidden="true" />
           {{ field.status === "未提及" ? "填寫" : "修改" }}
         </Button>
       </template>
     </div>
 
-    <div v-if="editing" class="col-span-2 mt-1 grid gap-2">
+    <div v-if="editing" ref="editor" class="col-span-2 mt-1 grid gap-2" @keydown.esc.stop="cancel">
       <div v-if="isChoice" class="flex flex-wrap gap-2">
         <Button v-for="c in choices" :key="c" variant="outline" @click="save(c)">{{ c }}</Button>
         <Button variant="ghost" @click="save('')">清除</Button>
@@ -109,7 +116,7 @@ function save(raw: string) {
       <p v-if="def.hint && !isChoice" class="text-base text-muted-foreground">{{ def.hint }}</p>
       <div class="flex gap-2 pb-1">
         <Button v-if="!isChoice" @click="save(draft)">儲存</Button>
-        <Button variant="outline" @click="editing = false">取消</Button>
+        <Button variant="outline" @click="cancel">取消</Button>
       </div>
     </div>
   </li>
