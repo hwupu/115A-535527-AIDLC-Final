@@ -33,7 +33,7 @@ Paths are from the repository root. In the zip, the repository files are under `
 | 7 | `DECISIONS.md`, up to date | `DECISIONS.md` | ⚠️ Needed: Week 9 (劉順松) steward entry (Week 8 and Week 10 recorded); walking-skeleton line. Merge-day outcome recorded |
 | 8 | GitHub contributor graph | https://github.com/hwupu/115A-535527-AIDLC-Final/graphs/contributors; screenshot `docs/cp2/CONTRIBUTOR_GRAPH.png` | ✅ Screenshot taken 2026-11-24 (before merge day). Retake after merge day if the team wants the final numbers. Claude shows as a contributor (co-author lines) and #73 doesn't count (see report §8) |
 | 9 | Walking skeleton pull request | Worksheet `docs/cp2/WALKING_SKELETON.md`; merged PR linked in the report | ❌ Session not held (planned 11/26). Needed: session, merged PR reviewed by the steward, filled worksheet |
-| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ⚠️ Recorded from GitHub: each member's last feature PR (#80, #82, #117, #123), no joint session. Needed: fresh-clone test by a non-steward |
+| 10 | Merge-day activity in `DECISIONS.md` | Merge plan and outcome in `DECISIONS.md`; worksheet `docs/cp2/MERGE_DAY.md` | ⚠️ Recorded from GitHub: each member's last feature PR (#80, #82, #117, #123), no joint session. Needed: joint-session requirement remains unmet; fresh-clone test by a non-steward |
 
 The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md`. We keep course files in
 `docs/cp2/`; the instructor's blank originals are in `docs/references/`.

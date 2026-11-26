@@ -4,6 +4,7 @@
 > **Group 01 note.** The prototype already runs end to end, so we take Route 2. The AI-failure slice was merged
 > before the session (#80) and cannot count again, so Parts 3 and 4 use the CP2 record in #120: each member adds
 > their own part on one branch, and the steward reviews the one PR. Lines left blank are for that member to fill.
+> **Review limitation (2026-11-26, 劉順松, Codex-assisted):** this document-only PR is an interim record, not evidence that the required joint technical slice or four-person session happened. The proposed substitution needs instructor acceptance. Blank participant entries remain uncompleted; merging this record does not complete the walking-skeleton requirement. Tracking: #106.
 > Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
 
 **What this is.** A single working session where your team gets the thinnest possible version of your tool running from input to output, together. It does not need to be good. It needs to **run**, and all four of you need to have had your hands on it.
@@ -157,7 +158,7 @@ If your team is changing stewards, the incoming steward approves this one as the
 | | |
 |---|---|
 | Link to the merged PR | https://github.com/hwupu/115A-535527-AIDLC-Final/pull/120 (open) |
-| Steward who reviewed | 劉順松 (Week 12 steward) |
+| Steward who reviewed | 劉順松 (Week 12 steward), Codex-assisted repository review; not an on-screen joint-session review |
 | Steward's comment (copy it here) | |
 | How the author answered | |
 

@@ -2,6 +2,8 @@
 
 Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
+**Requirement status:** this is an asynchronous integration record. It does not establish completion of the required joint session or the non-steward fresh-clone task. Both remain open in #106; a member being on leave does not establish their participation.
+
 **How we did it.** We did not hold merge day as one 60-minute call. The merges it asks for happened as reviewed pull
 requests into `main` between 2026-11-21 and 2026-11-26. This record takes each member's **last main feature PR
 merged into `main`** and fills in the worksheet from GitHub: the merge commit, who merged it (driver), who
@@ -30,7 +32,7 @@ approved it (reviewer), conflicts, and CI on `main` after the merge. Anything we
 **What "done" means:** every member's latest feature is on `main`, CI is green after each merge, and the nurse
 confirmation → physician report task runs from `README.md` on a fresh clone.
 
-**PRs we closed without merging, and why:** none. At 2026-11-26 the only open PR is #120 (CP2 status, this record).
+**PRs we closed without merging, and why:** none. At this review, #120 (this record) and #124 (README cover image) are open. Check GitHub again after merging.
 
 ---
 
@@ -100,7 +102,7 @@ after CP2: the fresh-clone test if it is not done before E3.
 ☐ The merge plan was in `DECISIONS.md` before the session started (a plan was drafted in the Week 12 entry; the
   merges did not follow one session)
 ☐ All four of us were there (no joint session)
-☑ Every open PR was merged or closed with a reason (#120 is merged as part of this record)
+☐ Every open PR was merged or closed with a reason (verify after #120 and #124 merge)
 ☑ Tests were run on `main` after each merge (CI); the app run was not recorded
 ☐ Someone other than the steward ran the fresh-clone test
 ☑ The outcome is written under the merge plan

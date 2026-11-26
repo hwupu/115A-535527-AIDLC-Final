@@ -13,7 +13,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   nothing on the path is faked, the second user (physician) works, and the AI failure state is #80.
 - Decision: the session's slice is the CP2 record in #120. Each member adds their own part on the one branch
   `docs/cp2-status-refresh`, and the steward reviews the PR. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
-- Consequences: no new code in the session; the PR is documents only.
+- Consequences: the PR is documents only. 劉順松's 2026-11-26 Codex-assisted review accepts merging it as an interim record only; it does not establish a joint technical slice or four-person attendance. Instructor acceptance of a documentary substitute is not recorded. Remaining requirements are tracked in #106.
 - Decided by: pending (proposed by 吳普軒)
 
 ## 2026-11-01 — Week 8 steward (吳普軒): two approvals, handover not recorded
