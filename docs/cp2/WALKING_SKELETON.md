@@ -44,15 +44,18 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 |---|---|
 | Person A (吳普軒) | Our tool helps triage nurses to type less during intake by listening to the conversation and pre-filling fields with quotes from it, while the nurse still decides 檢傷級數. |
 | Person B (張棨翔) | Our tool helps emergency triage nurses to write the triage record once and give the doctor a complete handoff by turning the nurse–patient conversation into a draft report that the nurse checks and confirms. |
-| Person C (劉順松) | |
+| Person C (劉順松) | AI-assisted draft for my own revision, not the independent two-minute exercise or a team-agreed sentence: Our tool helps triage nurses prepare a traceable intake record by turning the conversation into transcript-supported draft fields for the nurse to check and confirm before the physician reads the report. |
 | Person D (林均澔) | Our tool helps triage nurses to finish intake records faster by turning the spoken conversation into a quoted draft that the nurse checks. |
-| **Agreed sentence** | |
+| **Agreed sentence** | Our tool helps emergency triage nurses to finish the intake record once and hand the physician a complete report by turning the nurse–patient conversation into a draft with quotes from it that the nurse checks and confirms, while the nurse still decides 檢傷級數. |
 
-**Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No (not verified; Person C and the agreed sentence are still blank in this version)
+**Did all four sentences match?** ☐ Yes ☑ Mostly ☐ No (all four agreed on the sentence above)
 
 If they did not match, that is a useful finding. Write down the difference you had to settle:
 
-> A prior draft said "All agreed", but the complete four-person sentence record is not present; team confirmation remains required.
+> All four sentences name triage nurses and a conversation turned into a draft that the nurse checks. They differed in
+> the benefit (typing less, writing once, a complete handoff to the physician, speed) and in whether they said where
+> the draft comes from (quotes from the transcript). The agreed sentence keeps the handoff to the physician, the quotes
+> and the nurse deciding 檢傷級數. All four agreed on it.
 
 ---
 
@@ -61,10 +64,17 @@ If they did not match, that is a useful finding. Write down the difference you h
 **1. Draw the path (3 min).** On a whiteboard, paper or shared screen, draw the shortest path from **what the user gives the tool** to **what the tool gives back**. Three to five boxes is plenty.
 
 ```
-[Patient and nurse speak] -> [STT: transcript] -> [LLM: draft fields with quotes] -> [Nurse checks and confirms] -> [Physician reads the report]
+[Nurse screen (apps/web): record the patient and nurse]
+   --audio chunks (WebSocket)--> [services/api: session, orchestration]
+   --> [services/stt: Whisper -> zh-TW transcript]
+   --> [services/llm: Ollama (Gemma) -> draft fields with source_span]
+   --> [services/api: schema validation, boundary guard, audit -> SQLite]
+   --> [Nurse screen: check, edit, confirm (POST /sessions/{id}/confirm)]
+   --> [Physician screen (apps/web): read the confirmed report]
 ```
 
-(The API stores each step; the nurse decides 檢傷級數, the AI never does.)
+(From `docs/ARCHITECTURE.md` §2–3. Only `services/api` holds state; `stt` and `llm` are stateless. The AI output has no
+檢傷級數 field: the nurse enters it, and the boundary guard blocks any triage level or advice from the model.)
 
 **2. Check where you are.** *Can we do our main task from start to finish today, on one machine, without faking anything?*
 
@@ -85,8 +95,10 @@ If they did not match, that is a useful finding. Write down the difference you h
 |---|---|---|---|---|
 | 張棨翔 | CP2 status refresh after #114–#119 (`docs/cp2/README.md` item 7, report §7) | `main` after #119 | commit on the #120 branch | `docs/cp2-status-refresh` (#120) |
 | 吳普軒 | Week 8 steward entry, merge-day record (`MERGE_DAY.md`, outcome in `DECISIONS.md`), these worksheet lines | `main` after #123 | commits on the #120 branch | `docs/cp2-status-refresh` (#120) |
-| 劉順松 | Week 12 steward review and merge of #120 and #124; requirement-status notes (`MERGE_DAY.md`, these worksheet lines, `DECISIONS.md`, prompt log) | #120 and #124 heads after #123 | `963acfa` on the #120 branch; merge commits `0a7abf6` (#124) and `924d688` (#120) on `main` | `docs/cp2-status-refresh` (#120) |
+| 劉順松 | Week 12 steward review and merge of #120 and #124; requirement-status notes (`MERGE_DAY.md`, these worksheet lines, `DECISIONS.md`, prompt log); evidence-backed Week 9 record, report and package checks (Codex-assisted) | #120 and #124 heads after #123; PR history and the Nov 4 prompt log | `963acfa` on the #120 branch; merge commits `0a7abf6` (#124) and `924d688` (#120) on `main`; #125 commits `8188be2`, `04e961f`, `510faaf` | `docs/cp2-status-refresh` (#120); `docs/414551016-issue106-closeout` (#125) |
 | 林均澔 | Week 10 steward entry in `DECISIONS.md` (no pull requests that week) and the header line about the missing Week 10 record; these worksheet lines | `main` after #117 | merged as #119 (`7a31046`) on 2026-11-25, before #120; these lines in a follow-up PR on top of #126 | `docs/week10-steward` (#119), not the #120 branch |
+
+Individual update (劉順松, 2026-11-26): #120 has merged; my subsequent closeout work is in #125. These are documentary contributions, not evidence of the joint technical slice. The original proposed hand-off below is retained as context.
 
 Hand-off agreed: everyone commits to the one branch `docs/cp2-status-refresh`; pull before you edit, and add new
 entries to `DECISIONS.md` without rewriting anyone else's.
@@ -116,6 +128,10 @@ The LLM/API explanations below were initially AI-assisted drafts; 張棨翔 subs
 > filter that skips silence. At start-up it uses the GPU if a one-second silent test works (float16), otherwise the
 > CPU (int8), and the reply says which device was used.
 
+**劉順松 - preparation for explaining the frontend (Codex-assisted source check, not a recorded live explanation):**
+
+> The nurse store keeps transcript-supported AI drafts separate from confirmed fields, blocks session confirmation while drafts remain, and sends the nurse-selected triage level with the confirmation request. The doctor store lists sessions but only retrieves the report for reading; `not_confirmed` leaves it waiting rather than exposing a draft. Source: `apps/web/src/stores/nurseSession.ts` and `apps/web/src/stores/doctor.ts`. I still need to explain this myself in the actual joint activity; this prepared explanation does not establish that I have done so.
+
 **Route 2 only: boxes only their author could explain** (these become a pairing or review task after today):
 
 > Frontend boxes (patient, nurse and physician screens): mostly written by 吳普軒 alone. Follow-up: a teammate pairs
@@ -143,6 +159,7 @@ The LLM/API explanations below were initially AI-assisted drafts; 張棨翔 subs
 | Merge-day record (`338c2df`) and worksheet lines | 吳普軒 | | yes | none |
 | Steward review notes (`963acfa`) | 劉順松 | | yes | none; merged #124 and #120 into `main`, CI green on both |
 | Week 10 steward entry (#119, `7a31046`) | 林均澔 | | yes, merged into `main` separately before #120 | none |
+| Week 9 evidence, report and package guards (`8188be2`, `04e961f`) | 劉順松, Codex-assisted | Non-author explanation not yet recorded | #125, in review | Fixed a CRLF/LF source-hash mismatch; verified 62 ZIP payload hashes |
 
 **Where did it first run end to end?** (a time, or "not yet")
 
@@ -221,6 +238,16 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
    > fresh-clone test is still to do (a non-steward, before E3).
 
    > 劉順松: Integration of #110/#111 was corrected in #123. My closeout changes are in #125, with review requested from 吳普軒. A real non-steward still needs to follow only the README and complete nurse confirmation -> physician report; the team must confirm the tester. The joint technical slice, participant explanations and joint-session records remain unverified. The team and #106 coordinator need to arrange completion or seek instructor approval for a specific alternative.
+
+---
+
+## 劉順松 - individual reflection draft (Codex-assisted, not group minutes)
+
+- What helped in my work: checking live PR heads, formal review records and CI made the integration status traceable; #120/#124 were approved before merging. My #125 keeps the remaining requirements explicit.
+- What was difficult: stacked PRs #110/#111 had not reached main until #123; records must distinguish branch merges from main integration. Windows CRLF versus Git LF initially caused a false stale-PDF result; normalization fixed the source-hash comparison.
+- My next action: ask another member to review #125 and explain the prepared frontend trace in the actual shared activity. I will not treat a prepared explanation as a completed non-author explanation.
+- My current blockers: actual joint-session actions and participant records remain unverified; a real non-steward still needs to perform the README-only fresh-clone task. Team/instructor follow-through remains in #106.
+- Participation note supplied in the conversation: 「11/26 組會當天：本人會在本機操作並陪同參與」. This states my intended participation; it supplies no completed session time or attendance evidence.
 
 ---
 

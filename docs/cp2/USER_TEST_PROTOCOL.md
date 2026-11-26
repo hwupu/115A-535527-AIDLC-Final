@@ -1,6 +1,6 @@
 # External user testing protocol
 
-Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. Four sessions have been held (U01–U04 under Sessions below) and more will follow; each new session gets its own record there, copied from the facilitator's form. The Session form below is the blank template.
+Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. Four participants took part in two paired task runs (U01–U04 under Sessions below) and more will follow; each new session gets its own record there, copied from the facilitator's form. The Session form below is the blank template.
 
 ## Keep the participant's load small (about 15 minutes)
 
