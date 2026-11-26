@@ -32,7 +32,9 @@ approved it (reviewer), conflicts, and CI on `main` after the merge. Anything we
 **What "done" means:** every member's latest feature is on `main`, CI is green after each merge, and the nurse
 confirmation → physician report task runs from `README.md` on a fresh clone.
 
-**PRs we closed without merging, and why:** none. At this review, #120 (this record) and #124 (README cover image) are open. Check GitHub again after merging.
+**PRs we closed without merging, and why:** none. #124 (README cover image) and #120 (this record) were approved and
+merged by 劉順松 on 2026-11-26 (`0a7abf6`, `924d688`), CI green on both. After that, #125 (CP2 closeout, 劉順松) was
+opened and is still open.
 
 ---
 
@@ -84,7 +86,7 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 **Outcome (2026-11-26):** merged #80, #82, #117 and #123 (each member's last main feature); closed none. Conflicts in
 `DECISIONS.md`, resolved by keeping both sides' entries. #110 and #111 missed `main` through a stacked merge and were
-restored in #123. Fresh-clone test: not done yet. `main` is green (CI passed on every merge commit above). Left for
+restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: not done yet. `main` is green (CI passed on every merge commit above). Left for
 after CP2: the fresh-clone test if it is not done before E3.
 
 **Team check:**
@@ -102,7 +104,7 @@ after CP2: the fresh-clone test if it is not done before E3.
 ☐ The merge plan was in `DECISIONS.md` before the session started (a plan was drafted in the Week 12 entry; the
   merges did not follow one session)
 ☐ All four of us were there (no joint session)
-☐ Every open PR was merged or closed with a reason (verify after #120 and #124 merge)
+☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
 ☑ Tests were run on `main` after each merge (CI); the app run was not recorded
 ☐ Someone other than the steward ran the fresh-clone test
 ☑ The outcome is written under the merge plan
