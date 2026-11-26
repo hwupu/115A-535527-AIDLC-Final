@@ -7,13 +7,12 @@ says the week was missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
-## 2026-11-26 — Walking skeleton slice: the shared CP2 record in #120
+## 2026-11-26 — CP2 interim record #120; walking-skeleton technical slice remains required
 - Status: approved as an interim record by the Week 12 steward, 劉順松, in the #120 review (merged 2026-11-26,
   `924d688`); confirmation by the rest of the team and instructor acceptance not recorded
 - Context: the prototype already runs end to end (Route 2), and the slices the worksheet offers are already merged:
   nothing on the path is faked, the second user (physician) works, and the AI failure state is #80.
-- Decision: the session's slice is the CP2 record in #120. Each member adds their own part on the one branch
-  `docs/cp2-status-refresh`, and the steward reviews the PR. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
+- Decision: #120 records documentary contributions only. 張棨翔 clarified in the #126 comment that #120 is not the walking-skeleton technical slice; a thin code slice must still be built together. The original documentary-substitution proposal is not recorded as accepted. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
 - Consequences: the PR is documents only. 劉順松's 2026-11-26 Codex-assisted review accepts merging it as an interim record only; it does not establish a joint technical slice or four-person attendance. Instructor acceptance of a documentary substitute is not recorded. Remaining requirements are tracked in #106.
 - Decided by: proposed by 吳普軒; approved in review by 劉順松 (Week 12 steward); team confirmation pending
 

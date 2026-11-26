@@ -2,8 +2,7 @@
 ## One session, all four of you together | about 75 minutes | one worksheet per team
 
 > **Group 01 note.** The prototype already runs end to end, so we take Route 2. The AI-failure slice was merged
-> before the session (#80) and cannot count again, so Parts 3 and 4 use the CP2 record in #120: each member adds
-> their own part on one branch, and the steward reviews the one PR. Lines left blank are for that member to fill.
+> before the session (#80) and cannot count again, the CP2 record in #120 is documentary work only. As clarified by 張棨翔 in the #126 comment, it is not the new technical slice required by Parts 3 and 4. Lines left blank are for that member to fill.
 > #120 was approved and merged by 劉順松 on 2026-11-26 (`924d688`); lines added after that go in follow-up PRs.
 > **Review limitation (2026-11-26, 劉順松, Codex-assisted):** this document-only PR is an interim record, not evidence that the required joint technical slice or four-person session happened. The proposed substitution needs instructor acceptance. Blank participant entries remain uncompleted; merging this record does not complete the walking-skeleton requirement. Tracking: #106.
 > Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
@@ -49,11 +48,11 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 | Person D (林均澔) | Our tool helps triage nurses to finish intake records faster by turning the spoken conversation into a quoted draft that the nurse checks. |
 | **Agreed sentence** | |
 
-**Did all four sentences match?** ☑ Yes ☐ Mostly ☐ No
+**Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No (not verified; Person C and the agreed sentence are still blank in this version)
 
 If they did not match, that is a useful finding. Write down the difference you had to settle:
 
-> All agreed.
+> A prior draft said "All agreed", but the complete four-person sentence record is not present; team confirmation remains required.
 
 ---
 
@@ -78,9 +77,7 @@ If they did not match, that is a useful finding. Write down the difference you h
 
 **Our goal for today** (one example, going in as ____, coming out as ____; or, Route 2: the slice we chose):
 
-> Route 2. Nothing on the path is faked any more, and the second user (physician) and the AI failure state (#80) are
-> already merged. So today's slice is the CP2 record in #120: each member adds their own part to the shared documents
-> on one branch, and the steward reviews it.
+> Route 2. The second user and the prior AI-failure work (#80) are already merged. #120 is an interim documentary record, not a new technical slice. The next thin code slice and its joint implementation still need to be selected and recorded. This follows 張棨翔's comment on #126; #80 cannot count again.
 
 **3. Split the building (with the hand-offs agreed).** Give each person, or each pair, **one building task**: usually one box, or one connection between boxes. Before anyone starts, agree **what each piece receives and returns** (for example "the model step receives the ticket text and returns `{category, summary}`"). This is what lets the pieces connect in Part 3.
 
@@ -95,6 +92,8 @@ Hand-off agreed: everyone commits to the one branch `docs/cp2-status-refresh`; p
 entries to `DECISIONS.md` without rewriting anyone else's.
 
 **Route 2 trace, one box each (explained by someone who did not write it):**
+
+The LLM/API explanations below were initially AI-assisted drafts; 張棨翔 subsequently reported those explanations in the #126 comment. That report is preserved as the source; this review did not observe a live session.
 
 > LLM extraction (written by 張棨翔), explained by 劉順松: `services/llm` receives the transcript at `POST /extract`
 > and sends it to Ollama (`gemma3:1b` by default, `LLM_MODEL`) with prompt `v5`, marked as untrusted text and
@@ -175,8 +174,7 @@ If your team is changing stewards, the incoming steward approves this one as the
 
 **Add one line to `DECISIONS.md`** about the biggest choice you made today (for example, what you cut, what you faked, or a hand-off format you agreed):
 
-> Approved by the Week 12 steward in the #120 review as an interim record (team confirmation pending): the Route 2 slice is the shared CP2 record in #120 (one branch, everyone's part), not new code, because
-> the path, the second user and the AI failure state were already merged.
+> #120 was approved as an interim documentary record only. 張棨翔 clarified in #126 that it is not the walking-skeleton technical slice; a new thin code slice and its actual joint activity remain to be recorded in #106.
 
 ---
 

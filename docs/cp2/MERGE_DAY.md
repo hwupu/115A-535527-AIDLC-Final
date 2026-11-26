@@ -2,7 +2,7 @@
 
 Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
-**Requirement status:** this is an asynchronous integration record. It does not establish completion of the required joint session or the non-steward fresh-clone task. Both remain open in #106; a member being on leave does not establish their participation.
+**Requirement status:** this is an asynchronous integration record, not evidence of the required single joint merge session. In #126, author 吳普軒 reports that all four members ran the app and the README-only fresh-clone task on their own machines. The results below are attributed to that report, not independently reproduced by this review. Tester-specific dates, fresh-clone revisions and run artifacts are not attached; confirmation remains tracked in #106. A member being on leave does not by itself establish participation.
 
 **Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
 main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
@@ -60,10 +60,10 @@ Three of us drove a merge (張棨翔, 林均澔, 吳普軒); 劉順松 reviewed 
 
 | # | PR | Merge commit | Conflicts? (where) | How we resolved them | CI on `main` after merge | App runs on `main`? |
 |---|---|---|---|---|---|---|
-| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | yes (all four ran it on merge day) |
-| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | yes (all four ran it on merge day) |
-| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | yes (all four ran it on merge day) |
-| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | yes (all four ran it on merge day) |
+| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
+| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | reported yes by 吳普軒 in #126 (all four; individual run evidence not attached) |
 
 **Something we had to fix on `main`.** #110 and #111 were approved and merged, but into the stacked branches
 `feat/86-patient-guided-questions` and `feat/87-nurse-checklist`, seconds *after* #109 had already merged `feat/86`
@@ -77,10 +77,10 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 | | |
 |---|---|
-| Who did it | all four of us, each on our own machine (including the non-stewards 張棨翔, 吳普軒 and 林均澔) |
-| Did the README work without help? | yes |
-| What was missing from the README? | nothing found |
-| Did the main task work end to end? | yes: the nurse confirmed a report and the physician read it |
+| Who did it | 吳普軒 reports all four on their own machines, including the non-stewards 張棨翔, 吳普軒 and 林均澔; individual confirmations not attached |
+| Did the README work without help? | reported yes by 吳普軒 in #126 |
+| What was missing from the README? | none reported by 吳普軒 |
+| Did the main task work end to end? | 吳普軒 reports nurse confirmation -> physician read; this review did not observe the run |
 | Any API key or setup step that only one person knows? | none: the models run locally (Ollama, Whisper), so no API key is needed |
 
 ---
@@ -89,7 +89,7 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 **Outcome (2026-11-26):** merged #80, #82, #117 and #123 (each member's last main feature); closed none. Conflicts in
 `DECISIONS.md`, resolved by keeping both sides' entries. #110 and #111 missed `main` through a stacked merge and were
-restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: done, all four of us ran the main task from the README on merge day. `main` is green (CI passed on every
+restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: reported completed by 吳普軒 in #126; individual run details remain to be confirmed. `main` is green (CI passed on every
 merge commit above).
 
 **Team check:**
@@ -98,7 +98,7 @@ merge commit above).
    there (four merge commits on 11/24–11/25); and stacked PRs, which let approved work miss `main` twice (#69, #123).
 2. One habit we will change for Phase 3 (吳普軒): once a parent PR merges, retarget the PRs stacked on it to `main`,
    and check the feature is actually on `main`.
-3. Could each of us run the prototype and do the main task without help? Yes: all four of us ran it on merge day.
+3. Could each of us run the prototype and do the main task without help? Reported yes by 吳普軒 in #126; no individual run artifacts attached.
 
 ---
 
@@ -109,6 +109,6 @@ merge commit above).
 ☑ All four of us were there (we met together on merge day)
 ☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
-☑ Someone other than the steward ran the fresh-clone test
+☑ Someone other than the steward ran the fresh-clone test (author-reported in #126; not independently verified here)
 ☑ The outcome is written under the merge plan
 ☑ This worksheet is saved (as `docs/cp2/MERGE_DAY.md`)
