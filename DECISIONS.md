@@ -7,6 +7,26 @@ says the week was missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
+## 2026-11-26 — Walking skeleton slice: the shared CP2 record in #120
+- Status: proposed (to be confirmed by the team and the Week 12 steward, 劉順松, in the #120 review)
+- Context: the prototype already runs end to end (Route 2), and the slices the worksheet offers are already merged:
+  nothing on the path is faked, the second user (physician) works, and the AI failure state is #80.
+- Decision: the session's slice is the CP2 record in #120. Each member adds their own part on the one branch
+  `docs/cp2-status-refresh`, and the steward reviews the PR. Worksheet: `docs/cp2/WALKING_SKELETON.md`.
+- Consequences: no new code in the session; the PR is documents only.
+- Decided by: pending (proposed by 吳普軒)
+
+## 2026-11-01 — Week 8 steward (吳普軒): two approvals, handover not recorded
+- Status: recorded late (2026-11-26); facts checked on GitHub, to be confirmed by 吳普軒
+- Context: 吳普軒 was the code steward for Week 8 (Oct 26 – Nov 1), the setup sprint (Sprint 0).
+- What happened: approved and merged two PRs by 張棨翔, each with a written review of a local test run: #67 (uv
+  projects; `uv sync --locked`, ruff and pytest passed for the three services) and #68 (api healthcheck; `/api/health`
+  went from four 502s to none at demo start). 吳普軒's own setup PRs (#54, #55, #56, #66) were reviewed and merged
+  by 張棨翔.
+- Consequences: no handover to the Week 9 steward (劉順松) was recorded at the time, and the "Current code steward"
+  line was not updated.
+- Recorded by: 吳普軒
+
 ## 2026-11-15 — Week 10 steward (林均澔): no pull requests that week
 - Status: recorded late (2026-11-24)
 - Context: 林均澔 was the code steward for Week 10 (Nov 9–15) under the confirmed rotation.
@@ -109,7 +129,8 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Decided by: the team (recorded by 吳普軒)
 
 ## 2026-11-24 — One README, and course files kept in `docs/cp2/` (#97, #103)
-- Status: proposed by 吳普軒 (README area lead) in #103; pending review
+- Status: proposed by 吳普軒 (README area lead) in #103. #103 was merged 2026-11-24 with an approval from the
+  author's own account only (made by Claude Code on 吳普軒's instruction), so a teammate still has to confirm it
 - Context: Group 03 found two conflicting quick starts in the Week 12 lab (`README.md` and `README_CP2.md`, #97). The
   repository root and `docs/` also held course working notes (`CP2_WORK_LOG.md`, personal handoff files, an old
   archive), mixed in with the documentation for the code.
@@ -121,7 +142,7 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   `docs/cp2/README.md` points graders to the actual location. Packing the whole source tree in the zip: the code is
   graded from GitHub.
 - Consequences: removed files stay in git history (`56a8b38`). The CP2 report and the zip read from `docs/cp2/`.
-- Decided by: 吳普軒 (README area lead); the team confirms in the #103 review
+- Decided by: 吳普軒 (README area lead); confirmation by another member pending
 
 ## 2026-11-24 - Week 12 steward actions and future merge plan
 - Status: observed repository actions plus a proposed future plan; not joint-session minutes.
@@ -136,7 +157,11 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
 - Order: complete the genuine skeleton slice and review first; then reviewed independent documentation/startup work; any shared contract change before consumers. Run tests and the primary task after each merge, stop on failure. Do not add new features during merge day.
 - Expected overlap: DECISIONS.md, README and CP2 report. Preserve separate dated decisions; do not overwrite teammate notes. Rotate drivers and require explanation of any AI conflict suggestion.
 - Done: clean main; every open PR merged or closed with reason; a non-steward clones fresh and completes nurse confirmation -> doctor report from README only; actual outcome and reflection recorded in docs/merge_day.md.
-- Outcome, driver rotation, fresh-copy tester, result and evidence: PENDING ACTUAL SESSION. Agent-only merges on 2026-11-24 do not satisfy this activity.
+- Outcome (2026-11-26): no single joint session. We record each member's last main feature merged into `main`:
+  #80 (劉順松), #82 (林均澔), #117 (張棨翔), #123 (吳普軒); closed none. Drivers: 張棨翔, 林均澔, 吳普軒. Conflicts in
+  `DECISIONS.md` (#109, #116, #119), resolved by keeping both sides. #110 (#87) and #111 (#28) were approved but merged
+  into stacked branches after #109 had merged `feat/86`, so they missed `main`; #123 restored them. CI passed on every
+  merge commit. Fresh-clone test: not done yet. Details: `docs/cp2/MERGE_DAY.md`.
 
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted

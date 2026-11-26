@@ -1,6 +1,11 @@
 # Walking Skeleton: Team Worksheet
 ## One session, all four of you together | about 75 minutes | one worksheet per team
 
+> **Group 01 note.** The prototype already runs end to end, so we take Route 2. The AI-failure slice was merged
+> before the session (#80) and cannot count again, so Parts 3 and 4 use the CP2 record in #120: each member adds
+> their own part on one branch, and the steward reviews the one PR. Lines left blank are for that member to fill.
+> Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
+
 **What this is.** A single working session where your team gets the thinnest possible version of your tool running from input to output, together. It does not need to be good. It needs to **run**, and all four of you need to have had your hands on it.
 
 **What this is not.** It is not a list of things to finish. If you only complete Parts 1 to 4, that is a good session. Your teamwork during these 75 minutes matters more than how much code you end up with.
@@ -36,10 +41,10 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 
 | | Sentence |
 |---|---|
-| Person A | |
-| Person B | |
-| Person C | |
-| Person D | |
+| Person A (吳普軒) | Our tool helps triage nurses to type less during intake by listening to the conversation and pre-filling fields with quotes from it, while the nurse still decides 檢傷級數. |
+| Person B (張棨翔) | |
+| Person C (劉順松) | |
+| Person D (林均澔) | |
 | **Agreed sentence** | |
 
 **Did all four sentences match?** ☐ Yes ☐ Mostly ☐ No
@@ -55,38 +60,59 @@ If they did not match, that is a useful finding. Write down the difference you h
 **1. Draw the path (3 min).** On a whiteboard, paper or shared screen, draw the shortest path from **what the user gives the tool** to **what the tool gives back**. Three to five boxes is plenty.
 
 ```
-[User input] -> [ ... ] -> [ ... ] -> [Output the user sees]
+[Patient and nurse speak] -> [STT: transcript] -> [LLM: draft fields with quotes] -> [Nurse checks and confirms] -> [Physician reads the report]
 ```
+
+(The API stores each step; the nurse decides 檢傷級數, the AI never does.)
 
 **2. Check where you are.** *Can we do our main task from start to finish today, on one machine, without faking anything?*
 
 ☐ **No (Route 1).** Decide the smallest piece of this path that would count as "it runs" (one example going through). Cut everything else. Today you build that.
 
-☐ **Yes (Route 2).** Your skeleton already walks. First **trace it (about 5 min):** for each box, someone **who did not write it** opens the code and explains it in a minute. Mark any box only its author could explain, and anything still hard-coded or faked. Then choose **the next thin slice** to build today, the first of these that applies:
+☑ **Yes (Route 2).** Your skeleton already walks. First **trace it (about 5 min):** for each box, someone **who did not write it** opens the code and explains it in a minute. Mark any box only its author could explain, and anything still hard-coded or faked. Then choose **the next thin slice** to build today, the first of these that applies:
 1. something on the path that is still **faked or hard-coded**
 2. **the second person:** CP2 needs a prototype "two people can use together"; if only one user can use it, connect the second
 3. **one failure state** for the AI call (a time-out or a broken reply), with a test that uses a fake model (Week 11)
 
 **Our goal for today** (one example, going in as ____, coming out as ____; or, Route 2: the slice we chose):
 
-> 
+> Route 2. Nothing on the path is faked any more, and the second user (physician) and the AI failure state (#80) are
+> already merged. So today's slice is the CP2 record in #120: each member adds their own part to the shared documents
+> on one branch, and the steward reviews it.
 
 **3. Split the building (with the hand-offs agreed).** Give each person, or each pair, **one building task**: usually one box, or one connection between boxes. Before anyone starts, agree **what each piece receives and returns** (for example "the model step receives the ticket text and returns `{category, summary}`"). This is what lets the pieces connect in Part 3.
 
 | Person or pair | Building task | Receives | Returns | Branch name |
 |---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
+| 張棨翔 | CP2 status refresh after #114–#119 (`docs/cp2/README.md` item 7, report §7) | `main` after #119 | commit on the #120 branch | `docs/cp2-status-refresh` (#120) |
+| 吳普軒 | Week 8 steward entry, merge-day record (`MERGE_DAY.md`, outcome in `DECISIONS.md`), these worksheet lines | `main` after #123 | commits on the #120 branch | `docs/cp2-status-refresh` (#120) |
+| 劉順松 | | | | `docs/cp2-status-refresh` (#120) |
+| 林均澔 | | | | `docs/cp2-status-refresh` (#120) |
+
+Hand-off agreed: everyone commits to the one branch `docs/cp2-status-refresh`; pull before you edit, and add new
+entries to `DECISIONS.md` without rewriting anyone else's.
+
+**Route 2 trace, one box each (explained by someone who did not write it):**
+
+> LLM extraction, explained by: 
+>
+> API and report storage, explained by: 
+>
+> Frontend screens (written by 吳普軒), explained by: 
+>
+> STT, explained by 吳普軒: `services/stt` receives the whole recorded clip at `POST /transcribe` and returns the
+> transcript. It runs faster-whisper (`small` by default, `WHISPER_MODEL`) in Chinese with `beam_size=5` and a VAD
+> filter that skips silence. At start-up it uses the GPU if a one-second silent test works (float16), otherwise the
+> CPU (int8), and the reply says which device was used.
 
 **Route 2 only: boxes only their author could explain** (these become a pairing or review task after today):
 
-> 
+> Frontend boxes (patient, nurse and physician screens): mostly written by 吳普軒 alone. Follow-up: a teammate pairs
+> with 吳普軒 on the next frontend change.
 
 **Things we are leaving out on purpose today:**
 
-> 
+> New features and code changes (#120 is documents only); the fresh-clone test, which belongs to merge day.
 
 ---
 
@@ -101,18 +127,21 @@ If they did not match, that is a useful finding. Write down the difference you h
 
 | Piece | Built by | Explained by | Connected? (yes / with a fix / not yet) | What we had to fix at the connection |
 |---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
+| CP2 status refresh (`b50103d`) | 張棨翔 | | yes | rebased onto `main` after #123, no conflicts |
+| Week 8 steward entry (`f39a093`) | 吳普軒 | | yes | none |
+| Merge-day record (`338c2df`) and worksheet lines | 吳普軒 | | yes | none |
+| | 劉順松 | | | |
+| | 林均澔 | | | |
 
 **Where did it first run end to end?** (a time, or "not yet")
 
-> 
+> The prototype already ran end to end before the session (demonstrated in the Week 12 lab). The #120 record: not yet
+> (open until every member's part is in).
 
 **What did we fake or stub?** (it is fine to fake things; write them down so you do not forget)
 
-> 
+> Nothing faked. Merge day was recorded from GitHub history (each member's last feature PR) instead of one joint
+> session; `MERGE_DAY.md` says so.
 
 ---
 
@@ -127,14 +156,15 @@ If your team is changing stewards, the incoming steward approves this one as the
 
 | | |
 |---|---|
-| Link to the merged PR | |
-| Steward who reviewed | |
+| Link to the merged PR | https://github.com/hwupu/115A-535527-AIDLC-Final/pull/120 (open) |
+| Steward who reviewed | 劉順松 (Week 12 steward) |
 | Steward's comment (copy it here) | |
 | How the author answered | |
 
 **Add one line to `DECISIONS.md`** about the biggest choice you made today (for example, what you cut, what you faked, or a hand-off format you agreed):
 
-> 
+> Proposed: the Route 2 slice is the shared CP2 record in #120 (one branch, everyone's part), not new code, because
+> the path, the second user and the AI failure state were already merged.
 
 ---
 
@@ -152,7 +182,8 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 3. **Who had the least chance to contribute, and what would help next time?** (Route 2: was there a box only one person could explain? What will we do about it?)
 
-   > 
+   > 吳普軒: the frontend boxes were written mostly by 吳普軒 alone, so only 吳普軒 could explain them; next time a
+   > teammate pairs with 吳普軒 on a frontend change.
 
 4. **What is the one thing we will do differently in the next team session** (merge day)?
 
@@ -160,7 +191,8 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 5. **Blockers we found** (technical or otherwise) and who will follow up:
 
-   > 
+   > #110 (#87) and #111 (#28) were approved but missed `main` through a stacked merge; fixed in #123 (吳普軒). The
+   > fresh-clone test is still to do (a non-steward, before E3).
 
 ---
 
