@@ -164,6 +164,8 @@ Entry format: Status, Context, Decision, Consequences, Decided by. New entries g
   into stacked branches after #109 had merged `feat/86`, so they missed `main`; #123 restored them. CI passed on every
   merge commit. #124 and #120 (the CP2 record) were then merged by 劉順松 (`0a7abf6`, `924d688`), CI green; #125
   is open. Fresh-clone test: not done yet. Details: `docs/cp2/MERGE_DAY.md`.
+- Update (2026-11-26, 張棨翔): the four of us then met together for merge day; each ran the main task (nurse confirms
+  → physician reads the report) from the README on our own machine, so the joint session and the fresh-clone test are done.
 
 ## 2026-11-23 — Speaker roles in the transcript: labelled by the AI from content, correctable by the nurse
 - Status: accepted

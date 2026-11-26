@@ -4,6 +4,9 @@ Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
 **Requirement status:** this is an asynchronous integration record. It does not establish completion of the required joint session or the non-steward fresh-clone task. Both remain open in #106; a member being on leave does not establish their participation.
 
+**Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
+main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
+
 **How we did it.** We did not hold merge day as one 60-minute call. The merges it asks for happened as reviewed pull
 requests into `main` between 2026-11-21 and 2026-11-26. This record takes each member's **last main feature PR
 merged into `main`** and fills in the worksheet from GitHub: the merge commit, who merged it (driver), who
@@ -103,7 +106,7 @@ merge commit above).
 
 ☐ The merge plan was in `DECISIONS.md` before the session started (a plan was drafted in the Week 12 entry; the
   merges did not follow one session)
-☐ All four of us were there (no joint session)
+☑ All four of us were there (we met together on merge day)
 ☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
 ☑ Someone other than the steward ran the fresh-clone test
