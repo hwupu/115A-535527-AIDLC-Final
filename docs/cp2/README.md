@@ -25,8 +25,8 @@ Paths are from the repository root. In the zip, the repository files are under `
 | # | Deliverable | Where | Status (temp, remove before submission) |
 |---|---|---|---|
 | 1 | Working prototype two people can use together | The repository; run steps in `README.md` (快速開始) | ✅ Demonstrated in the Week 12 lab, reviewed by Group 03 (Track A). Fresh-clone test still happens at merge day |
-| 2 | Design rationale, with at least two user tests outside the team | `docs/cp2/DESIGN_RATIONALE.md`; sessions in `docs/cp2/USER_TEST_PROTOCOL.md` (form: `USER_TEST_FORM.md`, scenarios: `SCENARIO_CARDS.md`) | ✅ Two nurses (U01, U02) and the Group 03 review in the Week 12 lab. Optional: fill the 待補 fields in `USER_TEST_PROTOCOL.md` if the facilitator has them |
-| 3 | Updated evaluation report | `docs/cp2/EVALUATION_REPORT.md` (metric definitions: `docs/cp2/METRICS.md`; plan: `docs/EVALUATION_PLAN.md`) | ✅ Done. Update if U01/U02 details arrive |
+| 2 | Design rationale, with at least two user tests outside the team | `docs/cp2/DESIGN_RATIONALE.md`; sessions in `docs/cp2/USER_TEST_PROTOCOL.md` (form: `USER_TEST_FORM.md`, scenarios: `SCENARIO_CARDS.md`) | ✅ Four outside-team participants in two runs (U01–U04; U03 a nurse, U04 a physician) with timing, AI accuracy and observations, plus the Group 03 review in the Week 12 lab. No paper baseline yet (CP3) |
+| 3 | Updated evaluation report | `docs/cp2/EVALUATION_REPORT.md` (metric definitions: `docs/cp2/METRICS.md`; plan: `docs/EVALUATION_PLAN.md`) | ✅ Done, including the U01–U04 run results |
 | 4 | System prompt and prompt documentation card | `CLAUDE.md` (coding agent); `services/llm/prompts/v5.txt` (the product's model); `docs/cp2/PROMPT_CARD.md` | ✅ Done |
 | 5 | AI usage guidelines, updated from Week 3 | `AI_USAGE_GUIDELINES.md` (v0.3, with the changes from v0.1 and v0.2) | ✅ v0.3 approved by the team 2026-11-24, recorded in `DECISIONS.md` |
 | 6 | Prompt test suite: 10+ cases, one fail → fix → re-run cycle | `eval/cases.json` (14 cases), `eval/run_prompt_suite.py`; raw outputs in `docs/cp2/evidence/` | ✅ Done |

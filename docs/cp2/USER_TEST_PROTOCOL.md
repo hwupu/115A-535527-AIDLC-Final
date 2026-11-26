@@ -1,6 +1,6 @@
 # External user testing protocol
 
-Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. Two sessions have been held (U01, U02 under Sessions below) and more will follow; each new session gets its own record there, copied from the facilitator's form. The Session form below is the blank template.
+Two external-user sessions are required for CP2 design rationale. The two CP1 interviews are discovery evidence, not prototype tests. Recruit representative nurses/physicians with consent, no patient data. Do not invent findings. Four sessions have been held (U01–U04 under Sessions below) and more will follow; each new session gets its own record there, copied from the facilitator's form. The Session form below is the blank template.
 
 ## Keep the participant's load small (about 15 minutes)
 
@@ -12,7 +12,7 @@ The participant does one task with the tool and answers five short questions. Ev
 ## Before the session (facilitator)
 
 - Pick a fictional scenario (S01, S03 or S04 in `SCENARIO_CARDS.md`) and give a teammate its role-player card to play the patient. The patient answers only from the card and says 「不知道」 or 「沒有」 to anything not on it. The facilitator keeps the measured-values card (read out when the nurse measures) and the answer key (never shown to the nurse).
-- Open the admin screen (evaluation mode) and create a run with an API-compatible anonymous participant code (N-01, N-02, …; the API requires N- followed by two digits). U01/U02 below are document session labels, not valid API participant codes; record their actual N-xx mapping from the facilitator, never infer a past mapping; the participant uses the nurse screen on the facilitator's laptop via `localhost`, so no HTTPS is needed.
+- Open the admin screen (evaluation mode) and create a run with an API-compatible anonymous participant code (N-01, N-02, …; the API requires N- followed by two digits). U01–U04 below are document session labels, not valid API participant codes; record their actual N-xx mapping from the facilitator, never infer a past mapping; the participant uses the nurse screen on the facilitator's laptop via `localhost`, so no HTTPS is needed.
 - Note the software revision, prompt version and model.
 
 ## Consent (read aloud, about 30 seconds)
@@ -58,31 +58,55 @@ If the participant is a physician, add one question after they read the confirme
 ## Sessions
 
 Fields marked 待補 were not reported yet; they are filled from the facilitator's form (`USER_TEST_FORM.md` page 2),
-never estimated. Follow-up: #101.
+never estimated. Timing, edits and AI draft values come from the demo database (session timestamps and audit log); the comparison with the S03 answer key was done by the coding assistant and still needs a nurse to check it. Follow-up: #101.
 
-### U01 (護理師 A)
+### U01 (測試者 A)
 
-- Status: CONDUCTED; questionnaire answers recorded, other fields 待補
-- Anonymous code / role / outside-team confirmation: U01 / 護理師 (nurse) / not a group member
-- Date / facilitator / consent read and given: 待補 / 待補 / 待補
-- Software revision / prompt / model / scenario: 待補
-- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
-- Help needed and where the participant hesitated: 待補
+- Status: CONDUCTED; questionnaire answers, system records (timing, audit log) and facilitator observations recorded
+- Anonymous code / role / outside-team confirmation: U01 / 其他 / confirmed not a team member
+- Date / facilitator / consent read and given: 2026-11-23 / 張棨翔 / yes
+- Software revision / prompt / model / scenario: demo environment on the workstation (build of the morning of 2026-11-23, commit not recorded) / v5 / gemma4:e4b, Whisper small / S03. U01 operated the nurse screen and U02 played the patient from the S03 card (demo session SIM-000008); this participant: nurse screen operator
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 5 min 02 s (audio 57.9 s; the first AI draft took 117 s) / 1 / of 17 AI drafts against the S03 answer key: 14 correct, 2 wrong (systolic BP 2 instead of 158; history 「感冒」 instead of 洗腎), 1 doubtful (病程 「昨天沒有去洗腎」), missing 3 (主訴, 陪同 rejected by the source check, 血壓部位), filled although not said 0. **Safety finding:** the wrong systolic BP was first confirmed and corrected by the nurse 11 s later; STT heard 血壓 as 「斜壓兩」 and the number check took 「兩」 as the value. The 量測禁忌 quote kept an STT error (毆管 for 瘻管)
+- Help needed and where the participant hesitated: hesitated when the transcript and the 量測禁忌 draft showed the STT error for 瘻管 (毆管 on 11-23, 樓管 on 11-24); hesitated while waiting for the AI draft after the transcript appeared. No help needed; task completed (report confirmed)
 - Ratings (1–3) and answers to the open questions (4–5), anonymized: 5 / 5 / 5. Q4: 「更正式的 PDF 格式，又或者對接醫院系統。」 Q5: 「有沒有考慮到多台裝置負載的問題」
-- Design change proposed / implemented / retest outcome: formal printout → #99 (ED-style printed triage record, implemented, retest 待補); hospital-system integration → not doing, because the scope excludes writing to a real HIS; multi-device load → #100 (load test, not started)
-- Evidence file and limitations: paper form (to be destroyed after transcription); one participant
+- Design change proposed / implemented / retest outcome: formal printout → #99 (ED-style printed triage record, implemented; retested on 2026-11-24 with U03/U04, who found it more formal but said getting the data into the HIS matters more than the printout); hospital-system integration → not doing, because the scope excludes writing to a real HIS; PO decision 2026-11-24: keep copy text, print and JSON download as the exports; multi-device load → #100 (load test, not started); facilitator observation: show partial AI drafts as soon as the first part of the transcript is ready instead of all at once (#112); STT misspelling of 瘻管 → #89 (medical vocabulary hints)
+- Evidence file and limitations: paper form (to be destroyed after transcription); demo database on the workstation (simulated data only); timing and AI accuracy belong to the run, which the two participants did together (one as nurse, one as patient)
 
-### U02 (護理師 B)
+### U02 (測試者 B)
 
-- Status: CONDUCTED; questionnaire answers recorded, other fields 待補
-- Anonymous code / role / outside-team confirmation: U02 / 護理師 (nurse) / not a group member
-- Date / facilitator / consent read and given: 待補 / 待補 / 待補
-- Software revision / prompt / model / scenario: 待補
-- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 待補
-- Help needed and where the participant hesitated: 待補
+- Status: CONDUCTED; questionnaire answers, system records (timing, audit log) and facilitator observations recorded
+- Anonymous code / role / outside-team confirmation: U02 / 其他 / confirmed not a team member
+- Date / facilitator / consent read and given: 2026-11-23 / 張棨翔 / yes
+- Software revision / prompt / model / scenario: demo environment on the workstation (build of the morning of 2026-11-23, commit not recorded) / v5 / gemma4:e4b, Whisper small / S03. U01 operated the nurse screen and U02 played the patient from the S03 card (demo session SIM-000008); this participant: patient (S03 card)
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 5 min 02 s (audio 57.9 s; the first AI draft took 117 s) / 1 / of 17 AI drafts against the S03 answer key: 14 correct, 2 wrong (systolic BP 2 instead of 158; history 「感冒」 instead of 洗腎), 1 doubtful (病程 「昨天沒有去洗腎」), missing 3 (主訴, 陪同 rejected by the source check, 血壓部位), filled although not said 0. **Safety finding:** the wrong systolic BP was first confirmed and corrected by the nurse 11 s later; STT heard 血壓 as 「斜壓兩」 and the number check took 「兩」 as the value. The 量測禁忌 quote kept an STT error (毆管 for 瘻管)
+- Help needed and where the participant hesitated: hesitated when the transcript and the 量測禁忌 draft showed the STT error for 瘻管 (毆管 on 11-23, 樓管 on 11-24); hesitated while waiting for the AI draft after the transcript appeared. No help needed; task completed (report confirmed)
 - Ratings (1–3) and answers to the open questions (4–5), anonymized: 5 / 5 / 5. Q4: 「如果可以辨別對話的角色。」 Q5: 「會比較在意資料摘要的精準度。」
 - Design change proposed / implemented / retest outcome: speaker roles → #102 (AI labels each line's speaker from its content, the nurse can correct it; PO decision 2026-11-23), voice-based separation with pyannote kept for later in #9; summary accuracy → #45 (formal evaluation with held-out cases and a nurse-checked answer key), #89 (medical vocabulary hints)
-- Evidence file and limitations: paper form (to be destroyed after transcription); one participant
+- Evidence file and limitations: paper form (to be destroyed after transcription); demo database on the workstation (simulated data only); timing and AI accuracy belong to the run, which the two participants did together (one as nurse, one as patient)
+
+### U03 (測試者 C)
+
+- Status: CONDUCTED; questionnaire answers, system records (timing, audit log) and facilitator observations recorded
+- Anonymous code / role / outside-team confirmation: U03 / 護理師 / confirmed not a team member
+- Date / facilitator / consent read and given: 2026-11-24（115.11.24） / 張棨翔 / yes
+- Software revision / prompt / model / scenario: demo environment on the workstation, build c454933 (includes the printed record, #99) / v5 / gemma4:e4b, Whisper small / S03. U03 operated the nurse screen and U04 played the patient from the S03 card (demo session SIM-000010); this participant: nurse screen operator
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 3 min 28 s (audio 69 s; the AI draft took 51 s) / 1 / of 19 AI drafts against the S03 answer key: 18 correct, 0 wrong, 1 doubtful (發作時間 「昨天」; the card says today), missing 2 (舒張壓, added by the nurse as 92; 血壓部位), filled although not said 0. Confirming the 19 drafts one by one took about 55 s. The 量測禁忌 quote kept an STT error (樓管 for 瘻管)
+- Help needed and where the participant hesitated: hesitated when the transcript and the 量測禁忌 draft showed the STT error for 瘻管 (毆管 on 11-23, 樓管 on 11-24); hesitated while waiting for the AI draft after the transcript appeared. No help needed; task completed (report confirmed)
+- Ratings (1–3) and answers to the open questions (4–5), anonymized: 4 / 5 / 5. Q4: 「等待輸入時間（語音轉文字檔）、可同步帶入 HIS 系統」 Q5: 「多一份工作，希望可以自動帶入 HIS 會更好」
+- Design change proposed / implemented / retest outcome: speech-to-text waiting time → #88 (GPU Whisper), #100 (load test); HIS sync → not doing, because the scope excludes writing to a real HIS (second participant to ask, see U01; on seeing the printout, U03 and U04 said HIS import matters more than printing); "one more task" → see U04 section confirmation; facilitator observation: show partial AI drafts as soon as the first part of the transcript is ready instead of all at once (#112); STT misspelling of 瘻管 → #89 (medical vocabulary hints)
+- Evidence file and limitations: paper form (to be destroyed after transcription); demo database on the workstation (simulated data only); timing and AI accuracy belong to the run, which the two participants did together (one as nurse, one as patient)
+
+### U04 (測試者 D)
+
+- Status: CONDUCTED; questionnaire answers, system records (timing, audit log) and facilitator observations recorded
+- Anonymous code / role / outside-team confirmation: U04 / 醫師 / confirmed not a team member
+- Date / facilitator / consent read and given: 2026-11-24（115.11.24） / 張棨翔 / yes
+- Software revision / prompt / model / scenario: demo environment on the workstation, build c454933 (includes the printed record, #99) / v5 / gemma4:e4b, Whisper small / S03. U03 operated the nurse screen and U04 played the patient from the S03 card (demo session SIM-000010); this participant: patient (S03 card)
+- Time to confirm / fields edited / AI drafts correct, wrong, missing, filled although not said: 3 min 28 s (audio 69 s; the AI draft took 51 s) / 1 / of 19 AI drafts against the S03 answer key: 18 correct, 0 wrong, 1 doubtful (發作時間 「昨天」; the card says today), missing 2 (舒張壓, added by the nurse as 92; 血壓部位), filled although not said 0. Confirming the 19 drafts one by one took about 55 s. The 量測禁忌 quote kept an STT error (樓管 for 瘻管)
+- Help needed and where the participant hesitated: hesitated when the transcript and the 量測禁忌 draft showed the STT error for 瘻管 (毆管 on 11-23, 樓管 on 11-24); hesitated while waiting for the AI draft after the transcript appeared. No help needed; task completed (report confirmed)
+- Ratings (1–3) and answers to the open questions (4–5), anonymized: 5 / 5 / 5. Q4: 「語音轉成AI草稿時，有蠻多的需要一個一個確認，希望可以減少一個一個確認的次數（可以一小個區塊來確認）來加快草稿確認時間」 Q5: 「怕導入後會因為多了步驟而減少護理師的使用意願」 Additional comment: 「建議可以依照『急診五級檢傷分類基準』當中聽到的主訴內容來自動填寫檢傷級數，因為護理師填寫主訴的選項之後，就會自動帶入檢傷級數，大差不差，除非可能因為有很多病發症的話，才會多調嚴重一點級數」
+- Design change proposed / implemented / retest outcome: confirm AI drafts one section at a time → #113; fewer steps → same card and #87 (checklist prompts); triage level filled in from the chief complaint by the TTAS criteria → PO wants it (2026-11-24); it changes the rule that the nurse decides 檢傷級數 and the AI never does, so the design and a `DECISIONS.md` entry await team confirmation before any work
+- Evidence file and limitations: paper form (to be destroyed after transcription); demo database on the workstation (simulated data only); timing and AI accuracy belong to the run, which the two participants did together (one as nurse, one as patient)
 
 ## Measures
 
@@ -91,4 +115,4 @@ Report per participant: time to confirm, edit count, and AI drafts against the s
 
 ## 2026-11-24 review boundary
 
-U01/U02 are author-reported questionnaire records. This review did not observe the sessions or independently verify outside-team status, consent, date or scenario. Those fields remain pending in #101. Until the facilitator supplies them, merging these documents does not certify the two qualifying outside-team prototype sessions are fully evidenced. Do not infer task-time improvement from the subjective ratings, or replace missing observations with estimates.
+U01–U04 are reported by the facilitator (the PO), who supplied outside-team status, consent, roles and observations on 2026-11-24; timing, edits and AI draft values come from the demo database. No one else observed the sessions. The S03 answer-key comparison was made by the coding assistant and still needs a nurse to check it. Do not infer task-time improvement from the ratings or from two runs without a paper baseline, or replace missing observations with estimates.

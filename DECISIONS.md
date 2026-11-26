@@ -1,11 +1,103 @@
 # Decisions Log
 
 **Current code steward: 劉順松 (Week 12, Nov 23 – 29), per the confirmed rotation.** Rotation schedule: `README.md`.
-Update this line via PR at every handover. The Week 9 (劉順松) and Week 10 (林均澔) handovers were not recorded
-when they happened. Each person adds a short entry with what they actually did as steward, or says the week was
-missed.
+Update this line via PR at every handover. The Week 9 (劉順松) handover was not recorded when it happened; Week 10
+(林均澔) was recorded late (entry below). Each person adds a short entry with what they actually did as steward, or
+says the week was missed.
 
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
+
+## 2026-11-15 — Week 10 steward (林均澔): no pull requests that week
+- Status: recorded late (2026-11-24)
+- Context: 林均澔 was the code steward for Week 10 (Nov 9–15) under the confirmed rotation.
+- What happened: no pull requests were opened or merged and nothing was committed to main that week (checked
+  on GitHub); the team had not started implementation yet, so there was nothing to review or approve.
+- Consequences: no steward approvals in Week 10. 林均澔's review work is in later PRs (#74, #75, #90, #91, #94).
+- Recorded by: 林均澔
+
+## 2026-11-24 — TTAS reference level filled in by a rule table, never by the LLM; the nurse decides
+- Status: accepted (PO direction 2026-11-24; approved in the #116 review by 吳普軒 and 劉順松, 2026-11-25)
+- Context: outside-team participant U04 (physician, #101) suggested filling in the triage level from the chief
+  complaint by the TTAS criteria (急診五級檢傷分類基準), since in practice choosing the complaint mostly sets the
+  level. The project rule so far: the nurse decides 檢傷級數 and the AI never does. TTAS is not one level per
+  complaint: the adult non-trauma table has about 127 standard complaints and 1,400 criteria, and the level depends
+  on modifiers such as SpO2, blood pressure, heart rate, temperature, consciousness and pain (for example 呼吸短促
+  is level 1 at SpO2 < 90 %, 2 at < 92 %, 3 at 92–94 %, 4 without distress).
+- Decision: the LLM keeps drafting the chief complaint and vitals only; it never outputs a level (v5 schema
+  unchanged). A program looks up a TTAS rule table: chief complaint → standard complaint (synonym table), then
+  the vitals already in the report → the matching criterion and level. The screen shows it as 「TTAS 參考級數（程式
+  依主訴與生命徵象對照）」 with the matched criterion; the nurse still selects and confirms 檢傷級數. If the complaint
+  cannot be matched, or a criterion needs information the report lacks (consciousness, pain, PEFR), it says so
+  instead of guessing. The audit log keeps the reference level and the nurse's level.
+- Consequences: the rule becomes "the AI never decides 檢傷級數; the system may show a TTAS reference level from a
+  rule table, and the nurse decides". `CLAUDE.md`, `PROMPT_CARD.md`, the printout footer, the scenario answer keys
+  and the "no triage level from the AI" tests are updated with the implementation, and the LLM tests stay as they
+  are. The first version covers the complaints in S01, S03 and S04 and the vitals-based criteria; the rest of the
+  table follows. The TTAS PDFs stay out of the repository until their licence is checked; the repository holds only
+  the structured rows used. CP3 can report how often the nurse's level matches the reference level.
+- Decided by: 張棨翔 (PO); confirmed by 吳普軒 and 劉順松
+- Conditional support from 劉順松, explicitly confirmed 2026-11-24: simulation/demo only; source and version traceable; inputs and rules checked by a clinically qualified reviewer; no automatic final-level selection. This is not clinical validation or permission for patient care.
+- Implementation acceptance gates for #115: identify the exact official table/revision and rule IDs with provenance/licensing; do not mix outdated and revised rows. Official reference index: https://dep.mohw.gov.tw/doma/lp-5037-106-1-20.html (includes the 108.6.11 adult non-trauma amendment). No clinical thresholds in this proposal are certified by this review.
+- Use nurse-verified inputs for a reference calculation, or explicitly withhold a reference when required inputs are missing/unverified; do not silently turn an AI draft error into a level. Missing modifiers, conflicting/multiple matches and out-of-scope complaints must be visible, not treated as normal/default low acuity.
+- Keep the reference result separate from the nurse's final selection, with no auto-confirmation. Record the table version, input provenance, matched rule and final human choice in audit; invalidate stale references after input edits. Test absent data, boundary values, conflicting matches and stale inputs using nurse-checked cases before enabling the feature.
+- Other members must review these conditions; the proposal stays proposed until team confirmation. Clinical sign-off and #115 implementation are separate from this document review.
+
+## 2026-11-24 — Exports stay copy text, print and JSON; no HIS integration
+- Status: accepted
+- Context: three of four outside-team participants (U01, U03, U04; #101) said getting the report into the HIS
+  matters more than printing. The scope excludes writing to a real HIS, and the project uses simulated data only.
+- Decision: keep the three exports (copy text, the ED-style printout from #99, JSON download). No HIS-specific
+  export for now.
+- Consequences: re-typing into the HIS remains, and the evaluation and final report name it as the main gap for
+  real use.
+- Decided by: 張棨翔 (PO)
+
+## 2026-11-24 — No RAG for extraction (B5, #15)
+- Status: accepted
+- Context: spike B5 asked whether extraction needs retrieval-augmented generation. The model only copies and
+  normalises what the transcript says; every field must quote the transcript, and anything else is rejected.
+- Decision: no RAG. The prompt (v5), the JSON Schema and the code guards stay the only inputs and checks. The TTAS
+  reference level (#115) is a rule-table lookup in code, not retrieval for the model.
+- Consequences: no vector store or document index to build or evaluate. Revisit only if a later feature needs the
+  model to use outside knowledge, which the current safety rules do not allow.
+- Decided by: 張棨翔 (PO)
+
+## 2026-11-24 — Patient questions: answers saved with their question in the frontend; questions read aloud (#86, #109)
+- Status: accepted (proposed by 吳普軒, frontend area lead, in #109; confirmed by PO 張棨翔 on 2026-11-25 after testing
+  it on the workstation demo)
+- Context: #86 asked to save each answer together with its question so a short answer like 「沒有」 maps to the right
+  field, either through a new `question` field on the input API or by the frontend. The same issue put reading
+  questions aloud out of scope (PO, 2026-11-22). We wanted a working demo before changing the API.
+- Decision: the frontend writes each answer as `問：<question> 答：<answer>` through the existing input API; for a
+  spoken answer it sends `問：<question>` when recording starts and the transcript follows. No API change. The fixed
+  questions (v1, 林均澔's draft) are also read aloud from pre-made mp3 files (macOS voice Meijia,
+  `scripts/make-question-audio.sh`, Git LFS); only the fixed question text is read, never AI output.
+- Rejected: adding `question` to the API now (needs backend work before the demo; can still be added later); speech
+  generated in the browser at run time (not chosen: pre-made files sound the same on every device).
+- Consequences: reverses the 2026-11-22 "no voice for now" scope; the pre-made voice stays in use. The prompt is
+  unchanged but the transcript format is new, so it still needs a real-model check and an `eval/cases.json` case.
+  Apple's voice licence should cover only personal, non-commercial use; change the voice before any other use.
+- Decided by: 吳普軒 (proposal), 張棨翔 (PO, confirmed 2026-11-25)
+
+## 2026-11-24 — Whisper on the GPU first, CPU fallback (#88)
+- Status: accepted
+- Context: the 2026-11-22 Whisper decision asked STT to try the GPU first (#88), because medium on the CPU makes a
+  30 s turn wait about 22 s. In the outside-team runs (U01–U04) participants hesitated while waiting for the draft.
+- Decision: `WHISPER_DEVICE=auto` (default) loads Whisper on CUDA in float16 and checks it by transcribing 1 s of
+  silence, since missing cuBLAS/cuDNN only fails at inference; on any failure, or without a GPU, it uses the CPU in
+  int8 as before. `cuda` and `cpu` can be forced. The CUDA libraries are installed only when the image is built
+  through `docker-compose.gpu.yml` (`STT_GPU=1`), so Mac and Windows images are unchanged. `/transcribe` reports the
+  device and compute type used.
+- Measured on the workstation RTX 3090 with `eval/stt_benchmark.py` (same 18 sentences, plain and masked, as A1;
+  CER with numerals scored as values): small 0.15 / 0.15, median 0.18–0.19 s, RTF 0.03; medium 0.09 / 0.07, median
+  0.29–0.32 s, RTF 0.05 (plain / mask). On the CPU (A1) the same clips took 1.7 s (small) and 4.7 s (medium).
+  Evidence: `docs/cp2/evidence/stt-2026-11-24-gpu/`.
+- Consequences: on the GPU, medium costs about 0.1 s more per clip than small and is more accurate, so the
+  workstation `.env` can use medium for every run, not only official ones. The default for laptops stays small.
+  On the shared workstation another user's Ollama can fill the GPU memory; Whisper then falls back to the CPU at
+  start-up. Operations note: if a long-running Ollama container logs `Failed to initialize NVML`, it has lost the
+  GPU and runs on the CPU (the draft took 51 s instead of 1.2 s); restarting the container restores it.
+- Decided by: 張棨翔 (PO), 2026-11-22; measured 2026-11-24
 
 ## 2026-11-24 — AI usage guidelines v0.3 approved
 - Status: accepted

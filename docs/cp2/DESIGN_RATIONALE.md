@@ -27,12 +27,18 @@ is unconfirmed. We keep both.
 
 ## Decisions shaped by user feedback (outside-team sessions)
 
-Two outside-team sessions so far, both with nurses (U01 護理師 A, U02 護理師 B; records in `USER_TEST_PROTOCOL.md`, follow-up #101). So far only the questionnaire answers are recorded; the date, scenario, timing, edits, AI draft accuracy and observations are still to be filled in from the facilitator's forms, so the findings below are the participants' own words, not measured outcomes. Both rated all three items 5 of 5; with two participants this is encouraging, not a general result.
+Four outside-team participants across two prototype runs (U01–U04; records in `USER_TEST_PROTOCOL.md`, follow-up #101), with more to follow; U03 is a nurse, U04 a physician, U01 and U02 are neither (role 其他). They worked in pairs on scenario S03 (one at the nurse screen, one as the patient), with the PO as facilitator. Timing and AI accuracy come from the demo database (see `EVALUATION_REPORT.md`); the findings below distinguish participant feedback, facilitator observations and recorded run metrics; none establishes time saved without a baseline. Ratings were 5/5/5 three times and 4/5/5 once; with four participants this is encouraging, not a general result.
 
 | Finding (participant's words) | Change |
 |---|---|
-| A more formal PDF format (U01) | Implemented: the confirmed report prints as an ED-style triage record (#99); retest pending |
-| Integration with the hospital system (U01) | Not doing: the scope excludes writing to a real HIS; the nurse prints or copies the report |
+| A more formal PDF format (U01) | Implemented: the confirmed report prints as an ED-style triage record (#99). Retest 2026-11-24 (U03, U04): more formal, but HIS import matters more |
+| Integration with the hospital system (U01, U03) | Not doing: the scope excludes writing to a real HIS. PO decision 2026-11-24: keep copy text, print and JSON download. Asked by U01 and U03, and U03/U04 ranked it above the printout, so it is the main gap for real use |
 | Load with several devices at once (U01) | Load test planned (#100); STT currently transcribes one clip at a time |
 | Telling the speakers' roles apart (U02) | Planned (#102): the AI labels each transcript line's speaker from its content and the nurse can correct it; voice-based separation (pyannote) stays for later (#9) |
 | Accuracy of the summary (U02) | Formal evaluation on held-out cases with a nurse-checked answer key (#45); medical vocabulary hints (#89) |
+| Waiting for speech-to-text (U03) | Whisper on the GPU when there is one (#88); load test (#100) |
+| Hesitation while the AI draft was generated (51–117 s, facilitator observation, both runs) | Planned (#112): record in 15–20 s parts and show the drafts of each part as soon as it is transcribed |
+| Hesitation at the misspelled 瘻管 (毆管, 樓管) in the transcript and the 量測禁忌 draft (facilitator observation, both runs) | Medical vocabulary hints for Whisper (#89) |
+| Confirming AI drafts one by one takes long; extra steps may put nurses off (U04, U03) | Planned (#113): confirm the AI drafts of one section at a time; checklist prompts (#87) |
+| Suggest the triage level from the TTAS criteria and the chief complaint (U04) | PO wants it (2026-11-24). It changes the rule that the nurse decides 檢傷級數 and the AI never does, so the design and a `DECISIONS.md` entry await team confirmation |
+

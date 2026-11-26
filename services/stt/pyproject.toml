@@ -12,6 +12,11 @@ dependencies = [
 ]
 
 [dependency-groups]
+# CUDA 12 libraries for CTranslate2 on an NVIDIA GPU; installed only when the image is built with STT_GPU=1.
+gpu = [
+    "nvidia-cublas-cu12>=12.4",
+    "nvidia-cudnn-cu12>=9.1,<10",
+]
 dev = [
     "pytest>=8",
     "httpx>=0.27",
