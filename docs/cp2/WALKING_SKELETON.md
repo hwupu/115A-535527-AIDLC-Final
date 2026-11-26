@@ -186,7 +186,7 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 1. **What worked well in how we worked together today?**
 
-   > 
+   > From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
 
 2. **What was hard or awkward?** (for example: one person doing most of the typing, long silences, disagreeing about direction, tool problems)
 
