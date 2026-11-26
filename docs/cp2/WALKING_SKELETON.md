@@ -46,7 +46,7 @@ Take turns: each person writes their own sentence **alone for 2 minutes**, then 
 | Person A (吳普軒) | Our tool helps triage nurses to type less during intake by listening to the conversation and pre-filling fields with quotes from it, while the nurse still decides 檢傷級數. |
 | Person B (張棨翔) | Our tool helps emergency triage nurses to write the triage record once and give the doctor a complete handoff by turning the nurse–patient conversation into a draft report that the nurse checks and confirms. |
 | Person C (劉順松) | |
-| Person D (林均澔) | |
+| Person D (林均澔) | Our tool helps triage nurses to finish intake records faster by turning the spoken conversation into a quoted draft that the nurse checks. |
 | **Agreed sentence** | |
 
 **Did all four sentences match?** ☑ Yes ☐ Mostly ☐ No
@@ -89,7 +89,7 @@ If they did not match, that is a useful finding. Write down the difference you h
 | 張棨翔 | CP2 status refresh after #114–#119 (`docs/cp2/README.md` item 7, report §7) | `main` after #119 | commit on the #120 branch | `docs/cp2-status-refresh` (#120) |
 | 吳普軒 | Week 8 steward entry, merge-day record (`MERGE_DAY.md`, outcome in `DECISIONS.md`), these worksheet lines | `main` after #123 | commits on the #120 branch | `docs/cp2-status-refresh` (#120) |
 | 劉順松 | Week 12 steward review and merge of #120 and #124; requirement-status notes (`MERGE_DAY.md`, these worksheet lines, `DECISIONS.md`, prompt log) | #120 and #124 heads after #123 | `963acfa` on the #120 branch; merge commits `0a7abf6` (#124) and `924d688` (#120) on `main` | `docs/cp2-status-refresh` (#120) |
-| 林均澔 | | | | `docs/cp2-status-refresh` (#120) |
+| 林均澔 | Week 10 steward entry in `DECISIONS.md` (no pull requests that week) and the header line about the missing Week 10 record; these worksheet lines | `main` after #117 | merged as #119 (`7a31046`) on 2026-11-25, before #120; these lines in a follow-up PR on top of #126 | `docs/week10-steward` (#119), not the #120 branch |
 
 Hand-off agreed: everyone commits to the one branch `docs/cp2-status-refresh`; pull before you edit, and add new
 entries to `DECISIONS.md` without rewriting anyone else's.
@@ -143,7 +143,7 @@ entries to `DECISIONS.md` without rewriting anyone else's.
 | Week 8 steward entry (`f39a093`) | 吳普軒 | | yes | none |
 | Merge-day record (`338c2df`) and worksheet lines | 吳普軒 | | yes | none |
 | Steward review notes (`963acfa`) | 劉順松 | | yes | none; merged #124 and #120 into `main`, CI green on both |
-| | 林均澔 | | | |
+| Week 10 steward entry (#119, `7a31046`) | 林均澔 | | yes, merged into `main` separately before #120 | none |
 
 **Where did it first run end to end?** (a time, or "not yet")
 
@@ -199,7 +199,7 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 4. **What is the one thing we will do differently in the next team session** (merge day)?
 
-   > 
+   > 林均澔: the author replies to the steward's comment before the PR is merged (#120's comment got no reply).
 
 5. **Blockers we found** (technical or otherwise) and who will follow up:
 
