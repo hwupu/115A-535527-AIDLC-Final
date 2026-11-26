@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuestionAudio } from "@/composables/useQuestionAudio";
-import { useShortcuts } from "@/composables/useShortcuts";
 import { questions, stepId, stepText } from "@/intake/questions";
 import { usePatientInputStore } from "@/stores/patientInput";
 
@@ -50,10 +49,6 @@ function reanswer() {
   store.reanswer();
   typing.value = false;
 }
-
-// Space starts and stops the recording (#28), only where the 「用說的回答」 or 「停止錄音」 button is on screen.
-const canRecord = () => phase.value === "questions" && !typing.value && (listening.value || !answer.value || answer.value.kind === "skipped");
-useShortcuts((): Record<string, () => void> => (canRecord() ? { " ": record } : {}));
 
 function nextPatient() {
   audio.stop();
