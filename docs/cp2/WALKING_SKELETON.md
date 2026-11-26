@@ -173,27 +173,33 @@ If your team is changing stewards, the incoming steward approves this one as the
 
 Answer these together, honestly. Nobody is graded on how good the answers sound.
 
+**劉順松 - individual perspective, Codex-assisted draft for team confirmation. These answers describe repository work and proposed next steps; they are not minutes of an unverified joint session.**
+
 1. **What worked well in how we worked together today?**
 
-   > From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
+   > 劉順松: From my perspective, using pull requests, written reviews and CI results made our contributions easier to trace. We also kept unfinished requirements visible instead of treating every merged PR as a completed team activity.
 
 2. **What was hard or awkward?** (for example: one person doing most of the typing, long silences, disagreeing about direction, tool problems)
 
-   > 
+   > 劉順松: Stacked branches made integration confusing: #110 and #111 had been merged into their parent branches, but their changes did not reach `main` until #123. We also needed to distinguish completed implementation from unfinished collaboration records.
 
 3. **Who had the least chance to contribute, and what would help next time?** (Route 2: was there a box only one person could explain? What will we do about it?)
 
    > 吳普軒: the frontend boxes were written mostly by 吳普軒 alone, so only 吳普軒 could explain them; next time a
    > teammate pairs with 吳普軒 on a frontend change.
 
+   > 劉順松: We have not established who had the least opportunity to contribute. Frontend knowledge was concentrated with 吳普軒. Next time, I propose explaining the nurse-confirmation-to-physician-report flow myself, with 吳普軒 checking my explanation, so another member can understand and maintain that path.
+
 4. **What is the one thing we will do differently in the next team session** (merge day)?
 
-   > 
+   > 劉順松: Before each merge, we will check that the PR targets `main`; after merging, we will verify that the intended feature actually appears and works on `main`. This is my proposed next-session practice, pending team agreement.
 
 5. **Blockers we found** (technical or otherwise) and who will follow up:
 
    > #110 (#87) and #111 (#28) were approved but missed `main` through a stacked merge; fixed in #123 (吳普軒). The
    > fresh-clone test is still to do (a non-steward, before E3).
+
+   > 劉順松: Integration of #110/#111 was corrected in #123. My closeout changes are in #125, with review requested from 吳普軒. A real non-steward still needs to follow only the README and complete nurse confirmation -> physician report; the team must confirm the tester. The joint technical slice, participant explanations and joint-session records remain unverified. The team and #106 coordinator need to arrange completion or seek instructor approval for a specific alternative.
 
 ---
 
