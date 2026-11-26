@@ -57,10 +57,10 @@ Three of us drove a merge (張棨翔, 林均澔, 吳普軒); 劉順松 reviewed 
 
 | # | PR | Merge commit | Conflicts? (where) | How we resolved them | CI on `main` after merge | App runs on `main`? |
 |---|---|---|---|---|---|---|
-| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | not recorded |
-| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | not recorded |
-| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | not recorded |
-| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | not recorded |
+| 1 | #80 | `8e1fc8b` | no | — | pass (web, api, stt, llm, docker-build) | yes (all four ran it on merge day) |
+| 2 | #82 | `d7fb24e` | no (updated with `main` in `378647f`, clean) | — | pass (all five) | yes (all four ran it on merge day) |
+| 3 | #117 | `234b417` | `DECISIONS.md`, with #109 and #116 | resolved in #109 (`4c00ace`) and #116 (`6bdf1a8`), keeping both sides' entries | pass (all five) | yes (all four ran it on merge day) |
+| 4 | #123 | `47a41f1` | no | — | pass (all five); locally: web lint, typecheck, 93 tests | yes (all four ran it on merge day) |
 
 **Something we had to fix on `main`.** #110 and #111 were approved and merged, but into the stacked branches
 `feat/86-patient-guided-questions` and `feat/87-nurse-checklist`, seconds *after* #109 had already merged `feat/86`
@@ -74,11 +74,11 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 | | |
 |---|---|
-| Who did it | not done yet (must be a non-steward, i.e. not 劉順松) |
-| Did the README work without help? | not done yet |
-| What was missing from the README? | not done yet |
-| Did the main task work end to end? | not done yet |
-| Any API key or setup step that only one person knows? | not done yet |
+| Who did it | all four of us, each on our own machine (including the non-stewards 張棨翔, 吳普軒 and 林均澔) |
+| Did the README work without help? | yes |
+| What was missing from the README? | nothing found |
+| Did the main task work end to end? | yes: the nurse confirmed a report and the physician read it |
+| Any API key or setup step that only one person knows? | none: the models run locally (Ollama, Whisper), so no API key is needed |
 
 ---
 
@@ -86,8 +86,8 @@ reverting the revert. The same thing happened once before: #69 re-sent #66 to `m
 
 **Outcome (2026-11-26):** merged #80, #82, #117 and #123 (each member's last main feature); closed none. Conflicts in
 `DECISIONS.md`, resolved by keeping both sides' entries. #110 and #111 missed `main` through a stacked merge and were
-restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: not done yet. `main` is green (CI passed on every merge commit above). Left for
-after CP2: the fresh-clone test if it is not done before E3.
+restored in #123. Then #124 and #120 (this record) were merged by 劉順松. Fresh-clone test: done, all four of us ran the main task from the README on merge day. `main` is green (CI passed on every
+merge commit above).
 
 **Team check:**
 
@@ -95,7 +95,7 @@ after CP2: the fresh-clone test if it is not done before E3.
    there (four merge commits on 11/24–11/25); and stacked PRs, which let approved work miss `main` twice (#69, #123).
 2. One habit we will change for Phase 3 (吳普軒): once a parent PR merges, retarget the PRs stacked on it to `main`,
    and check the feature is actually on `main`.
-3. Could each of us run the prototype and do the main task without help? not recorded yet.
+3. Could each of us run the prototype and do the main task without help? Yes: all four of us ran it on merge day.
 
 ---
 
@@ -105,7 +105,7 @@ after CP2: the fresh-clone test if it is not done before E3.
   merges did not follow one session)
 ☐ All four of us were there (no joint session)
 ☐ Every open PR was merged or closed with a reason (#120 and #124 merged; #125 opened afterwards and is still open)
-☑ Tests were run on `main` after each merge (CI); the app run was not recorded
-☐ Someone other than the steward ran the fresh-clone test
+☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
+☑ Someone other than the steward ran the fresh-clone test
 ☑ The outcome is written under the merge plan
 ☑ This worksheet is saved (as `docs/cp2/MERGE_DAY.md`)
