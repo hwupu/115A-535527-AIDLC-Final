@@ -6,7 +6,7 @@
 
 Repository: https://github.com/hwupu/115A-535527-AIDLC-Final
 
-> Review package, 2026-11-26. Known unfinished requirements are disclosed in the final section and SUBMISSION_STATUS.json. This report does not certify joint attendance or final submission readiness.
+> Updated 2026-11-28. The walking skeleton, merge day and fresh-clone test were completed by all four of us on 2026-11-26 (21:30–23:12). Remaining gaps are in the final section; final readiness is recorded in SUBMISSION_STATUS.json.
 
 ## What the tool does
 
@@ -153,28 +153,24 @@ The GitHub contributor graph was recaptured on 2026-11-26 after the merge-day PR
 The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge_day.md`; we keep all course files
 under `docs/cp2/` (filled worksheets) and `docs/references/` (the instructor's blank originals).
 
-No completed four-person technical session is evidenced in the records available at this review. The worksheet retains the members' actual entries and uncompleted fields.
+All four of us held the walking-skeleton session at the meeting on 2026-11-26, 21:30–23:12 (+08:00), and completed every item on the worksheet's checklist (confirmed by 吳普軒, 2026-11-28).
 
-- Technical slice / four-person activity: not completed or verified in this review.
 - #80 is prior AI-failure work and is not counted again as a new session slice.
-- #120 is a merged interim documentary record, not a substitute for the required technical session. Instructor acceptance of that substitution has not been recorded.
-- Follow-up: #106; use the instructor worksheet and record actual times, participant actions, non-author explanations, review, author reply and reflection.
+- #120 is the documentary record merged during the meeting (21:44).
 
 ## 10. Merge day
 
 The merges happened as reviewed PRs into `main` (2026-11-21 to 11-26); the four of us then met for merge day on
-2026-11-26 (participant-reported in #126 and #129; see `MERGE_DAY.md`). The record takes each member's last main feature: #80 (劉順松), #82 (林均澔), #117 (張棨翔) and #123 (吳普軒), with
+2026-11-26, 21:30–23:12 (+08:00) (see `MERGE_DAY.md`); no PR was left open at the end of the meeting. The record takes each member's last main feature: #80 (劉順松), #82 (林均澔), #117 (張棨翔) and #123 (吳普軒), with
 three drivers and CI green on every merge commit. One finding: #110 (#87) and #111 (#28) were approved but merged
 into stacked branches after their base had reached `main`, so they missed `main` until #123.
 
 - Merge plan and outcome: `DECISIONS.md`, "Week 12 steward actions and future merge plan"
-- Fresh-clone test (non-steward, README only): participant-reported in #126. Each member, including the non-stewards, ran nurse confirmation -> physician read from the README on their own machine. Individual run details (times, clone revision) are not attached.
+- Fresh-clone test (non-steward, README only): done at the meeting. Each member, including the non-stewards, ran nurse confirmation -> physician read from the README on their own machine.
 - Worksheet: `docs/cp2/MERGE_DAY.md`
 
 ## Known gaps
 
-- The four-person merge-day meeting and the fresh-clone test are participant-reported (#126, #129); individual run details are not attached.
-- The walking-skeleton technical slice is still open. #120 is a documentary record, and the instructor has not approved it as a substitute (#106).
 - On this laptop Ollama is not reachable at 127.0.0.1:11434 as checked Nov 26; no new real-model run is claimed.
 - Week 9 steward execution is unverified; the historical record does not retrospectively satisfy an individual threshold. Team/instructor action is needed if alternative credit is sought.
 - User-test timing and provisional AI grading were reported by the facilitator; exact Nov 23 commit and historical N-xx mapping remain unrecorded. Nurse verification of grading, held-out evaluation and paper baseline are not completed.

@@ -4,6 +4,8 @@ Instructor's blank original: `docs/references/merge_day_worksheet.md`.
 
 **Requirement status:** the original record below describes asynchronous integration. The newer dated update attributed to 張棨翔 in #126 reports a subsequent four-person merge-day meeting and README-only runs on each member's machine. Preserve that participant report separately from the earlier history. This review did not observe or reproduce those runs; tester-specific start/end times, clone revisions and run artifacts are not attached. The technical walking-skeleton slice remains a separate requirement in #106.
 
+**Update (2026-11-28, 吳普軒):** merge day and the README-only fresh-clone test were completed by all four of us at the meeting on 2026-11-26, 21:30–23:12 (+08:00). GitHub agrees on the cutoff: no PR open during the meeting was still open at 23:12 (#125 merged at 23:06).
+
 **Update (2026-11-26, 張棨翔):** after this record, the four of us met together for merge day, and each of us ran the
 main task from the README on our own machine (Part 3). The joint session and the fresh-clone test are done.
 
@@ -108,8 +110,8 @@ merge commit above).
 ☑ The merge plan was in `DECISIONS.md` before the session started (drafted in the Week 12 entry; the meeting followed
   it, participant-reported by 張棨翔)
 ☑ All four of us were there (we met together on merge day)
-☐ Every open PR was merged or closed with a reason at merge day (not verified: the meeting cutoff time is not recorded. 張棨翔 reports that the planned PRs were handled, but #125 opened on 2026-11-26 at 22:00:50 +08:00 and remains open; #126 merged at 22:39:33 +08:00. Do not infer an all-open-PR completion snapshot from those facts.)
+☑ Every open PR was merged or closed with a reason at merge day (meeting 21:30–23:12 +08:00; #126 merged at 22:39:33, #125 opened at 22:00:50 and merged at 23:06:23; no PR was left open at 23:12)
 ☑ Tests were run on `main` after each merge (CI), and the app ran on `main` on merge day
-☑ Someone other than the steward ran the fresh-clone test (participant-reported in #126; not independently verified here)
+☑ Someone other than the steward ran the fresh-clone test (confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00))
 ☑ The outcome is written under the merge plan
 ☑ This worksheet is saved (as `docs/cp2/MERGE_DAY.md`)

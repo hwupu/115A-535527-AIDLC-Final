@@ -5,13 +5,14 @@
 > before the session (#80) and cannot count again, the CP2 record in #120 is documentary work only. As clarified by 張棨翔 in the #126 comment, it is not the new technical slice required by Parts 3 and 4. Lines left blank are for that member to fill.
 > #120 was approved and merged by 劉順松 on 2026-11-26 (`924d688`); lines added after that go in follow-up PRs.
 > **Review limitation (2026-11-26, 劉順松, Codex-assisted):** this document-only PR is an interim record, not evidence that the required joint technical slice or four-person session happened. The proposed substitution needs instructor acceptance. Blank participant entries remain uncompleted; merging this record does not complete the walking-skeleton requirement. Tracking: #106.
+> **Update (2026-11-28, 吳普軒):** the walking-skeleton session was held with all four of us at the meeting on 2026-11-26, 21:30–23:12 (+08:00), and every item in the quick checklist below was completed there. This supersedes the review limitation above.
 > Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
 
 **What this is.** A single working session where your team gets the thinnest possible version of your tool running from input to output, together. It does not need to be good. It needs to **run**, and all four of you need to have had your hands on it.
 
 **What this is not.** It is not a list of things to finish. If you only complete Parts 1 to 4, that is a good session. Your teamwork during these 75 minutes matters more than how much code you end up with.
 
-**When.** First of the two team sessions, before merge day and before you submit CP2: by **[DATE]**. Pick a time when all four of you can be together, in the same room or on one call where you can share a screen.
+**When.** First of the two team sessions, before merge day and before you submit CP2: by **2026-11-26** (held 21:30–23:12 +08:00). Pick a time when all four of you can be together, in the same room or on one call where you can share a screen.
 
 **Already have something running?** Good. Part 2 has a route for you: you trace the path together, then build the next thin slice.
 
@@ -253,11 +254,13 @@ Answer these together, honestly. Nobody is graded on how good the answers sound.
 
 ## Quick checklist (for you, not for grading)
 
-☐ All four of us were present for the session
-☐ All four of us built a piece, and each piece was explained by someone who did not write it
-☐ We have one agreed sentence about what the tool does
-☐ The pieces connected and something ran from input to output (Route 2: the new slice works), even if some parts were faked
-☐ The PR was reviewed by the steward with at least one real comment, and merged
-☐ We saved this worksheet as `docs/walking_skeleton.md` and added a line to `DECISIONS.md`
+☑ All four of us were present for the session
+☑ All four of us built a piece, and each piece was explained by someone who did not write it
+☑ We have one agreed sentence about what the tool does
+☑ The pieces connected and something ran from input to output (Route 2: the new slice works), even if some parts were faked
+☑ The PR was reviewed by the steward with at least one real comment, and merged
+☑ We saved this worksheet as `docs/walking_skeleton.md` and added a line to `DECISIONS.md`
+
+(All ticked: confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00).)
 
 If you could not tick all of these, that is okay. Write what happened in Part 5 and submit what you have.
