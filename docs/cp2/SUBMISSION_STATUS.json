@@ -1,36 +1,35 @@
 {
-  "as_of": "2026-11-26 Asia/Taipei",
+  "as_of": "2026-11-28 Asia/Taipei",
   "issue": 106,
   "ready_for_final_submission": false,
   "completed_in_this_change": [
-    "Week 9 evidence-based historical record",
-    "One README organization confirmed by Liu in this conversation",
-    "Report placeholders replaced by explicit facts or disclosed gaps",
-    "Submission index temporary Status column removed",
-    "Contributor graph recaptured after the merge-day PRs (#126, #127, #129)"
+    "Walking skeleton, merge day and the non-steward fresh-clone test recorded as complete (confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00))",
+    "PR130 review preserves the participant report but leaves walking-skeleton artifact verification and final ZIP/E3 actions pending."
   ],
   "remaining_requirements": [
     {
       "id": "joint_walking_skeleton",
-      "status": "not_verified",
-      "requires": "Actual team session, technical slice, non-author explanation and review; or instructor-approved alternative"
+      "status": "participant_reported",
+      "requires": "Actual team session, technical slice, non-author explanation and review; or instructor-approved alternative",
+      "evidence": "docs/cp2/WALKING_SKELETON.md; confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00)",
+      "verification_gap": "PR130 still requests the actual new technical slice, its merged code PR and Part 3b non-author explanation mapping. Meeting confirmation alone does not supply that artifact; #120 remains documentary."
     },
     {
       "id": "joint_merge_day",
-      "status": "participant_reported",
+      "status": "complete",
       "requires": "Actual required joint activity; asynchronous merges remain recorded separately",
-      "evidence": "docs/cp2/MERGE_DAY.md; #126; #129"
+      "evidence": "docs/cp2/MERGE_DAY.md; #126; #129; confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00)"
     },
     {
       "id": "non_steward_fresh_clone",
-      "status": "participant_reported",
+      "status": "complete",
       "requires": "A real non-steward follows README on a new clone and completes nurse-to-physician task",
-      "evidence": "docs/cp2/MERGE_DAY.md Part 3; #126 (individual run details not attached)"
+      "evidence": "docs/cp2/MERGE_DAY.md Part 3; #126 (individual run details not attached); confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00)"
     },
     {
       "id": "team_review_and_upload",
       "status": "pending",
-      "requires": "Another teammate reviews this PR; team checks final ZIP; authorized human uploads to E3"
+      "requires": "Another teammate reviews this PR; team checks the final ZIP; authorized human uploads to E3. Do not mark the entire item complete before those events; do not use an early flag change to bypass the final-readiness gate."
     }
   ],
   "historical_limit": "Week 9 formal steward reviews not found; do not claim credit from implementation alone",

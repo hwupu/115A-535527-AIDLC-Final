@@ -2,6 +2,11 @@
 
 This record supports #106. It does not close the issue or certify final readiness.
 
+## Update 2026-11-28
+The walking skeleton, merge day and the non-steward fresh-clone test (follow-through items 1 and 2 below) were completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00), confirmed by 吳普軒. Item 3/4 (teammate review, final ZIP check, E3 upload) remains.
+
+PR130 review clarification: the completion update is retained as a participant report. The actual new technical slice, merged code PR and Part 3b explanation mapping are still requested by the PR and remain to be supplied. Final ZIP/team verification and E3 upload must not be pre-certified; readiness remains false.
+
 ## Completed technical/documentary work
 - #120 and #124 are merged into main 924d688; all five CI checks succeeded. Existing checklist/keyboard work reaches main through #123.
 - Week 9 now has a dated, evidence-based late entry. No formal Week 9 approval by 414551016 was found across all 40 PRs; implementation evidence is not a steward review.
