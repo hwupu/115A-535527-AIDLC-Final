@@ -6,14 +6,13 @@ Update this line via PR at every handover. Week 9 (劉順松) now has a retrospe
 Entry format: Status, Context, Decision, Consequences, Decided by. New entries go at the top of the 2026-11 block.
 
 ## 2026-11-28 — CP2 team requirements recorded as completed at the 2026-11-26 meeting
-- Status: confirmed by 吳普軒; awaiting teammate review in the PR
+- Status: participant report confirmed by 吳普軒; repository review does not independently verify every session event
 - Context: `_package.py` still listed the walking skeleton, merge day and the fresh-clone test as unfinished, because
   `SUBMISSION_STATUS.json` had not been updated after the meeting.
 - Decision: record all three as completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00), and tick
   the worksheet checklists. This supersedes the "remains required" note in the #120 entry below. GitHub agrees on
   the merge-day cutoff: no PR was left open at 23:12 (#125 merged 23:06).
-- Consequences: only `team_review_and_upload` remains; the reviewer sets `ready_for_final_submission` before the
-  final ZIP is built with `--strict`.
+- Consequences: retain the meeting report with its source. PR130 still asks for the actual new technical slice, merged code PR and Part 3b explanation mapping; those artifact details remain unverified. Keep `ready_for_final_submission` false while this evidence gap or the final ZIP/team-review/upload actions remain pending. Do not pre-certify E3 upload to make `--strict` pass.
 - Decided by: the team at the meeting; recorded by 吳普軒
 
 ## 2026-11-26 - CP2 file organization confirmed by 劉順松

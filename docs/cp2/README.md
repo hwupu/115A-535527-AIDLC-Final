@@ -38,9 +38,9 @@ The course asks for the worksheets at `docs/walking_skeleton.md` and `docs/merge
 
 ## Readiness and remaining requirements
 
-The walking skeleton, merge day and fresh-clone test were completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00). The remaining gaps are listed in the report.
+吳普軒 reports completion of the walking skeleton, merge day and fresh-clone test at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00). The actual walking-skeleton code-slice PR and explanation mapping remain unverified in PR130. The remaining gaps are listed in the report.
 The machine-readable status is `SUBMISSION_STATUS.json`; evidence and next actions are in
-`CLOSEOUT_STATUS.md`. 
+`CLOSEOUT_STATUS.md`.
 Do not infer completion from the absence of a temporary table column.
 
 ## Other files in this folder

@@ -6,6 +6,7 @@
 > #120 was approved and merged by 劉順松 on 2026-11-26 (`924d688`); lines added after that go in follow-up PRs.
 > **Review limitation (2026-11-26, 劉順松, Codex-assisted):** this document-only PR is an interim record, not evidence that the required joint technical slice or four-person session happened. The proposed substitution needs instructor acceptance. Blank participant entries remain uncompleted; merging this record does not complete the walking-skeleton requirement. Tracking: #106.
 > **Update (2026-11-28, 吳普軒):** the walking-skeleton session was held with all four of us at the meeting on 2026-11-26, 21:30–23:12 (+08:00), and every item in the quick checklist below was completed there. This supersedes the review limitation above.
+> **PR130 review clarification (劉順松, Codex-assisted):** the Nov 28 update and ticks below are retained as 吳普軒's participant report. PR130 itself still requests the actual technical slice, merged code PR and Part 3b explanation mapping. Those details are not supplied by the general completion statement; #120 remains documentary. This review records the report, not independent observation or full artifact verification.
 > Instructor's blank original: `docs/references/walking_skeleton_worksheet.md`.
 
 **What this is.** A single working session where your team gets the thinnest possible version of your tool running from input to output, together. It does not need to be good. It needs to **run**, and all four of you need to have had your hands on it.

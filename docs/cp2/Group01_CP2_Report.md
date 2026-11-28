@@ -171,6 +171,8 @@ into stacked branches after their base had reached `main`, so they missed `main`
 
 ## Known gaps
 
+- PR130 records 吳普軒's confirmation of the meeting, but still requests the actual new walking-skeleton technical slice, its merged code PR and non-author explanation mapping. These artifact details remain unverified; #120 is documentary. The final readiness gate remains false until required evidence and team/ZIP/upload actions are resolved.
+
 - On this laptop Ollama is not reachable at 127.0.0.1:11434 as checked Nov 26; no new real-model run is claimed.
 - Week 9 steward execution is unverified; the historical record does not retrospectively satisfy an individual threshold. Team/instructor action is needed if alternative credit is sought.
 - User-test timing and provisional AI grading were reported by the facilitator; exact Nov 23 commit and historical N-xx mapping remain unrecorded. Nurse verification of grading, held-out evaluation and paper baseline are not completed.

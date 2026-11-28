@@ -3,14 +3,16 @@
   "issue": 106,
   "ready_for_final_submission": false,
   "completed_in_this_change": [
-    "Walking skeleton, merge day and the non-steward fresh-clone test recorded as complete (confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00))"
+    "Walking skeleton, merge day and the non-steward fresh-clone test recorded as complete (confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00))",
+    "PR130 review preserves the participant report but leaves walking-skeleton artifact verification and final ZIP/E3 actions pending."
   ],
   "remaining_requirements": [
     {
       "id": "joint_walking_skeleton",
-      "status": "complete",
+      "status": "participant_reported",
       "requires": "Actual team session, technical slice, non-author explanation and review; or instructor-approved alternative",
-      "evidence": "docs/cp2/WALKING_SKELETON.md; confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00)"
+      "evidence": "docs/cp2/WALKING_SKELETON.md; confirmed by 吳普軒 on 2026-11-28: completed at the four-person meeting on 2026-11-26, 21:30–23:12 (+08:00)",
+      "verification_gap": "PR130 still requests the actual new technical slice, its merged code PR and Part 3b non-author explanation mapping. Meeting confirmation alone does not supply that artifact; #120 remains documentary."
     },
     {
       "id": "joint_merge_day",
@@ -27,7 +29,7 @@
     {
       "id": "team_review_and_upload",
       "status": "pending",
-      "requires": "Another teammate reviews this PR, sets ready_for_final_submission, team checks the final ZIP; authorized human uploads to E3"
+      "requires": "Another teammate reviews this PR; team checks the final ZIP; authorized human uploads to E3. Do not mark the entire item complete before those events; do not use an early flag change to bypass the final-readiness gate."
     }
   ],
   "historical_limit": "Week 9 formal steward reviews not found; do not claim credit from implementation alone",
